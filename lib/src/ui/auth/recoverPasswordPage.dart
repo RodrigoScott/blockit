@@ -16,7 +16,7 @@ class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
             child: Container(
               width: MediaQuery.of(context).size.width * .8,
               height: MediaQuery.of(context).size.height * .35,
-              child: Image.asset("assets/icons/icon.png"),
+              child: Image.asset("assets/icon.png"),
             ),
           ),
           SizedBox(
@@ -24,7 +24,7 @@ class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
           ),
           Container(
             height: MediaQuery.of(context).size.height * .05,
-            width: MediaQuery.of(context).size.width * .7,
+            width: MediaQuery.of(context).size.width * .9,
             alignment: Alignment.centerLeft,
             child: Text(
               'Correo Electónico',
@@ -34,7 +34,7 @@ class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
           ),
           Container(
               height: MediaQuery.of(context).size.height * .07,
-              width: MediaQuery.of(context).size.width * .7,
+              width: MediaQuery.of(context).size.width * .9,
               child: TextField(
                 cursorColor: Colors.black,
                 style: TextStyle(fontSize: 20),
@@ -68,7 +68,7 @@ class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
           ),
           Container(
             height: MediaQuery.of(context).size.height * .07,
-            width: MediaQuery.of(context).size.width * .7,
+            width: MediaQuery.of(context).size.width * .9,
             child: InkWell(
               borderRadius: BorderRadius.circular(5),
               onTap: () {
@@ -81,7 +81,7 @@ class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
                     color: Color(0xffff5f00),
                   ),
                   height: MediaQuery.of(context).size.height * .07,
-                  width: MediaQuery.of(context).size.width * .7,
+                  width: MediaQuery.of(context).size.width * .9,
                   child: Center(
                     child: Text(
                       'Recuperar Contraseña',

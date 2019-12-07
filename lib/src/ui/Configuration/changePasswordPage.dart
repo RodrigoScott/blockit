@@ -1,36 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 
-class SignIn extends StatefulWidget {
+class ChangePasswordPage extends StatefulWidget {
   @override
-  _SignInState createState() => _SignInState();
+  _ChangePasswordPageState createState() => _ChangePasswordPageState();
 }
 
-class _SignInState extends State<SignIn> {
-  void initState() {
-    super.initState();
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
-  }
-
+class _ChangePasswordPageState extends State<ChangePasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView(
         children: <Widget>[
+          SizedBox(
+            height: MediaQuery.of(context).size.height * .01,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 22),
+            child: Text(
+              'Cambiar Contraseña',
+              style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
+            ),
+          ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * .2,
+          ),
           Column(
-            mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              Center(
-                child: Container(
-                  width: MediaQuery.of(context).size.width * .8,
-                  height: MediaQuery.of(context).size.height * .35,
-                  child: Image.asset("assets/icon.png"),
-                ),
-              ),
               SizedBox(
                 height: MediaQuery.of(context).size.height * .01,
               ),
@@ -39,7 +34,7 @@ class _SignInState extends State<SignIn> {
                 width: MediaQuery.of(context).size.width * .9,
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Correo Electónico',
+                  'Antigua Contraseña',
                   style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
@@ -83,7 +78,51 @@ class _SignInState extends State<SignIn> {
                 width: MediaQuery.of(context).size.width * .9,
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Contraseña',
+                  'Nueva Contraseña',
+                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Container(
+                  height: MediaQuery.of(context).size.height * .07,
+                  width: MediaQuery.of(context).size.width * .9,
+                  child: TextField(
+                    cursorColor: Color(0xffff5f00),
+                    style: TextStyle(fontSize: 20),
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(
+                        Icons.email,
+                        color: Color(0xff888888),
+                      ),
+                      filled: true,
+                      fillColor: Color(0xffe3e3e3),
+                      contentPadding: EdgeInsets.all(8),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide: BorderSide(color: Colors.transparent)),
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide: BorderSide(color: Colors.transparent)),
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide: BorderSide(color: Colors.transparent)),
+                      errorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide: BorderSide(color: Colors.transparent)),
+                      disabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide: BorderSide(color: Colors.transparent)),
+                    ),
+                  )),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * .02,
+              ),
+              Container(
+                height: MediaQuery.of(context).size.height * .05,
+                width: MediaQuery.of(context).size.width * .9,
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Repite Nueva Contraseña',
                   style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
@@ -128,7 +167,7 @@ class _SignInState extends State<SignIn> {
                 child: InkWell(
                   borderRadius: BorderRadius.circular(5),
                   onTap: () {
-                    Navigator.pushNamed(context, 'HomePage');
+                    Navigator.pop(context);
                   },
                   child: Center(
                     child: Container(
@@ -140,39 +179,8 @@ class _SignInState extends State<SignIn> {
                       width: MediaQuery.of(context).size.width * .9,
                       child: Center(
                         child: Text(
-                          'Iniciar sesión',
+                          'Guardar',
                           style: TextStyle(fontSize: 25, color: Colors.white),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * .01,
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width * .9,
-                child: InkWell(
-                  focusColor: Colors.transparent,
-                  borderRadius: BorderRadius.circular(15),
-                  onTap: () {
-                    Navigator.pushNamed(context, 'RecoverPass');
-                  },
-                  child: Center(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        //border: Border.all(width: 3),
-                        color: Colors.transparent,
-                      ),
-                      width: MediaQuery.of(context).size.width * .9,
-                      height: 40,
-                      child: Center(
-                        child: Text(
-                          'Olvide mi contraseña',
-                          style: TextStyle(fontSize: 15),
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -183,38 +191,11 @@ class _SignInState extends State<SignIn> {
               SizedBox(
                 height: MediaQuery.of(context).size.height * .1,
               ),
-              Container(
-                width: MediaQuery.of(context).size.width * .9,
-                child: InkWell(
-                  focusColor: Colors.transparent,
-                  borderRadius: BorderRadius.circular(15),
-                  onTap: () {
-                    Navigator.pushNamed(context, 'TerminosyC');
-                  },
-                  child: Center(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        //border: Border.all(width: 3),
-                        color: Colors.transparent,
-                      ),
-                      width: MediaQuery.of(context).size.width * .9,
-                      height: 40,
-                      child: Center(
-                        child: Text(
-                          'Terminos y condiciones',
-                          style: TextStyle(fontSize: 15),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
             ],
           ),
         ],
       ),
     );
+    ;
   }
 }
