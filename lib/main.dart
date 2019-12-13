@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:trailock/src/ui/Configuration/changePasswordPage.dart';
 import 'package:trailock/src/ui/auth/recoverPasswordPage.dart';
 import 'package:trailock/src/ui/auth/signIn.dart';
