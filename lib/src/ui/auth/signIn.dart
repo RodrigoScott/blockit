@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:trailock/src/resources/user.Services.dart';
+import 'package:trailock/src/widgets/loadingAlertDismissible.dart';
 
 class SignIn extends StatefulWidget {
   @override
@@ -8,6 +10,11 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
+  var loadingContext;
+  closeAlert(BuildContext _context) {
+    Navigator.of(_context).pop();
+  }
+
   var _formemailkey = GlobalKey<FormState>();
   var _emailController = TextEditingController();
   var _passwordController = TextEditingController();
@@ -170,9 +177,55 @@ class _SignInState extends State<SignIn> {
                             ],
                           );
                         });
-                    print('hola');
                   } else {
-                    Navigator.pushNamed(context, 'HomePage');
+                    showDialog(
+                        barrierDismissible: false,
+                        context: context,
+                        builder: (BuildContext context) {
+                          loadingContext = context;
+                          return LoadingAlertDismissible();
+                        });
+                    UserService()
+                        .requestLogin(
+                            _emailController.text, _passwordController.text)
+                        .then((res) {
+                      closeAlert(loadingContext);
+                      if (res.statusCode == 200) {
+                        Navigator.pushNamed(context, 'HomePage');
+                      } else {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(5),
+                                  ),
+                                ),
+                                title: Text('Error'),
+                                content: Container(
+                                    child: Text(
+                                        'Correo electronico o contraseña erroneos, intentelo de nuevo ')),
+                                actions: <Widget>[
+                                  FlatButton(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(5)),
+                                    ),
+                                    color: Color(0xffff5f00),
+                                    child: Text(
+                                      "Aceptar",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  )
+                                ],
+                              );
+                            });
+                      }
+                    });
                   }
                 },
                 child: Center(

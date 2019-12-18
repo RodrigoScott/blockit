@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trailock/src/ui/auth/signIn.dart';
 
 class ConfigurationPage extends StatefulWidget {
   @override
@@ -108,7 +110,8 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
               SizedBox(
                 height: 5,
               ),
-              options(Icon(Icons.label_outline), Text('Cerrar Sesión'), ''),
+              options(
+                  Icon(Icons.label_outline), Text('Cerrar Sesión'), 'log-out'),
               SizedBox(
                 height: MediaQuery.of(context).size.height * .01,
               ),
@@ -140,9 +143,17 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
     return Container(
       color: Colors.black12,
       child: ListTile(
-        onTap: () {
-          Navigator.pushNamed(context, '$route');
-        },
+        onTap: route != 'log-out'
+            ? () {
+                Navigator.pushNamed(context, '$route');
+              }
+            : () async {
+                final prefs = await SharedPreferences.getInstance();
+                prefs.remove('access_token');
+                Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (context) => SignIn()),
+                    (Route<dynamic> route) => false);
+              },
         dense: true,
         leading: icon,
         title: title,

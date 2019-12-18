@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trailock/src/resources/user.Services.dart';
 import 'package:trailock/src/widgets/loadingAlertDismissible.dart';
 
 class RecoverPasswordPage extends StatefulWidget {
@@ -113,7 +114,6 @@ class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
                             ],
                           );
                         });
-                    print('hola');
                   } else {
                     showDialog(
                         barrierDismissible: false,
@@ -122,7 +122,79 @@ class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
                           loadingContext = context;
                           return LoadingAlertDismissible();
                         });
-                    closeAlert(loadingContext);
+                    UserService()
+                        .requestRecoverPass(_emailController.text)
+                        .then((res) {
+                      print(res.statusCode);
+                      if (res.statusCode == 200) {
+                        closeAlert(loadingContext);
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(5),
+                                  ),
+                                ),
+                                title: Text('Envidado'),
+                                content: Container(
+                                    child: Text(
+                                        'Favor de revisar su correo electronico')),
+                                actions: <Widget>[
+                                  FlatButton(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(5)),
+                                    ),
+                                    color: Color(0xffff5f00),
+                                    child: Text(
+                                      "Aceptar",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  )
+                                ],
+                              );
+                            });
+                      } else {
+                        closeAlert(loadingContext);
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(5),
+                                  ),
+                                ),
+                                title: Text('Error'),
+                                content: Container(
+                                    child: Text(
+                                        'Correo electronico erroneo, intentelo de nuevo ')),
+                                actions: <Widget>[
+                                  FlatButton(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(5)),
+                                    ),
+                                    color: Color(0xffff5f00),
+                                    child: Text(
+                                      "Aceptar",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  )
+                                ],
+                              );
+                            });
+                      }
+                    });
+
                     //Navigator.pushNamed(context, 'HomePage');
                   }
                 },

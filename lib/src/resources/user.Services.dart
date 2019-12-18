@@ -39,7 +39,7 @@ class UserService {
       "accept": "application/json",
       "X-Requested-With": "XMLHttpRequest"
     };
-    var url = '${Environment.config.base_url_api}password/email';
+    var url = '${Environment.config.base_url_api}password/reset';
     var recoverData = {"email": "$email"};
     Response response;
     try {
