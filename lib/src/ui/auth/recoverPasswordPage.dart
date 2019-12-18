@@ -125,7 +125,6 @@ class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
                     UserService()
                         .requestRecoverPass(_emailController.text)
                         .then((res) {
-                      print('aaaaaa${res.statusCode}');
                       if (res.statusCode == 200) {
                         closeAlert(loadingContext);
                         showDialog(
