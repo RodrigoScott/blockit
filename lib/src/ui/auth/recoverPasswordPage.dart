@@ -125,7 +125,7 @@ class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
                     UserService()
                         .requestRecoverPass(_emailController.text)
                         .then((res) {
-                      print(res.statusCode);
+                      print('aaaaaa${res.statusCode}');
                       if (res.statusCode == 200) {
                         closeAlert(loadingContext);
                         showDialog(
@@ -140,7 +140,7 @@ class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
                                 title: Text('Envidado'),
                                 content: Container(
                                     child: Text(
-                                        'Favor de revisar su correo electronico')),
+                                        'Se ha enviado un correo a la dirección ingresada')),
                                 actions: <Widget>[
                                   FlatButton(
                                     shape: RoundedRectangleBorder(
