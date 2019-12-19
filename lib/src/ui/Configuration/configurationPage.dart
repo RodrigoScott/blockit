@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trailock/src/ui/auth/signIn.dart';
 
 class ConfigurationPage extends StatefulWidget {
   @override
@@ -77,70 +79,86 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
           SizedBox(
             height: 15,
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 10),
-            child: Container(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * .02,
-                  ),
-                  Container(
-                    height: MediaQuery.of(context).size.height * .05,
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Mi cuenta',
-                      style:
-                          TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * .01,
-                  ),
-                  options(
-                      Icon(Icons.account_circle), Text('Perfil'), 'Profile'),
-                  options(Icon(Icons.lock), Text('Cambiar Contraseña'),
-                      'ChangePassword'),
-                  options(Icon(Icons.label_outline), Text('Cerrar Sesión'), ''),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * .01,
-                  ),
-                  Container(
-                    height: MediaQuery.of(context).size.height * .05,
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Información',
-                      style:
-                          TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  options(Icon(Icons.info_outline),
-                      Text('Terminos y Condiciones'), 'TerminosyC'),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * .05,
-                  ),
-                ],
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(
+                height: MediaQuery.of(context).size.height * .02,
               ),
-            ),
-          )
+              Padding(
+                padding: const EdgeInsets.only(left: 10),
+                child: Container(
+                  height: MediaQuery.of(context).size.height * .05,
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Mi cuenta',
+                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * .01,
+              ),
+              options(Icon(Icons.account_circle), Text('Perfil'), 'Profile'),
+              SizedBox(
+                height: 5,
+              ),
+              options(Icon(Icons.lock), Text('Cambiar Contraseña'),
+                  'ChangePassword'),
+              SizedBox(
+                height: 5,
+              ),
+              options(
+                  Icon(Icons.label_outline), Text('Cerrar Sesión'), 'log-out'),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * .01,
+              ),
+              Container(
+                height: MediaQuery.of(context).size.height * .05,
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 10),
+                  child: Text(
+                    'Información',
+                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+              options(Icon(Icons.info_outline), Text('Terminos y Condiciones'),
+                  'TerminosyC'),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * .05,
+              ),
+            ],
+          ),
         ],
       ),
     ));
   }
 
   Widget options(Icon icon, Text title, String route) {
-    return ListTile(
-      onTap: () {
-        Navigator.pushNamed(context, '$route');
-      },
-      dense: true,
-      leading: icon,
-      title: title,
-      trailing: Icon(Icons.arrow_forward_ios),
+    return Container(
+      color: Colors.black12,
+      child: ListTile(
+        onTap: route != 'log-out'
+            ? () {
+                Navigator.pushNamed(context, '$route');
+              }
+            : () async {
+                final prefs = await SharedPreferences.getInstance();
+                prefs.remove('access_token');
+                Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (context) => SignIn()),
+                    (Route<dynamic> route) => false);
+              },
+        dense: true,
+        leading: icon,
+        title: title,
+        trailing: Icon(Icons.arrow_forward_ios),
+      ),
     );
   }
 }
