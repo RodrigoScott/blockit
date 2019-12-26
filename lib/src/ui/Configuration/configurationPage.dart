@@ -147,12 +147,57 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
             ? () {
                 Navigator.pushNamed(context, '$route');
               }
-            : () async {
-                final prefs = await SharedPreferences.getInstance();
-                prefs.remove('access_token');
-                Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (context) => SignIn()),
-                    (Route<dynamic> route) => false);
+            : () {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(5),
+                          ),
+                        ),
+                        title: Text('Alerta'),
+                        content: Container(
+                            child: Text('¿Seguro que desea cerrar sesión? ')),
+                        actions: <Widget>[
+                          FlatButton(
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5)),
+                            ),
+                            color: Color(0xffff5f00),
+                            child: Text(
+                              "Aceptar",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            onPressed: () async {
+                              final prefs =
+                                  await SharedPreferences.getInstance();
+                              prefs.remove('access_token');
+                              Navigator.of(context).pushAndRemoveUntil(
+                                  MaterialPageRoute(
+                                      builder: (context) => SignIn()),
+                                  (Route<dynamic> route) => false);
+                            },
+                          ),
+                          FlatButton(
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5)),
+                            ),
+                            color: Color(0xffff5f00),
+                            child: Text(
+                              "Cancelar",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          )
+                        ],
+                      );
+                    });
               },
         dense: true,
         leading: icon,

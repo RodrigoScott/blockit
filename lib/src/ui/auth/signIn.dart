@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:trailock/src/resources/user.Services.dart';
+import 'package:trailock/src/utils/Enviroment.dart';
 import 'package:trailock/src/widgets/loadingAlertDismissible.dart';
 
 class SignIn extends StatefulWidget {
@@ -15,8 +16,8 @@ class _SignInState extends State<SignIn> {
     Navigator.of(_context).pop();
   }
 
-  var _formemailkey = GlobalKey<FormState>();
   var _emailController = TextEditingController();
+  bool connectionInternet = false;
   var _passwordController = TextEditingController();
   void initState() {
     super.initState();
@@ -58,6 +59,7 @@ class _SignInState extends State<SignIn> {
                 height: MediaQuery.of(context).size.height * .07,
                 width: MediaQuery.of(context).size.width * .9,
                 child: TextField(
+                  enableInteractiveSelection: false,
                   keyboardType: TextInputType.emailAddress,
                   controller: _emailController,
                   cursorColor: Color(0xffff5f00),
@@ -104,6 +106,7 @@ class _SignInState extends State<SignIn> {
                 height: MediaQuery.of(context).size.height * .07,
                 width: MediaQuery.of(context).size.width * .9,
                 child: TextField(
+                  enableInteractiveSelection: false,
                   obscureText: true,
                   controller: _passwordController,
                   cursorColor: Color(0xffff5f00),
@@ -156,9 +159,8 @@ class _SignInState extends State<SignIn> {
                             title: Text('Error'),
                             content: Container(
                                 child: _emailController.text == ''
-                                    ? Text('Porfavor de digitar un email')
-                                    : Text(
-                                        'Porfavor de digitar una contraseña')),
+                                    ? Text(' Ingrese un email')
+                                    : Text('Ingrese una contraseña')),
                             actions: <Widget>[
                               FlatButton(
                                 shape: RoundedRectangleBorder(
@@ -185,14 +187,52 @@ class _SignInState extends State<SignIn> {
                           loadingContext = context;
                           return LoadingAlertDismissible();
                         });
-                    UserService()
-                        .requestLogin(
-                            _emailController.text, _passwordController.text)
-                        .then((res) {
-                      closeAlert(loadingContext);
-                      if (res.statusCode == 200) {
-                        Navigator.pushNamed(context, 'HomePage');
+                    Environment().checkInternetConnection().then((res) {
+                      if (res == true) {
+                        UserService()
+                            .requestLogin(
+                                _emailController.text, _passwordController.text)
+                            .then((res) {
+                          closeAlert(loadingContext);
+                          if (res.statusCode == 200) {
+                            Navigator.of(context).pushNamedAndRemoveUntil(
+                                'HomePage', (Route<dynamic> route) => false);
+                          } else {
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(5),
+                                      ),
+                                    ),
+                                    title: Text('Error'),
+                                    content: Container(
+                                        child: Text(
+                                            'Correo electronico o contraseña erroneos, intentelo de nuevo ')),
+                                    actions: <Widget>[
+                                      FlatButton(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(5)),
+                                        ),
+                                        color: Color(0xffff5f00),
+                                        child: Text(
+                                          "Aceptar",
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      )
+                                    ],
+                                  );
+                                });
+                          }
+                        });
                       } else {
+                        Navigator.pop(context);
                         showDialog(
                             context: context,
                             builder: (BuildContext context) {
@@ -204,8 +244,7 @@ class _SignInState extends State<SignIn> {
                                 ),
                                 title: Text('Error'),
                                 content: Container(
-                                    child: Text(
-                                        'Correo electronico o contraseña erroneos, intentelo de nuevo ')),
+                                    child: Text('Sin conexion a internet')),
                                 actions: <Widget>[
                                   FlatButton(
                                     shape: RoundedRectangleBorder(

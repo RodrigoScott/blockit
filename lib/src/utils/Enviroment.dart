@@ -1,7 +1,7 @@
 import 'dart:io';
 
 class Environment {
-  String client_secret = "luCI1UqZOprh33dJHaelA1xh5xFphoSp3c3ZLSHo";
+  String client_secret = "9b5qOjeUAKPsOeLRyth0mLBdFIPnQDKfmbgnmFtz";
   String client_id = "2";
   String base_url = 'http://cceo.io:8109/';
   String base_url_api = 'http://cceo.io:8109/api/v1/';

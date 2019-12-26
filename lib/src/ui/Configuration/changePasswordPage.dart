@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:trailock/src/resources/user.Services.dart';
+import 'package:trailock/src/widgets/loadingAlertDismissible.dart';
 
 class ChangePasswordPage extends StatefulWidget {
   @override
@@ -6,8 +8,86 @@ class ChangePasswordPage extends StatefulWidget {
 }
 
 class _ChangePasswordPageState extends State<ChangePasswordPage> {
+  var _formNewPassword = GlobalKey<FormState>();
+  var _formConfirmNewPassword = GlobalKey<FormState>();
+
+  var _oldPasswordController = TextEditingController();
+  var _newPasswordController = TextEditingController();
+  var _confirmNewPasswordController = TextEditingController();
+  var loadingContext;
+  closeAlert(BuildContext _context) {
+    Navigator.of(_context).pop();
+  }
+  void initState() {
+    _newPasswordController.addListener(() {
+      setState(() {
+        _formNewPassword.currentState.validate();
+      });
+    });
+    _confirmNewPasswordController.addListener(() {
+      setState(() {
+        _formConfirmNewPassword.currentState.validate();
+      });
+    });
+    super.initState();
+  }
+
   @override
+  Widget createInput(
+    TextEditingController controller,
+    Function _valida,
+  ) {
+    return Container(
+        height: MediaQuery.of(context).size.height * .07,
+        width: MediaQuery.of(context).size.width * .9,
+        child: TextFormField(
+          enableInteractiveSelection: false,
+          obscureText: true,
+          validator: _valida,
+          controller: controller,
+          cursorColor: Color(0xffff5f00),
+          style: TextStyle(fontSize: 20),
+          decoration: InputDecoration(
+            prefixIcon: Icon(
+              Icons.lock,
+              color: Color(0xff888888),
+            ),
+            filled: true,
+            fillColor: Color(0xffe3e3e3),
+            contentPadding: EdgeInsets.all(8),
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(5),
+                borderSide: BorderSide(color: Colors.transparent)),
+            focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(5),
+                borderSide: BorderSide(color: Colors.transparent)),
+            enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(5),
+                borderSide: BorderSide(color: Colors.transparent)),
+            errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(5),
+                borderSide: BorderSide(color: Colors.transparent)),
+            disabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(5),
+            ),
+          ),
+        ));
+  }
+
   Widget build(BuildContext context) {
+    Widget _newPassword = createInput(_newPasswordController, (value) {
+      if (_newPasswordController.text.length < 8) {
+        return ('Favor de ingresar minimo 8 caracteres');
+      }
+    });
+    Widget _confirmNewPassword =
+        createInput(_confirmNewPasswordController, (value) {
+      if (_confirmNewPasswordController.text.length == 0 ||
+          _confirmNewPasswordController.text != _newPasswordController.text) {
+        return ('Contraseña nueva no coincide');
+      }
+    });
+
     return Scaffold(
       body: ListView(
         children: <Widget>[
@@ -43,6 +123,9 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                   height: MediaQuery.of(context).size.height * .07,
                   width: MediaQuery.of(context).size.width * .9,
                   child: TextField(
+                    enableInteractiveSelection: false,
+                    obscureText: true,
+                    controller: _oldPasswordController,
                     cursorColor: Color(0xffff5f00),
                     style: TextStyle(fontSize: 20),
                     decoration: InputDecoration(
@@ -83,37 +166,10 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                   textAlign: TextAlign.center,
                 ),
               ),
-              Container(
-                  height: MediaQuery.of(context).size.height * .07,
-                  width: MediaQuery.of(context).size.width * .9,
-                  child: TextField(
-                    cursorColor: Color(0xffff5f00),
-                    style: TextStyle(fontSize: 20),
-                    decoration: InputDecoration(
-                      prefixIcon: Icon(
-                        Icons.email,
-                        color: Color(0xff888888),
-                      ),
-                      filled: true,
-                      fillColor: Color(0xffe3e3e3),
-                      contentPadding: EdgeInsets.all(8),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: BorderSide(color: Colors.transparent)),
-                      focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: BorderSide(color: Colors.transparent)),
-                      enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: BorderSide(color: Colors.transparent)),
-                      errorBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: BorderSide(color: Colors.transparent)),
-                      disabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: BorderSide(color: Colors.transparent)),
-                    ),
-                  )),
+              Form(
+                key: _formNewPassword,
+                child: _newPassword,
+              ),
               SizedBox(
                 height: MediaQuery.of(context).size.height * .02,
               ),
@@ -127,37 +183,10 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                   textAlign: TextAlign.center,
                 ),
               ),
-              Container(
-                  height: MediaQuery.of(context).size.height * .07,
-                  width: MediaQuery.of(context).size.width * .9,
-                  child: TextField(
-                    cursorColor: Color(0xffff5f00),
-                    style: TextStyle(fontSize: 20),
-                    decoration: InputDecoration(
-                      prefixIcon: Icon(
-                        Icons.lock,
-                        color: Color(0xff888888),
-                      ),
-                      filled: true,
-                      fillColor: Color(0xffe3e3e3),
-                      contentPadding: EdgeInsets.all(8),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: BorderSide(color: Colors.transparent)),
-                      focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: BorderSide(color: Colors.transparent)),
-                      enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: BorderSide(color: Colors.transparent)),
-                      errorBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: BorderSide(color: Colors.transparent)),
-                      disabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                    ),
-                  )),
+              Form(
+                key: _formConfirmNewPassword,
+                child: _confirmNewPassword,
+              ),
               SizedBox(
                 height: MediaQuery.of(context).size.height * .05,
               ),
@@ -167,8 +196,90 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                 child: InkWell(
                   borderRadius: BorderRadius.circular(5),
                   onTap: () {
-                    Navigator.pop(context);
-                  },
+                    if(_formNewPassword.currentState.validate() && _formConfirmNewPassword.currentState.validate()){
+                    showDialog(
+                        barrierDismissible: false,
+                        context: context,
+                        builder: (BuildContext context) {
+                          loadingContext = context;
+                          return LoadingAlertDismissible();
+                        });
+                    UserService().changePassword(_oldPasswordController.text, _newPasswordController.text, _confirmNewPasswordController.text).then((res){
+                      if(res.statusCode == 200){
+                        _oldPasswordController.text = '';
+                        _newPasswordController.text = '';
+                        _confirmNewPasswordController.text = '';
+                        closeAlert(loadingContext);
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(5),
+                                  ),
+                                ),
+                                title: Text('Hecho'),
+                                content: Container(
+                                    child: Text(
+                                        'Contraseña restablecida')),
+                                actions: <Widget>[
+                                  FlatButton(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(5)),
+                                    ),
+                                    color: Color(0xffff5f00),
+                                    child: Text(
+                                      "Aceptar",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  )
+                                ],
+                              );
+                            });
+                      }
+                      else
+                        {
+                          closeAlert(loadingContext);
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(5),
+                                    ),
+                                  ),
+                                  title: Text('Error'),
+                                  content: Container(
+                                      child: Text(
+                                          'Contraseña actual incorrecta')),
+                                  actions: <Widget>[
+                                    FlatButton(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(5)),
+                                      ),
+                                      color: Color(0xffff5f00),
+                                      child: Text(
+                                        "Aceptar",
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    )
+                                  ],
+                                );
+                              });
+                        }
+                    });
+                  }
+                    },
                   child: Center(
                     child: Container(
                       decoration: BoxDecoration(

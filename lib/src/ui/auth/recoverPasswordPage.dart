@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trailock/src/resources/user.Services.dart';
+import 'package:trailock/src/utils/Enviroment.dart';
 import 'package:trailock/src/widgets/loadingAlertDismissible.dart';
 
 class RecoverPasswordPage extends StatefulWidget {
@@ -45,6 +46,8 @@ class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
                 height: MediaQuery.of(context).size.height * .07,
                 width: MediaQuery.of(context).size.width * .9,
                 child: TextField(
+                  enableInteractiveSelection: false,
+                  keyboardType: TextInputType.emailAddress,
                   controller: _emailController,
                   cursorColor: Colors.black,
                   style: TextStyle(fontSize: 20),
@@ -94,7 +97,7 @@ class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
                             ),
                             title: Text('Error'),
                             content: Container(
-                              child: Text('Porfavor de digitar un email'),
+                              child: Text('Ingrese un email'),
                             ),
                             actions: <Widget>[
                               FlatButton(
@@ -122,44 +125,81 @@ class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
                           loadingContext = context;
                           return LoadingAlertDismissible();
                         });
-                    UserService()
-                        .requestRecoverPass(_emailController.text)
-                        .then((res) {
-                      if (res.statusCode == 200) {
-                        closeAlert(loadingContext);
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(5),
-                                  ),
-                                ),
-                                title: Text('Envidado'),
-                                content: Container(
-                                    child: Text(
-                                        'Se ha enviado un correo a la dirección ingresada')),
-                                actions: <Widget>[
-                                  FlatButton(
+                    Environment().checkInternetConnection().then((res) {
+                      if (res == true) {
+                        UserService()
+                            .requestRecoverPass(_emailController.text)
+                            .then((res) {
+                          if (res.statusCode == 200) {
+                            closeAlert(loadingContext);
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
                                     shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(5)),
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(5),
+                                      ),
                                     ),
-                                    color: Color(0xffff5f00),
-                                    child: Text(
-                                      "Aceptar",
-                                      style: TextStyle(color: Colors.white),
+                                    title: Text('Envidado'),
+                                    content: Container(
+                                        child: Text(
+                                            'Se ha enviado un correo a la dirección ingresada')),
+                                    actions: <Widget>[
+                                      FlatButton(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(5)),
+                                        ),
+                                        color: Color(0xffff5f00),
+                                        child: Text(
+                                          "Aceptar",
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      )
+                                    ],
+                                  );
+                                });
+                          } else {
+                            closeAlert(loadingContext);
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(5),
+                                      ),
                                     ),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  )
-                                ],
-                              );
-                            });
+                                    title: Text('Error'),
+                                    content: Container(
+                                        child: Text(
+                                            'Correo electronico erroneo, intentelo de nuevo ')),
+                                    actions: <Widget>[
+                                      FlatButton(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(5)),
+                                        ),
+                                        color: Color(0xffff5f00),
+                                        child: Text(
+                                          "Aceptar",
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      )
+                                    ],
+                                  );
+                                });
+                          }
+                        });
                       } else {
-                        closeAlert(loadingContext);
+                        Navigator.pop(context);
                         showDialog(
                             context: context,
                             builder: (BuildContext context) {
@@ -171,8 +211,7 @@ class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
                                 ),
                                 title: Text('Error'),
                                 content: Container(
-                                    child: Text(
-                                        'Correo electronico erroneo, intentelo de nuevo ')),
+                                    child: Text('Sin conexion a internet')),
                                 actions: <Widget>[
                                   FlatButton(
                                     shape: RoundedRectangleBorder(

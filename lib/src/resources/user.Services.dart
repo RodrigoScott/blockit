@@ -1,12 +1,56 @@
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trailock/main.dart';
 import 'package:trailock/src/utils/Enviroment.dart';
 
 class UserService {
   var dio = Dio();
+  validateStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    token = prefs.getString('access_token');
+    var url = '${Environment.config.base_url_api}validation';
+    var _headers = {
+      "accept": "application/json",
+      "X-Requested-With": "XMLHttpRequest",
+      "Authorization": "Bearer $token"
+    };
+    Response response;
+    try{
+      response =
+      await dio.post(url, options: Options(headers: _headers));
+      return response;
+    }
+    on DioError catch (e) {
+      return e.response;
+    }
+  }
 
+  changePassword(String oldPassword, String newPassword,String confirmNewPassword) async {
+    final prefs = await SharedPreferences.getInstance();
+    token = prefs.getString('access_token');
+    var url = '${Environment.config.base_url_api}password/change';
+    var _headers = {
+      "accept": "application/json",
+      "X-Requested-With": "XMLHttpRequest",
+      "Authorization": "Bearer $token"
+    };
+    var _data = {
+      "old_password": "$oldPassword",
+      "new_password": "$newPassword",
+      "new_password_confirmation": "$confirmNewPassword"
+    };
+    Response response;
+    try{
+      response =
+      await dio.post(url, options: Options(headers: _headers), data: _data);
+        return response;
+    }
+    on DioError catch (e) {
+      return e.response;
+    }
+  }
   requestLogin(String email, String password) async {
-    var url = '${Environment.config.base_url}oauth/token';
+    var url = '${Environment.config.base_url_api}login';
     var _headers = {
       "accept": "application/json",
       "X-Requested-With": "XMLHttpRequest",
