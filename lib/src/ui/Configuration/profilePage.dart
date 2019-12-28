@@ -59,7 +59,6 @@ class _ProfilePageState extends State<ProfilePage> {
                           onTap: () {},
                           child: ClipOval(
                               child: Container(
-
                             child: Text(userName == null ? '' :
                               '${userName.substring(0,1)}${lastName.substring(0,1)}',
                               style:

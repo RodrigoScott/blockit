@@ -99,27 +99,27 @@ class BluetoothOffScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Color(0xFFFF5F00),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        //mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Icon(
-            Icons.bluetooth_disabled,
-            size: 200.0,
-            color: Colors.white54,
-          ),
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.only(right: 10, left: 10),
-              child: Text(
-                'Para desbloquear candados enciende el Bluetooth.',
-                style: TextStyle(color: Colors.white),
-                textAlign: TextAlign.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          //mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Icon(
+              Icons.bluetooth_disabled,
+              size: 200.0,
+              color: Colors.white54,
+            ),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.only(right: 10,left: 10),
+                child: Text(
+                    'Para desbloquear candados enciende el Bluetooth.',
+                    style: TextStyle(color: Colors.white),textAlign: TextAlign.center,
+                  ),
               ),
             ),
-          ),
-        ],
-      ),
+
+          ],
+        ),
     );
   }
 }
@@ -135,11 +135,9 @@ class CardPadLockScanResult extends StatefulWidget {
 class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
   final codeFieldController = TextEditingController();
   var _validateField = GlobalKey<FormState>();
-  var _fController = TextEditingController();
   bool validateContainer = false;
   bool validateUseContainer = false;
   String textError = '';
-
   int _duration = 300;
   String _current = '';
   StreamSubscription<CountdownTimer> timer;
@@ -181,7 +179,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
       Function _valida,
     ) {
       return Container(
-          height: MediaQuery.of(context).size.height * .07,
+          height: MediaQuery.of(context).size.height * .1,
           width: MediaQuery.of(context).size.width * .9,
           child: TextFormField(
             validator: _valida,
@@ -215,7 +213,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
     }
 
     Widget _inputValidate = createInput(codeFieldController, (value) {
-      if (_fController.text.length < 9) {
+      if (codeFieldController.text.length < 9) {
         return ('Ingresa 9 caracteres');
       }
     });
@@ -270,6 +268,9 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
             ),
             InkWell(
               onTap: () {
+                setState(() {
+                  validateContainer = false;
+                });
                 var device = widget.result.advertisementData.connectable;
 
                 print("CONECTABLE? " + '$device');
@@ -319,191 +320,216 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                         .first;
                     closeAlert(loadingContext);
                     showDialog(
+                      barrierDismissible: true,
                         context: context,
                         builder: (context) {
-                          return StatefulBuilder(builder: (context, setState) {
-                            return Padding(
-                              padding:
-                                  const EdgeInsets.only(bottom: 170, top: 100),
-                              child: SingleChildScrollView(
-                                child: AlertDialog(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(5)),
-                                    content: Column(
-                                      children: <Widget>[
-                                        Text('Candado',
-                                            style: TextStyle(
-                                                fontSize: 25,
-                                                fontWeight: FontWeight.bold)),
-                                        Text(widget.result.device.name,
-                                            style: TextStyle(
-                                                fontSize: 25,
-                                                fontWeight: FontWeight.bold)),
-                                        validateContainer
-                                            ? Container(
-                                                child: Text(textError),
-                                              )
-                                            : Container(),
-                                        Container(
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              .05,
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              .9,
-                                          alignment: Alignment.centerLeft,
-                                          child: Text(
-                                            'Codigo',
-                                            style: TextStyle(
-                                                fontSize: 13,
-                                                fontWeight: FontWeight.bold),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                        Container(
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              .07,
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              .9,
-                                          child: Form(
-                                              key: _validateField,
-                                              child: _inputValidate),
-                                        ),
-                                        SizedBox(
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              .05,
-                                        ),
-                                        Container(
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              .07,
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              .9,
-                                          child: InkWell(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                            onTap: () async {
-                                              await characteristic.write(
-                                                  utf8.encode(
-                                                      codeFieldController.text
-                                                          .toUpperCase()));
-                                              int lockedStatus =
-                                                  (await unlockedCharacteristic
-                                                      .read())[0];
-                                              print(await unlockedCharacteristic
-                                                  .read());
-                                              setState(() {
-                                                switch (lockedStatus) {
-                                                  case 0:
-                                                    print('case 0');
-                                                    validateContainer = true;
-                                                    textError =
-                                                        'Codigo incorrecto';
-                                                    break;
-                                                  case 1:
-                                                    validateContainer = false;
-                                                    textError = '';
-                                                    print('case 1');
-                                                    Navigator.pop(context);
-                                                    showDialog(
-                                                        context: context,
-                                                        builder: (BuildContext
-                                                            context) {
-                                                          return AlertDialog(
-                                                            shape:
-                                                                RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .all(
-                                                                Radius.circular(
-                                                                    5),
-                                                              ),
-                                                            ),
-                                                            title: Text(
-                                                                'Codigo correcto'),
-                                                            content: Container(
-                                                                child: Text(
-                                                                    'El candado permanecera abierto durante 5 min')),
-                                                            actions: <Widget>[
-                                                              FlatButton(
-                                                                shape:
-                                                                    RoundedRectangleBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius.all(
-                                                                          Radius.circular(
-                                                                              5)),
-                                                                ),
-                                                                color: Color(
-                                                                    0xffff5f00),
-                                                                child: Text(
-                                                                  "Aceptar",
-                                                                  style: TextStyle(
-                                                                      color: Colors
-                                                                          .white),
-                                                                ),
-                                                                onPressed: () {
-                                                                  Navigator.of(
-                                                                          context)
-                                                                      .pop();
-                                                                },
-                                                              )
-                                                            ],
-                                                          );
-                                                        });
-                                                    break;
-                                                  case 2:
-                                                    print('case 2');
-                                                    validateContainer = true;
-                                                    textError =
-                                                        'El candado está abierto';
-                                                    break;
-                                                }
-                                              }); //
-                                            },
-                                            child: Center(
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(5),
-                                                  color: Color(0xffff5f00),
-                                                ),
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .height *
-                                                    .07,
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    .9,
-                                                child: Center(
-                                                  child: Text(
-                                                    'Verificar',
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              StatefulBuilder(builder: (context, setState) {
+                                return AlertDialog(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(5)),
+                                            content: Column(
+                                              children: <Widget>[
+                                                Text('Candado',
                                                     style: TextStyle(
-                                                        fontSize: 20,
-                                                        color: Colors.white),
+                                                        fontSize: 25,
+                                                        fontWeight: FontWeight.bold)),
+                                                Text(widget.result.device.name,
+                                                    style: TextStyle(
+                                                        fontSize: 25,
+                                                        fontWeight: FontWeight.bold)),
+                                                validateContainer
+                                                      ? Container(
+                                                  height: 60,
+                                                  child: Column(
+                                                    mainAxisSize: MainAxisSize.min,
+                                                    children: <Widget>[
+                                                      Container(
+                                                          height: 30,
+                                                          child: Icon(Icons.error,color: Colors.red,)),
+                                                      Container(
+                                                        height: 20,
+                                                        child: Text(textError),
+                                                      )
+                                                    ],
+                                                  ),
+                                                )
+
+                                                      : Container(),
+
+                                                Container(
+                                                  height: MediaQuery.of(context)
+                                                          .size
+                                                          .height *
+                                                      .05,
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      .9,
+                                                  alignment: Alignment.centerLeft,
+                                                  child: Text(
+                                                    'Codigo',
+                                                    style: TextStyle(
+                                                        fontSize: 13,
+                                                        fontWeight: FontWeight.bold),
                                                     textAlign: TextAlign.center,
                                                   ),
                                                 ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    )),
-                              ),
-                            );
-                          });
+                                                Container(
+                                                  height: MediaQuery.of(context)
+                                                          .size
+                                                          .height *
+                                                      .07,
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      .9,
+                                                  child: Form(
+                                                      key: _validateField,
+                                                      child: _inputValidate),
+                                                ),
+                                                SizedBox(
+                                                  height: MediaQuery.of(context)
+                                                          .size
+                                                          .height *
+                                                      .05,
+                                                ),
+                                                Container(
+                                                  height: MediaQuery.of(context)
+                                                          .size
+                                                          .height *
+                                                      .07,
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      .9,
+                                                  child: InkWell(
+                                                    borderRadius:
+                                                        BorderRadius.circular(5),
+                                                    onTap: () async {
+                                                      showDialog(
+                                                          barrierDismissible: false,
+                                                          context: context,
+                                                          builder: (BuildContext context) {
+                                                            loadingContext = context;
+                                                            return LoadingAlertDismissible();
+                                                          });
+                                                      await characteristic.write(
+                                                          utf8.encode(
+                                                              codeFieldController.text
+                                                                  .toUpperCase()));
+                                                      int lockedStatus =
+                                                      (await unlockedCharacteristic
+                                                          .read())[0];
+                                                      codeFieldController.text = '';
+                                                      closeAlert(loadingContext);
+                                                      setState(() {
+                                                        switch (lockedStatus) {
+                                                          case 0:
+                                                            print('case 0');
+                                                            validateContainer = true;
+                                                            textError =
+                                                            'Codigo incorrecto';
+                                                            break;
+                                                          case 1:
+                                                            validateContainer = false;
+                                                            textError = '';
+                                                            startTimer();
+                                                            Navigator.pop(context);
+                                                            showDialog(
+                                                                context: context,
+                                                                builder: (BuildContext
+                                                                context) {
+                                                                  return AlertDialog(
+                                                                    shape:
+                                                                    RoundedRectangleBorder(
+                                                                      borderRadius:
+                                                                      BorderRadius
+                                                                          .all(
+                                                                        Radius.circular(
+                                                                            5),
+                                                                      ),
+                                                                    ),
+                                                                    title: Text(
+                                                                        'Codigo correcto'),
+                                                                    content: Container(
+                                                                        child: Text(
+                                                                            'El candado permanecera abierto durante 5 min')),
+                                                                    actions: <Widget>[
+                                                                      FlatButton(
+                                                                        shape:
+                                                                        RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                          BorderRadius.all(
+                                                                              Radius.circular(
+                                                                                  5)),
+                                                                        ),
+                                                                        color: Color(
+                                                                            0xffff5f00),
+                                                                        child: Text(
+                                                                          "Aceptar",
+                                                                          style: TextStyle(
+                                                                              color: Colors
+                                                                                  .white),
+                                                                        ),
+                                                                        onPressed: () {
+                                                                          Navigator.of(
+                                                                              context)
+                                                                              .pop();
+                                                                        },
+                                                                      )
+                                                                    ],
+                                                                  );
+                                                                });
+                                                            break;
+                                                          case 2:
+                                                            print('case 2');
+                                                            validateContainer = true;
+                                                            textError =
+                                                            'El candado está abierto';
+                                                            break;
+                                                        }
+                                                      }); //
+                                                    },
+                                                    child: Center(
+                                                      child: Container(
+                                                        decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius.circular(5),
+                                                          color: Color(0xffff5f00),
+                                                        ),
+                                                        height: MediaQuery.of(context)
+                                                                .size
+                                                                .height *
+                                                            .07,
+                                                        width: MediaQuery.of(context)
+                                                                .size
+                                                                .width *
+                                                            .9,
+                                                        child: Center(
+                                                          child: Text(
+                                                            'Verificar',
+                                                            style: TextStyle(
+                                                                fontSize: 20,
+                                                                color: Colors.white),
+                                                            textAlign: TextAlign.center,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ));
+
+
+                              }),
+                            ],
+                          );
                         }).then((data) {
                       widget.result.device.disconnect();
                     });
@@ -544,5 +570,6 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
     widget.result.device.disconnect();
     timer.cancel();
     super.dispose();
+
   }
 }
