@@ -1,7 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_blue/flutter_blue.dart';
+import 'package:quiver/async.dart';
 import 'package:trailock/src/widgets/loadingAlertDismissible.dart';
 
 class PadlockPage extends StatefulWidget {
@@ -12,6 +15,16 @@ class PadlockPage extends StatefulWidget {
 class _PadlockPageState extends State<PadlockPage> {
   closeAlert(BuildContext _context) {
     Navigator.of(_context).pop();
+  }
+
+  @override
+  void initState() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+
+    super.initState();
   }
 
   @override
@@ -77,7 +90,7 @@ class _PadlockPageState extends State<PadlockPage> {
 }
 
 class BluetoothOffScreen extends StatelessWidget {
-  const BluetoothOffScreen({Key key, this.state}) : super(key: key);
+  BluetoothOffScreen({Key key, this.state}) : super(key: key);
 
   final BluetoothState state;
 
@@ -125,7 +138,28 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
   bool validateContainer = false;
   bool validateUseContainer = false;
   String textError = '';
+
+  int _duration = 300;
+  String _current = '';
+  StreamSubscription<CountdownTimer> timer;
+
+  void startTimer() {
+    timer = CountdownTimer(Duration(seconds: _duration), Duration(seconds: 1))
+        .listen((data) {})
+          ..onData((CountdownTimer data) {
+            setState(() {
+              _current =
+                  '${data.remaining.inMinutes}:${(data.remaining.inSeconds % 60).toString().padLeft(2, '0')}';
+            });
+          })
+          ..onDone(() {
+            print('onDone.........');
+          });
+  }
+
+  @override
   void initState() {
+    startTimer();
     codeFieldController.addListener(() {
       setState(() {
         _validateField.currentState.validate();
@@ -235,9 +269,9 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
             ),
             InkWell(
               onTap: () {
-                var device = widget.result.advertisementData.connectable
-                    ? widget.result.device
-                    : null;
+                var device = widget.result.advertisementData.connectable;
+
+                print("CONECTABLE? " + '$device');
 
                 showDialog(
                     barrierDismissible: false,
@@ -304,18 +338,11 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                             style: TextStyle(
                                                 fontSize: 25,
                                                 fontWeight: FontWeight.bold)),
-                                        SizedBox(
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              .07,
-                                        ),
-                                        SizedBox(
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              .07,
-                                        ),
+                                        validateContainer
+                                            ? Container(
+                                                child: Text(textError),
+                                              )
+                                            : Container(),
                                         Container(
                                           height: MediaQuery.of(context)
                                                   .size
@@ -477,7 +504,6 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                             );
                           });
                         }).then((data) {
-                      print("Ya me desconecte");
                       widget.result.device.disconnect();
                     });
                   });
@@ -496,7 +522,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                 height: 50,
                 child: Center(
                   child: Text(
-                    'Desbloquear',
+                    _current != '0:00' ? _current : 'Desbloquear',
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20,
@@ -514,8 +540,8 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
   @override
   void dispose() {
     // TODO: implement dispose
-    print("Ya me salí");
     widget.result.device.disconnect();
+    timer.cancel();
     super.dispose();
   }
 }
