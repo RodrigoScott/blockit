@@ -3,8 +3,7 @@ class User {
   String password;
   String name;
   String lastName;
-  String address;
-  String image;
+  String carrier;
 
   User.init();
 
@@ -13,24 +12,21 @@ class User {
       this.password,
       this.name,
       this.lastName,
-      this.address,
-      this.image});
+      this.carrier,});
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
       name: json['name'],
-      image: json['image'],
-      address: json['domicilio'],
+      carrier: json['carrier'],
       email: json['email'],
       lastName: json['last_name'],
     );
   }
   Map toJson() => {
         "email": this.email,
-        "domicilio": this.address,
+        "carrier": this.carrier,
         "password": this.password,
         "name": this.name,
         "last_name": this.lastName,
-        "image": this.image
       };
 }

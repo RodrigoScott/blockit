@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trailock/main.dart';
+import 'package:trailock/src/model/user.dart';
 import 'package:trailock/src/utils/Enviroment.dart';
 
 class UserService {
@@ -49,6 +50,26 @@ class UserService {
       return e.response;
     }
   }
+  Future<List<User>> getUser() async {
+    var prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('access_token');
+    var _headers = {
+      "accept": "application/json",
+      "X-Requested-With": "XMLHttpRequest",
+      "Authorization": "Bearer $token",
+    };
+    Response response = await dio.get(
+        '${Environment.config.base_url_api}posts',
+        options: Options(headers: _headers));
+    if (response.statusCode == 200) {
+      var data =
+      (response.data as List).map((data) => User.fromJson(data)).toList();
+
+      return data;
+    } else {
+      return List();
+    }
+  }
   requestLogin(String email, String password) async {
     var url = '${Environment.config.base_url_api}login';
     var _headers = {
@@ -65,12 +86,20 @@ class UserService {
     };
 
     var prefs = await SharedPreferences.getInstance();
+    var userName = await SharedPreferences.getInstance();
+    var lastName = await SharedPreferences.getInstance();
+    var userEmail = await SharedPreferences.getInstance();
+    var carrier = await SharedPreferences.getInstance();
     Response response;
     try {
       response =
           await dio.post(url, options: Options(headers: _headers), data: _data);
       if (response.statusCode == 200) {
         prefs.setString('access_token', response.data['access_token']);
+        userName.setString('userName', response.data['name']);
+        lastName.setString('lastName', response.data['first_last_name']);
+        userEmail.setString('userEmail', response.data['email']);
+        carrier.setString('carrier', response.data['company_name']);
         return response;
       }
     } on DioError catch (e) {

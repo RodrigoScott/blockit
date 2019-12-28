@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trailock/src/ui/auth/signIn.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ConfigurationPage extends StatefulWidget {
   @override
@@ -8,6 +9,17 @@ class ConfigurationPage extends StatefulWidget {
 }
 
 class _ConfigurationPageState extends State<ConfigurationPage> {
+  String userName;
+  String lastName;
+  String userEmail;
+  String carrier;
+  void initState() {
+    super.initState();
+    setState(() {
+      getshared();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,10 +55,11 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
                         onTap: () {},
                         child: ClipOval(
                             child: Container(
-                          child: Text(
-                            'FL',
-                            style: TextStyle(fontSize: 55, color: Colors.white),
-                          ),
+                          child: Text( userName == null ? '' :
+                                '${userName.substring(0,1)}${lastName.substring(0,1)}',
+                        style:
+                        TextStyle(fontSize: 55, color: Colors.white),
+                      ),
                         )),
                       )),
                 ),
@@ -61,13 +74,12 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text(
-                        'Fernando Leal',
+                      Text(userName == null ? '' :
+                        '$userName $lastName',
                         style: TextStyle(
                             fontSize: 20, fontWeight: FontWeight.bold),
                       ),
-                      Text(
-                        'Tres Guerras',
+                      Text(carrier == null ? '' : carrier,
                         style: TextStyle(fontSize: 13, color: Colors.black38),
                       ),
                     ],
@@ -145,8 +157,9 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
       child: ListTile(
         onTap: route != 'log-out'
             ? () {
-                Navigator.pushNamed(context, '$route');
-              }
+          route == 'TerminosyC' ?
+                launch('http://trailock.mx/terminos-y-condiciones') : Navigator.pushNamed(context, '$route') ;
+        }
             : () {
                 showDialog(
                     context: context,
@@ -205,5 +218,15 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
         trailing: Icon(Icons.arrow_forward_ios),
       ),
     );
+  }
+  Future getshared() async{
+    var userNameShared = await SharedPreferences.getInstance();
+    var lastNameShared = await SharedPreferences.getInstance();
+    var carrierShared = await SharedPreferences.getInstance();
+    setState(() {
+      userName = userNameShared.getString('userName');
+      lastName = lastNameShared.getString('lastName');
+      carrier = carrierShared.getString('carrier');
+    });
   }
 }

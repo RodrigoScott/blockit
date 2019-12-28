@@ -15,6 +15,8 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   var _newPasswordController = TextEditingController();
   var _confirmNewPasswordController = TextEditingController();
   var loadingContext;
+
+
   closeAlert(BuildContext _context) {
     Navigator.of(_context).pop();
   }

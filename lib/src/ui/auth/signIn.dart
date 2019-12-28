@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:trailock/src/resources/user.Services.dart';
 import 'package:trailock/src/utils/Enviroment.dart';
 import 'package:trailock/src/widgets/loadingAlertDismissible.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SignIn extends StatefulWidget {
   @override
@@ -326,13 +327,12 @@ class _SignInState extends State<SignIn> {
                 focusColor: Colors.transparent,
                 borderRadius: BorderRadius.circular(15),
                 onTap: () {
-                  Navigator.pushNamed(context, 'TerminosyC');
+                  launch('http://trailock.mx/terminos-y-condiciones');
                 },
                 child: Center(
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5),
-                      //border: Border.all(width: 3),
                       color: Colors.transparent,
                     ),
                     width: MediaQuery.of(context).size.width * .9,

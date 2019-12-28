@@ -98,9 +98,10 @@ class BluetoothOffScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFFFF5F00),
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
+      body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          //mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Icon(
               Icons.bluetooth_disabled,
@@ -108,17 +109,18 @@ class BluetoothOffScreen extends StatelessWidget {
               color: Colors.white54,
             ),
             Center(
-              child: Text(
-                'Para desbloquear candados enciende el Bluetooth.',
-                style: Theme.of(context)
-                    .primaryTextTheme
-                    .subhead
-                    .copyWith(color: Colors.white),
+              child: Padding(
+                padding: const EdgeInsets.only(right: 10,left: 10),
+                child: Text(
+                    'Para desbloquear candados enciende el Bluetooth.',
+                    style: TextStyle(color: Colors.white),textAlign: TextAlign.center,
+                  ),
               ),
             ),
+
           ],
         ),
-      ),
+
     );
   }
 }

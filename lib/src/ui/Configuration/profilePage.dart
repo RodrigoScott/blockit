@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -10,13 +10,16 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   var _nameController = TextEditingController();
-  var _typeController = TextEditingController();
   var _emailController = TextEditingController();
-  var _passwordController = TextEditingController();
-  var _addressController = TextEditingController();
+  String userName;
+  String lastName;
+  String userEmail;
+  String carrier;
   void initState() {
     super.initState();
-    setState(() {});
+    setState(() {
+     getshared();
+    });
   }
 
   @override
@@ -56,8 +59,9 @@ class _ProfilePageState extends State<ProfilePage> {
                           onTap: () {},
                           child: ClipOval(
                               child: Container(
-                            child: Text(
-                              'FL',
+
+                            child: Text(userName == null ? '' :
+                              '${userName.substring(0,1)}${lastName.substring(0,1)}',
                               style:
                                   TextStyle(fontSize: 55, color: Colors.white),
                             ),
@@ -75,13 +79,12 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text(
-                          'Fernando Leal',
+                        Text(userName == null ? '' : '$userName $lastName',
+
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold),
                         ),
-                        Text(
-                          'Tres Guerras',
+                        Text(carrier == null ? '' : carrier,
                           style: TextStyle(fontSize: 13, color: Colors.black38),
                         ),
                       ],
@@ -120,10 +123,10 @@ class _ProfilePageState extends State<ProfilePage> {
                           controller: _nameController,
                           enabled: false,
                           cursorColor: Colors.black,
-                          style: TextStyle(fontSize: 20),
+                          style: TextStyle(fontSize: 17),
                           decoration: InputDecoration(
                             prefixIcon: Icon(
-                              Icons.lock,
+                              Icons.person_outline,
                               color: Color(0xff888888),
                             ),
                             filled: true,
@@ -154,57 +157,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     SizedBox(
                       height: MediaQuery.of(context).size.height * .02,
                     ),
-                    Container(
-                      height: MediaQuery.of(context).size.height * .05,
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Tipo',
-                        style: TextStyle(
-                            fontSize: 13, fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    Container(
-                        height: MediaQuery.of(context).size.height * .07,
-                        width: MediaQuery.of(context).size.width * .9,
-                        child: TextField(
-                          controller: _typeController,
-                          enabled: false,
-                          cursorColor: Colors.black,
-                          style: TextStyle(fontSize: 20),
-                          decoration: InputDecoration(
-                            prefixIcon: Icon(
-                              Icons.lock,
-                              color: Color(0xff888888),
-                            ),
-                            filled: true,
-                            fillColor: Color(0xffe3e3e3),
-                            contentPadding: EdgeInsets.all(8),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide:
-                                    BorderSide(color: Colors.transparent)),
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide:
-                                    BorderSide(color: Colors.transparent)),
-                            enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide:
-                                    BorderSide(color: Colors.transparent)),
-                            errorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide:
-                                    BorderSide(color: Colors.transparent)),
-                            disabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide:
-                                    BorderSide(color: Colors.transparent)),
-                          ),
-                        )),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * .02,
-                    ),
+
                     Container(
                       height: MediaQuery.of(context).size.height * .05,
                       alignment: Alignment.centerLeft,
@@ -222,10 +175,10 @@ class _ProfilePageState extends State<ProfilePage> {
                           controller: _emailController,
                           enabled: false,
                           cursorColor: Colors.black,
-                          style: TextStyle(fontSize: 20),
+                          style: TextStyle(fontSize: 17),
                           decoration: InputDecoration(
                             prefixIcon: Icon(
-                              Icons.lock,
+                              Icons.mail_outline,
                               color: Color(0xff888888),
                             ),
                             filled: true,
@@ -256,54 +209,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     SizedBox(
                       height: MediaQuery.of(context).size.height * .02,
                     ),
-                    Container(
-                      height: MediaQuery.of(context).size.height * .05,
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Domicilio',
-                        style: TextStyle(
-                            fontSize: 13, fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    Container(
-                        height: MediaQuery.of(context).size.height * .07,
-                        width: MediaQuery.of(context).size.width * .9,
-                        child: TextField(
-                          controller: _addressController,
-                          enabled: false,
-                          cursorColor: Colors.black,
-                          style: TextStyle(fontSize: 20),
-                          decoration: InputDecoration(
-                            prefixIcon: Icon(
-                              Icons.lock,
-                              color: Color(0xff888888),
-                            ),
-                            filled: true,
-                            fillColor: Color(0xffe3e3e3),
-                            contentPadding: EdgeInsets.all(8),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide:
-                                    BorderSide(color: Colors.transparent)),
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide:
-                                    BorderSide(color: Colors.transparent)),
-                            enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide:
-                                    BorderSide(color: Colors.transparent)),
-                            errorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide:
-                                    BorderSide(color: Colors.transparent)),
-                            disabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide:
-                                    BorderSide(color: Colors.transparent)),
-                          ),
-                        )),
                     SizedBox(
                       height: MediaQuery.of(context).size.height * .05,
                     ),
@@ -326,5 +231,20 @@ class _ProfilePageState extends State<ProfilePage> {
         TextSpan(text: '${content}')
       ]),
     );
+  }
+
+  Future getshared() async{
+    var userNameShared = await SharedPreferences.getInstance();
+    var lastNameShared = await SharedPreferences.getInstance();
+    var userEmailShared = await SharedPreferences.getInstance();
+    var carrierShared = await SharedPreferences.getInstance();
+   setState(() {
+     userName = userNameShared.getString('userName');
+     lastName = lastNameShared.getString('lastName');
+     userEmail = userEmailShared.getString('userEmail');
+     carrier = carrierShared.getString('carrier');
+     _nameController.text = '$userName $lastName';
+     _emailController.text = userEmail;
+   });
   }
 }
