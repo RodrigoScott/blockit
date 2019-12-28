@@ -13,6 +13,7 @@ class _ProfilePageState extends State<ProfilePage> {
   var _emailController = TextEditingController();
   String userName;
   String lastName;
+  String secondLastName;
   String userEmail;
   String carrier;
   void initState() {
@@ -59,6 +60,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           onTap: () {},
                           child: ClipOval(
                               child: Container(
+
                             child: Text(userName == null ? '' :
                               '${userName.substring(0,1)}${lastName.substring(0,1)}',
                               style:
@@ -78,8 +80,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text(userName == null ? '' : '$userName $lastName',
-
+                        Text(userName == null ? '' : '$userName $lastName $secondLastName',
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold),
                         ),
@@ -233,16 +234,15 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future getshared() async{
-    var userNameShared = await SharedPreferences.getInstance();
-    var lastNameShared = await SharedPreferences.getInstance();
-    var userEmailShared = await SharedPreferences.getInstance();
-    var carrierShared = await SharedPreferences.getInstance();
+    var prefs = await SharedPreferences.getInstance();
+
    setState(() {
-     userName = userNameShared.getString('userName');
-     lastName = lastNameShared.getString('lastName');
-     userEmail = userEmailShared.getString('userEmail');
-     carrier = carrierShared.getString('carrier');
-     _nameController.text = '$userName $lastName';
+     userName = prefs.getString('userName');
+     lastName = prefs.getString('lastName');
+     secondLastName = prefs.getString('secondLastName');
+     userEmail = prefs.getString('userEmail');
+     carrier = prefs.getString('carrier');
+     _nameController.text = '$userName $lastName $secondLastName';
      _emailController.text = userEmail;
    });
   }

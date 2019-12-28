@@ -11,6 +11,7 @@ class ConfigurationPage extends StatefulWidget {
 class _ConfigurationPageState extends State<ConfigurationPage> {
   String userName;
   String lastName;
+  String secondLastName;
   String userEmail;
   String carrier;
   void initState() {
@@ -75,7 +76,7 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(userName == null ? '' :
-                        '$userName $lastName',
+                        '$userName $lastName $secondLastName',
                         style: TextStyle(
                             fontSize: 20, fontWeight: FontWeight.bold),
                       ),
@@ -220,13 +221,13 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
     );
   }
   Future getshared() async{
-    var userNameShared = await SharedPreferences.getInstance();
-    var lastNameShared = await SharedPreferences.getInstance();
-    var carrierShared = await SharedPreferences.getInstance();
+    var prefs = await SharedPreferences.getInstance();
+
     setState(() {
-      userName = userNameShared.getString('userName');
-      lastName = lastNameShared.getString('lastName');
-      carrier = carrierShared.getString('carrier');
+      userName = prefs.getString('userName');
+      lastName = prefs.getString('lastName');
+      secondLastName = prefs.getString('secondLastName');
+      carrier = prefs.getString('carrier');
     });
   }
 }

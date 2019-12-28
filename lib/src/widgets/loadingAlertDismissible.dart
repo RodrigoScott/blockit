@@ -12,9 +12,14 @@ class _LoadingAlertDismissibleState extends State<LoadingAlertDismissible> {
     return AlertDialog(
       content: new Row(
         children: <Widget>[
-          new CircularProgressIndicator(),
+          new CircularProgressIndicator(
+            valueColor: new AlwaysStoppedAnimation<Color>(Color(0xffff5f00)),
+          ),
+          SizedBox(
+            width: 10,
+          ),
           Padding(
-            padding: const EdgeInsets.only(left: 8.0),
+            padding: const EdgeInsets.only(left: 10.0),
             child: new Text("Cargando..."),
           ),
         ],

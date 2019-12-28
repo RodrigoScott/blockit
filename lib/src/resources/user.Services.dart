@@ -86,20 +86,17 @@ class UserService {
     };
 
     var prefs = await SharedPreferences.getInstance();
-    var userName = await SharedPreferences.getInstance();
-    var lastName = await SharedPreferences.getInstance();
-    var userEmail = await SharedPreferences.getInstance();
-    var carrier = await SharedPreferences.getInstance();
     Response response;
     try {
       response =
           await dio.post(url, options: Options(headers: _headers), data: _data);
       if (response.statusCode == 200) {
         prefs.setString('access_token', response.data['access_token']);
-        userName.setString('userName', response.data['name']);
-        lastName.setString('lastName', response.data['first_last_name']);
-        userEmail.setString('userEmail', response.data['email']);
-        carrier.setString('carrier', response.data['company_name']);
+        prefs.setString('userName', response.data['name']);
+        prefs.setString('lastName', response.data['first_last_name']);
+        prefs.setString('secondLastName', response.data['second_last_name']);
+        prefs.setString('userEmail', response.data['email']);
+        prefs.setString('carrier', response.data['company_name']);
         return response;
       }
     } on DioError catch (e) {
