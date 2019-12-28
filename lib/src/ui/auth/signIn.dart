@@ -60,6 +60,7 @@ class _SignInState extends State<SignIn> {
                 height: MediaQuery.of(context).size.height * .07,
                 width: MediaQuery.of(context).size.width * .9,
                 child: TextField(
+                  textCapitalization: TextCapitalization.none,
                   enableInteractiveSelection: false,
                   keyboardType: TextInputType.emailAddress,
                   controller: _emailController,
