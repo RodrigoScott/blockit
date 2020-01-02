@@ -1,11 +1,12 @@
 import 'dart:io';
 
 class Environment {
-  String client_secret = "BX26jpPthhlPJgAjuTxgXom368r6yDmnUMJlvnYQ";
+  String client_secret =
+      "qTsnFd6IJPVQbZdUVvy7uBX5lM57M5M5wGlMR9i6"; //"BX26jpPthhlPJgAjuTxgXom368r6yDmnUMJlvnYQ";
   String client_id = "2";
-  String base_url = 'http://cceo.io:8109/';
-  String base_url_api = 'http://cceo.io:8109/api/v1/';
-  String base_url_storage = 'falta';
+  String base_url = 'https://c24172b9.ngrok.io/'; //'http://cceo.io:8109/';
+  String base_url_api =
+      'https://c24172b9.ngrok.io/api/v1/'; //'http://cceo.io:8109/api/v1/';
 
   static final Environment _config = new Environment._internal();
 

@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trailock/main.dart';
 import 'package:trailock/src/model/user.dart';
-import 'package:trailock/src/utils/Enviroment.dart';
+import 'package:trailock/src/utils/enviroment.dart';
 
 class UserService {
   var dio = Dio();
@@ -16,17 +16,16 @@ class UserService {
       "Authorization": "Bearer $token"
     };
     Response response;
-    try{
-      response =
-      await dio.post(url, options: Options(headers: _headers));
+    try {
+      response = await dio.post(url, options: Options(headers: _headers));
       return response;
-    }
-    on DioError catch (e) {
+    } on DioError catch (e) {
       return e.response;
     }
   }
 
-  changePassword(String oldPassword, String newPassword,String confirmNewPassword) async {
+  changePassword(
+      String oldPassword, String newPassword, String confirmNewPassword) async {
     final prefs = await SharedPreferences.getInstance();
     token = prefs.getString('access_token');
     var url = '${Environment.config.base_url_api}password/change';
@@ -41,15 +40,15 @@ class UserService {
       "new_password_confirmation": "$confirmNewPassword"
     };
     Response response;
-    try{
+    try {
       response =
-      await dio.post(url, options: Options(headers: _headers), data: _data);
-        return response;
-    }
-    on DioError catch (e) {
+          await dio.post(url, options: Options(headers: _headers), data: _data);
+      return response;
+    } on DioError catch (e) {
       return e.response;
     }
   }
+
   Future<List<User>> getUser() async {
     var prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('access_token');
@@ -58,18 +57,18 @@ class UserService {
       "X-Requested-With": "XMLHttpRequest",
       "Authorization": "Bearer $token",
     };
-    Response response = await dio.get(
-        '${Environment.config.base_url_api}posts',
+    Response response = await dio.get('${Environment.config.base_url_api}posts',
         options: Options(headers: _headers));
     if (response.statusCode == 200) {
       var data =
-      (response.data as List).map((data) => User.fromJson(data)).toList();
+          (response.data as List).map((data) => User.fromJson(data)).toList();
 
       return data;
     } else {
       return List();
     }
   }
+
   requestLogin(String email, String password) async {
     var url = '${Environment.config.base_url_api}login';
     var _headers = {

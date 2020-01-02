@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:trailock/src/resources/user.Services.dart';
-import 'package:trailock/src/utils/Enviroment.dart';
+import 'package:trailock/src/utils/enviroment.dart';
 import 'package:trailock/src/widgets/loadingAlertDismissible.dart';
 import 'package:url_launcher/url_launcher.dart';
 

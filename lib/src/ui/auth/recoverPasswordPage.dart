@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trailock/src/resources/user.Services.dart';
-import 'package:trailock/src/utils/Enviroment.dart';
+import 'package:trailock/src/utils/enviroment.dart';
 import 'package:trailock/src/widgets/loadingAlertDismissible.dart';
 
 class RecoverPasswordPage extends StatefulWidget {
