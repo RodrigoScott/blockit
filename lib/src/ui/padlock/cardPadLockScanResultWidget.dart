@@ -76,7 +76,10 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
 
   Future<void> clearSharedPreferences() async {
     final prefs = await SharedPreferences.getInstance();
-    padlockStatus = "ready";
+    setState(() {
+      padlockStatus = "ready";
+    });
+
     prefs.remove('padlockName');
     prefs.remove('padlockDateTime');
     prefs.remove('padlockStatus');
@@ -270,8 +273,14 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                   fontWeight: FontWeight.bold)),
                                           validateContainer
                                               ? Container(
-                                                  height: 60,
-                                                  child: Column(
+                                                  height: 29,
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
                                                     mainAxisSize:
                                                         MainAxisSize.min,
                                                     children: <Widget>[
@@ -281,9 +290,17 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                             Icons.error,
                                                             color: Colors.red,
                                                           )),
+                                                      SizedBox(
+                                                        width: 5,
+                                                      ),
                                                       Container(
                                                         height: 20,
-                                                        child: Text(textError),
+                                                        child: Text(
+                                                          textError,
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.red),
+                                                        ),
                                                       )
                                                     ],
                                                   ),
@@ -370,6 +387,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                         .getInstance();
 
                                                 closeAlert(loadingContext);
+                                                print(lockedStatus);
                                                 setState(() {
                                                   switch (lockedStatus) {
                                                     case 0:
@@ -379,7 +397,9 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                           'Codigo incorrecto';
                                                       break;
                                                     case 1:
-                                                      padlockStatus = "open";
+                                                      setState(() {
+                                                        padlockStatus = "open";
+                                                      });
 
                                                       print(
                                                           "Escrito en shared");
@@ -461,7 +481,10 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                       break;
                                                     case 3:
                                                       print('Case 3');
-                                                      padlockStatus = "locked";
+                                                      setState(() {
+                                                        padlockStatus =
+                                                            "locked";
+                                                      });
 
                                                       var now =
                                                           new DateTime.now();
@@ -529,6 +552,13 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                               ],
                                                             );
                                                           });
+                                                      break;
+                                                    case 4:
+                                                      print('case 4');
+                                                      validateContainer = true;
+                                                      textError =
+                                                          'Codigo no reusable';
+                                                      break;
                                                   }
                                                 }); //
                                               },
@@ -647,7 +677,11 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                   bottomRight: Radius.circular(5)),
               child: Container(
                 decoration: BoxDecoration(
-                    color: Color(0xff081f2d),
+                    color: padlockStatus == 'open'
+                        ? Color(0xff14CC67)
+                        : padlockStatus == 'locked'
+                            ? Color(0xff718093)
+                            : Color(0xff081f2d),
                     borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(5),
                         bottomRight: Radius.circular(5))),
