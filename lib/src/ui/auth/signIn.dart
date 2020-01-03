@@ -38,9 +38,9 @@ class _SignInState extends State<SignIn> {
           children: <Widget>[
             Center(
               child: Container(
-                width: MediaQuery.of(context).size.width * .8,
+                width: MediaQuery.of(context).size.width * .6,
                 height: MediaQuery.of(context).size.height * .35,
-                child: Image.asset("assets/icon.png"),
+                child: Image.asset("assets/logoTrailock.png"),
               ),
             ),
             SizedBox(

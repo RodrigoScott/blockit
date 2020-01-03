@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trailock/src/resources/user.Services.dart';
-import 'package:trailock/src/ui/Configuration/configurationPage.dart';
 import 'package:trailock/src/ui/auth/signIn.dart';
 import 'package:trailock/src/ui/padlock/padlockPage.dart';
 import 'package:trailock/src/utils/enviroment.dart';
+
+import 'configuration/configurationPage.dart';
 
 class HomePage extends StatefulWidget {
   int indexPage;

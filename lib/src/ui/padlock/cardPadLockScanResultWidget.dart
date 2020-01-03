@@ -157,7 +157,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                   child: Container(
                     width: MediaQuery.of(context).size.width * .3,
                     child: Image.asset(
-                      "assets/trailockorange.png",
+                      "assets/icons/iconTrailockiOS.png",
                     ),
                   ),
                 )),

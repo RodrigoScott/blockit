@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:trailock/src/ui/Configuration/changePasswordPage.dart';
 import 'package:trailock/src/ui/auth/recoverPasswordPage.dart';
 import 'package:trailock/src/ui/auth/signIn.dart';
 import 'package:trailock/src/ui/homePage.dart';
-import 'package:trailock/src/ui/Configuration/profilePage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'src/ui/configuration/changePasswordPage.dart';
+import 'src/ui/configuration/configurationPage.dart';
+import 'src/ui/configuration/profilePage.dart';
 
 var token = '';
 Future<Null> main() async {
@@ -21,6 +23,7 @@ Future<Null> main() async {
       'RecoverPass': (BuildContext context) => RecoverPasswordPage(),
       'Profile': (BuildContext context) => ProfilePage(),
       'ChangePassword': (BuildContext context) => ChangePasswordPage(),
+      'ConfigurationPage': (BuildContext context) => ConfigurationPage(),
     },
   ));
 }
