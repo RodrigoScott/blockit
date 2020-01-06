@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trailock/src/resources/user.Services.dart';
 import 'package:trailock/src/ui/auth/signIn.dart';
+import 'package:trailock/src/utils/enviroment.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ConfigurationPage extends StatefulWidget {
@@ -15,6 +17,53 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
   String userEmail;
   String carrier;
   void initState() {
+    setState(() {
+      Environment().checkInternetConnection().then((res) {
+        res
+            ? UserService().validateStatus().then((r) {
+                r.statusCode == 401
+                    ? showDialog(
+                        barrierDismissible: false,
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(5),
+                              ),
+                            ),
+                            title: Text('Alerta'),
+                            content:
+                                Container(child: Text('Tu sesión a caducado')),
+                            actions: <Widget>[
+                              FlatButton(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(5)),
+                                ),
+                                color: Color(0xffff5f00),
+                                child: Text(
+                                  "Aceptar",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                onPressed: () async {
+                                  final prefs =
+                                      await SharedPreferences.getInstance();
+                                  prefs.remove('access_token');
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                      MaterialPageRoute(
+                                          builder: (context) => SignIn()),
+                                      (Route<dynamic> route) => false);
+                                },
+                              ),
+                            ],
+                          );
+                        })
+                    : null;
+              })
+            : null;
+      });
+    });
     super.initState();
     setState(() {
       getshared();
@@ -56,11 +105,12 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
                         onTap: () {},
                         child: ClipOval(
                             child: Container(
-                          child: Text( userName == null ? '' :
-                                '${userName.substring(0,1)}${lastName.substring(0,1)}',
-                        style:
-                        TextStyle(fontSize: 55, color: Colors.white),
-                      ),
+                          child: Text(
+                            userName == null
+                                ? ''
+                                : '${userName.substring(0, 1)}${lastName.substring(0, 1)}',
+                            style: TextStyle(fontSize: 55, color: Colors.white),
+                          ),
                         )),
                       )),
                 ),
@@ -75,12 +125,15 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text(userName == null ? '' :
-                        '$userName $lastName $secondLastName',
+                      Text(
+                        userName == null
+                            ? ''
+                            : '$userName $lastName $secondLastName',
                         style: TextStyle(
                             fontSize: 20, fontWeight: FontWeight.bold),
                       ),
-                      Text(carrier == null ? '' : carrier,
+                      Text(
+                        carrier == null ? '' : carrier,
                         style: TextStyle(fontSize: 13, color: Colors.black38),
                       ),
                     ],
@@ -158,9 +211,10 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
       child: ListTile(
         onTap: route != 'log-out'
             ? () {
-          route == 'TerminosyC' ?
-                launch('http://trailock.mx/terminos-y-condiciones') : Navigator.pushNamed(context, '$route') ;
-        }
+                route == 'TerminosyC'
+                    ? launch('http://trailock.mx/terminos-y-condiciones')
+                    : Navigator.pushNamed(context, '$route');
+              }
             : () {
                 showDialog(
                     context: context,
@@ -220,7 +274,8 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
       ),
     );
   }
-  Future getshared() async{
+
+  Future getshared() async {
     var prefs = await SharedPreferences.getInstance();
 
     setState(() {

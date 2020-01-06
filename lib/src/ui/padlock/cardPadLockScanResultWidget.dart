@@ -157,7 +157,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                   child: Container(
                     width: MediaQuery.of(context).size.width * .3,
                     child: Image.asset(
-                      "assets/icons/iconTrailockiOS.png",
+                      "assets/icons/iconiOS.png",
                     ),
                   ),
                 )),
@@ -317,7 +317,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                 .9,
                                             alignment: Alignment.centerLeft,
                                             child: Text(
-                                              'Codigo',
+                                              'Código',
                                               style: TextStyle(
                                                   fontSize: 13,
                                                   fontWeight: FontWeight.bold),
@@ -387,14 +387,15 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                         .getInstance();
 
                                                 closeAlert(loadingContext);
-                                                print(lockedStatus);
+                                                FocusScope.of(context)
+                                                    .requestFocus(FocusNode());
                                                 setState(() {
                                                   switch (lockedStatus) {
                                                     case 0:
                                                       print('case 0');
                                                       validateContainer = true;
                                                       textError =
-                                                          'Codigo incorrecto';
+                                                          'Código incorrecto';
                                                       break;
                                                     case 1:
                                                       setState(() {
@@ -442,7 +443,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                                 ),
                                                               ),
                                                               title: Text(
-                                                                  'Codigo correcto'),
+                                                                  'Código correcto'),
                                                               content: Container(
                                                                   child: Text(
                                                                       'El candado permanecera abierto durante ${_duration.inMinutes}:${(_duration.inSeconds % 60).toString().padLeft(2, '0')}')),
@@ -557,7 +558,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                       print('case 4');
                                                       validateContainer = true;
                                                       textError =
-                                                          'Codigo no reusable';
+                                                          'Código ya utilizado';
                                                       break;
                                                   }
                                                 }); //
