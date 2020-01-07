@@ -25,6 +25,8 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
   final codeFieldController = TextEditingController();
   var _validateField = GlobalKey<FormState>();
   bool validateContainer = false;
+  bool validateBotton = false;
+  bool validateBattery = false;
   bool validateUseContainer = false;
   String textError = '';
   String _current = '0:00';
@@ -49,15 +51,10 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
 
   @override
   void initState() {
-    print("object");
-    print(widget.dateTime);
-
     if (widget.dateTime != null) {
       var started = DateTime.parse(widget.dateTime);
       var rest =
           widget.remaining - DateTime.now().difference(started).inSeconds;
-
-      print(rest);
 
       if (rest > 0) {
         startTimer(rest);
@@ -246,6 +243,17 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                               -1)
                           .toList()
                           .first;
+                      BluetoothCharacteristic lowBatteryCharacteristic = service
+                          .characteristics
+                          .where((c) =>
+                              c.uuid
+                                  .toString()
+                                  .toUpperCase()
+                                  .substring(4, 8)
+                                  .indexOf('2104') !=
+                              -1)
+                          .toList()
+                          .first;
                       closeAlert(loadingContext);
                       showDialog(
                           barrierDismissible: true,
@@ -271,6 +279,42 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                               style: TextStyle(
                                                   fontSize: 25,
                                                   fontWeight: FontWeight.bold)),
+                                          validateBattery
+                                              ? Container(
+                                                  height: 29,
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: <Widget>[
+                                                      Container(
+                                                          height: 30,
+                                                          child: Icon(
+                                                            Icons.battery_alert,
+                                                            color: Color(
+                                                                0xffff5f00),
+                                                          )),
+                                                      SizedBox(
+                                                        width: 5,
+                                                      ),
+                                                      Container(
+                                                        height: 20,
+                                                        child: Text(
+                                                            'Candado sin batería',
+                                                            style: TextStyle(
+                                                              color: Color(
+                                                                  0xffff5f00),
+                                                            )),
+                                                      )
+                                                    ],
+                                                  ),
+                                                )
+                                              : Container(),
                                           validateContainer
                                               ? Container(
                                                   height: 29,
@@ -356,212 +400,232 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                               borderRadius:
                                                   BorderRadius.circular(5),
                                               onTap: () async {
-                                                showDialog(
-                                                    barrierDismissible: false,
-                                                    context: context,
-                                                    builder:
-                                                        (BuildContext context) {
-                                                      loadingContext = context;
-                                                      return LoadingAlertDismissible();
+                                                if (_validateField.currentState
+                                                    .validate()) {
+                                                  showDialog(
+                                                      barrierDismissible: false,
+                                                      context: context,
+                                                      builder: (BuildContext
+                                                          context) {
+                                                        loadingContext =
+                                                            context;
+                                                        return LoadingAlertDismissible();
+                                                      });
+                                                  await characteristic.write(
+                                                      utf8.encode(
+                                                          codeFieldController
+                                                              .text
+                                                              .toUpperCase()));
+
+                                                  int _dur =
+                                                      (await timeCharacteristic
+                                                              .read())[0] *
+                                                          10;
+
+                                                  _duration =
+                                                      Duration(seconds: _dur);
+                                                  int lowBattery =
+                                                      (await lowBatteryCharacteristic
+                                                          .read())[0];
+                                                  print(lowBattery);
+                                                  if (lowBattery == 1) {
+                                                    setState(() {
+                                                      validateBattery = true;
                                                     });
-                                                await characteristic.write(
-                                                    utf8.encode(
-                                                        codeFieldController.text
-                                                            .toUpperCase()));
-
-                                                int _dur =
-                                                    (await timeCharacteristic
-                                                            .read())[0] *
-                                                        10;
-
-                                                _duration =
-                                                    Duration(seconds: _dur);
-
-                                                int lockedStatus =
-                                                    (await unlockedCharacteristic
-                                                        .read())[0];
-                                                codeFieldController.text = '';
-
-                                                final prefs =
-                                                    await SharedPreferences
-                                                        .getInstance();
-
-                                                closeAlert(loadingContext);
-                                                FocusScope.of(context)
-                                                    .requestFocus(FocusNode());
-                                                setState(() {
-                                                  switch (lockedStatus) {
-                                                    case 0:
-                                                      print('case 0');
-                                                      validateContainer = true;
-                                                      textError =
-                                                          'Código incorrecto';
-                                                      break;
-                                                    case 1:
-                                                      setState(() {
-                                                        padlockStatus = "open";
-                                                      });
-
-                                                      print(
-                                                          "Escrito en shared");
-
-                                                      var now =
-                                                          new DateTime.now();
-
-                                                      prefs.setString(
-                                                          'padlockName',
-                                                          widget.result.device
-                                                              .name);
-                                                      prefs.setString(
-                                                          'padlockDateTime',
-                                                          now.toIso8601String());
-                                                      prefs.setString(
-                                                          'padlockStatus',
-                                                          padlockStatus);
-                                                      prefs.setInt(
-                                                          "padlockDuration",
-                                                          _duration.inSeconds);
-
-                                                      validateContainer = false;
-                                                      textError = '';
-                                                      startTimer(
-                                                          _duration.inSeconds);
-                                                      Navigator.pop(context);
-                                                      showDialog(
-                                                          context: context,
-                                                          builder: (BuildContext
-                                                              context) {
-                                                            return AlertDialog(
-                                                              shape:
-                                                                  RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .all(
-                                                                  Radius
-                                                                      .circular(
-                                                                          5),
-                                                                ),
-                                                              ),
-                                                              title: Text(
-                                                                  'Código correcto'),
-                                                              content: Container(
-                                                                  child: Text(
-                                                                      'El candado permanecera abierto durante ${_duration.inMinutes}:${(_duration.inSeconds % 60).toString().padLeft(2, '0')}')),
-                                                              actions: <Widget>[
-                                                                FlatButton(
-                                                                  shape:
-                                                                      RoundedRectangleBorder(
-                                                                    borderRadius:
-                                                                        BorderRadius.all(
-                                                                            Radius.circular(5)),
-                                                                  ),
-                                                                  color: Color(
-                                                                      0xffff5f00),
-                                                                  child: Text(
-                                                                    "Aceptar",
-                                                                    style: TextStyle(
-                                                                        color: Colors
-                                                                            .white),
-                                                                  ),
-                                                                  onPressed:
-                                                                      () {
-                                                                    Navigator.of(
-                                                                            context)
-                                                                        .pop();
-                                                                  },
-                                                                )
-                                                              ],
-                                                            );
-                                                          });
-                                                      break;
-                                                    case 2:
-                                                      print('case 2');
-                                                      validateContainer = true;
-                                                      textError =
-                                                          'El candado está abierto';
-                                                      break;
-                                                    case 3:
-                                                      print('Case 3');
-                                                      setState(() {
-                                                        padlockStatus =
-                                                            "locked";
-                                                      });
-
-                                                      var now =
-                                                          new DateTime.now();
-
-                                                      prefs.setString(
-                                                          'padlockName',
-                                                          widget.result.device
-                                                              .name);
-                                                      prefs.setString(
-                                                          'padlockDateTime',
-                                                          now.toIso8601String());
-                                                      prefs.setString(
-                                                          'padlockStatus',
-                                                          padlockStatus);
-                                                      prefs.setInt(
-                                                          "padlockDuration",
-                                                          _duration.inSeconds);
-
-                                                      startTimer(
-                                                          _duration.inSeconds);
-                                                      Navigator.pop(context);
-                                                      showDialog(
-                                                          context: context,
-                                                          builder: (BuildContext
-                                                              context) {
-                                                            return AlertDialog(
-                                                              shape:
-                                                                  RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .all(
-                                                                  Radius
-                                                                      .circular(
-                                                                          5),
-                                                                ),
-                                                              ),
-                                                              title: Text(
-                                                                  'Candado bloqueado'),
-                                                              content: Container(
-                                                                  child: Text(
-                                                                      'Vuelva a intentar en ${_duration.inMinutes}:${(_duration.inSeconds % 60).toString().padLeft(2, '0')}')),
-                                                              actions: <Widget>[
-                                                                FlatButton(
-                                                                  shape:
-                                                                      RoundedRectangleBorder(
-                                                                    borderRadius:
-                                                                        BorderRadius.all(
-                                                                            Radius.circular(5)),
-                                                                  ),
-                                                                  color: Color(
-                                                                      0xffff5f00),
-                                                                  child: Text(
-                                                                    "Aceptar",
-                                                                    style: TextStyle(
-                                                                        color: Colors
-                                                                            .white),
-                                                                  ),
-                                                                  onPressed:
-                                                                      () {
-                                                                    Navigator.of(
-                                                                            context)
-                                                                        .pop();
-                                                                  },
-                                                                )
-                                                              ],
-                                                            );
-                                                          });
-                                                      break;
-                                                    case 4:
-                                                      print('case 4');
-                                                      validateContainer = true;
-                                                      textError =
-                                                          'Código ya utilizado';
-                                                      break;
                                                   }
-                                                }); //
+
+                                                  int lockedStatus =
+                                                      (await unlockedCharacteristic
+                                                          .read())[0];
+
+                                                  final prefs =
+                                                      await SharedPreferences
+                                                          .getInstance();
+
+                                                  closeAlert(loadingContext);
+                                                  FocusScope.of(context)
+                                                      .requestFocus(
+                                                          FocusNode());
+                                                  setState(() {
+                                                    switch (lockedStatus) {
+                                                      case 0:
+                                                        validateContainer =
+                                                            true;
+                                                        textError =
+                                                            'Código incorrecto';
+                                                        break;
+                                                      case 1:
+                                                        setState(() {
+                                                          padlockStatus =
+                                                              "open";
+                                                        });
+                                                        var now =
+                                                            new DateTime.now();
+
+                                                        prefs.setString(
+                                                            'padlockName',
+                                                            widget.result.device
+                                                                .name);
+                                                        prefs.setString(
+                                                            'padlockDateTime',
+                                                            now.toIso8601String());
+                                                        prefs.setString(
+                                                            'padlockStatus',
+                                                            padlockStatus);
+                                                        prefs.setInt(
+                                                            "padlockDuration",
+                                                            _duration
+                                                                .inSeconds);
+
+                                                        validateContainer =
+                                                            false;
+                                                        textError = '';
+                                                        startTimer(_duration
+                                                            .inSeconds);
+                                                        Navigator.pop(context);
+                                                        showDialog(
+                                                            context: context,
+                                                            builder:
+                                                                (BuildContext
+                                                                    context) {
+                                                              return AlertDialog(
+                                                                shape:
+                                                                    RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .all(
+                                                                    Radius
+                                                                        .circular(
+                                                                            5),
+                                                                  ),
+                                                                ),
+                                                                title: Text(
+                                                                    'Código correcto'),
+                                                                content: Container(
+                                                                    child: Text(
+                                                                        'El candado permanecera abierto durante ${_duration.inMinutes}:${(_duration.inSeconds % 60).toString().padLeft(2, '0')}')),
+                                                                actions: <
+                                                                    Widget>[
+                                                                  FlatButton(
+                                                                    shape:
+                                                                        RoundedRectangleBorder(
+                                                                      borderRadius:
+                                                                          BorderRadius.all(
+                                                                              Radius.circular(5)),
+                                                                    ),
+                                                                    color: Color(
+                                                                        0xffff5f00),
+                                                                    child: Text(
+                                                                      "Aceptar",
+                                                                      style: TextStyle(
+                                                                          color:
+                                                                              Colors.white),
+                                                                    ),
+                                                                    onPressed:
+                                                                        () {
+                                                                      Navigator.of(
+                                                                              context)
+                                                                          .pop();
+                                                                    },
+                                                                  )
+                                                                ],
+                                                              );
+                                                            });
+                                                        break;
+                                                      case 2:
+                                                        validateContainer =
+                                                            true;
+                                                        textError =
+                                                            'El candado está abierto';
+                                                        break;
+                                                      case 3:
+                                                        setState(() {
+                                                          padlockStatus =
+                                                              "locked";
+                                                        });
+
+                                                        var now =
+                                                            new DateTime.now();
+
+                                                        prefs.setString(
+                                                            'padlockName',
+                                                            widget.result.device
+                                                                .name);
+                                                        prefs.setString(
+                                                            'padlockDateTime',
+                                                            now.toIso8601String());
+                                                        prefs.setString(
+                                                            'padlockStatus',
+                                                            padlockStatus);
+                                                        prefs.setInt(
+                                                            "padlockDuration",
+                                                            _duration
+                                                                .inSeconds);
+
+                                                        startTimer(_duration
+                                                            .inSeconds);
+                                                        Navigator.pop(context);
+                                                        showDialog(
+                                                            context: context,
+                                                            builder:
+                                                                (BuildContext
+                                                                    context) {
+                                                              return AlertDialog(
+                                                                shape:
+                                                                    RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .all(
+                                                                    Radius
+                                                                        .circular(
+                                                                            5),
+                                                                  ),
+                                                                ),
+                                                                title: Text(
+                                                                    'Candado bloqueado'),
+                                                                content: Container(
+                                                                    child: Text(
+                                                                        'Vuelva a intentar en ${_duration.inMinutes}:${(_duration.inSeconds % 60).toString().padLeft(2, '0')}')),
+                                                                actions: <
+                                                                    Widget>[
+                                                                  FlatButton(
+                                                                    shape:
+                                                                        RoundedRectangleBorder(
+                                                                      borderRadius:
+                                                                          BorderRadius.all(
+                                                                              Radius.circular(5)),
+                                                                    ),
+                                                                    color: Color(
+                                                                        0xffff5f00),
+                                                                    child: Text(
+                                                                      "Aceptar",
+                                                                      style: TextStyle(
+                                                                          color:
+                                                                              Colors.white),
+                                                                    ),
+                                                                    onPressed:
+                                                                        () {
+                                                                      Navigator.of(
+                                                                              context)
+                                                                          .pop();
+                                                                    },
+                                                                  )
+                                                                ],
+                                                              );
+                                                            });
+                                                        break;
+                                                      case 4:
+                                                        validateContainer =
+                                                            true;
+                                                        textError =
+                                                            'Código ya utilizado';
+                                                        break;
+                                                    }
+                                                    lockedStatus = null;
+                                                    codeFieldController.text =
+                                                        '';
+                                                  }); //
+                                                }
                                               },
                                               child: Center(
                                                 child: Container(
