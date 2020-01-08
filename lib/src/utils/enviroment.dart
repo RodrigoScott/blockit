@@ -18,12 +18,12 @@ class Environment {
 
   Future<bool> checkInternetConnection() async {
     try {
-      var result = await InternetAddress.lookup('google.com');
+      var result = await InternetAddress.lookup('https://google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
         result = null;
         return true;
       }
-    } on SocketException catch (_) {
+    } on SocketException catch (e) {
       return false;
     }
     return false;
