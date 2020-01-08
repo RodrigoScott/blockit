@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class LoadingAlertDismissible extends StatefulWidget {
+  String content = 'Cargando';
   @override
+  LoadingAlertDismissible({Key key, this.content}) : super(key: key);
   _LoadingAlertDismissibleState createState() =>
       _LoadingAlertDismissibleState();
 }
@@ -20,7 +22,7 @@ class _LoadingAlertDismissibleState extends State<LoadingAlertDismissible> {
           ),
           Padding(
             padding: const EdgeInsets.only(left: 10.0),
-            child: new Text("Cargando..."),
+            child: new Text(widget.content),
           ),
         ],
       ),

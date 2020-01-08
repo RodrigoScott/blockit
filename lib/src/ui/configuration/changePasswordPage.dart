@@ -16,10 +16,10 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   var _confirmNewPasswordController = TextEditingController();
   var loadingContext;
 
-
   closeAlert(BuildContext _context) {
     Navigator.of(_context).pop();
   }
+
   void initState() {
     _newPasswordController.addListener(() {
       setState(() {
@@ -198,54 +198,58 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                 child: InkWell(
                   borderRadius: BorderRadius.circular(5),
                   onTap: () {
-                    if(_formNewPassword.currentState.validate() && _formConfirmNewPassword.currentState.validate()){
-                    showDialog(
-                        barrierDismissible: false,
-                        context: context,
-                        builder: (BuildContext context) {
-                          loadingContext = context;
-                          return LoadingAlertDismissible();
-                        });
-                    UserService().changePassword(_oldPasswordController.text, _newPasswordController.text, _confirmNewPasswordController.text).then((res){
-                      if(res.statusCode == 200){
-                        _oldPasswordController.text = '';
-                        _newPasswordController.text = '';
-                        _confirmNewPasswordController.text = '';
-                        closeAlert(loadingContext);
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(5),
+                    if (_formNewPassword.currentState.validate() &&
+                        _formConfirmNewPassword.currentState.validate()) {
+                      showDialog(
+                          barrierDismissible: false,
+                          context: context,
+                          builder: (BuildContext context) {
+                            loadingContext = context;
+                            return LoadingAlertDismissible(
+                                content: 'Cambiando contraseña');
+                          });
+                      UserService()
+                          .changePassword(
+                              _oldPasswordController.text,
+                              _newPasswordController.text,
+                              _confirmNewPasswordController.text)
+                          .then((res) {
+                        if (res.statusCode == 200) {
+                          _oldPasswordController.text = '';
+                          _newPasswordController.text = '';
+                          _confirmNewPasswordController.text = '';
+                          closeAlert(loadingContext);
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(5),
+                                    ),
                                   ),
-                                ),
-                                title: Text('Hecho'),
-                                content: Container(
-                                    child: Text(
-                                        'Contraseña restablecida')),
-                                actions: <Widget>[
-                                  FlatButton(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(5)),
-                                    ),
-                                    color: Color(0xffff5f00),
-                                    child: Text(
-                                      "Aceptar",
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  )
-                                ],
-                              );
-                            });
-                      }
-                      else
-                        {
+                                  title: Text('Hecho'),
+                                  content: Container(
+                                      child: Text('Contraseña restablecida')),
+                                  actions: <Widget>[
+                                    FlatButton(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(5)),
+                                      ),
+                                      color: Color(0xffff5f00),
+                                      child: Text(
+                                        "Aceptar",
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    )
+                                  ],
+                                );
+                              });
+                        } else {
                           closeAlert(loadingContext);
                           showDialog(
                               context: context,
@@ -258,8 +262,8 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                                   ),
                                   title: Text('Error'),
                                   content: Container(
-                                      child: Text(
-                                          'Contraseña actual incorrecta')),
+                                      child:
+                                          Text('Contraseña actual incorrecta')),
                                   actions: <Widget>[
                                     FlatButton(
                                       shape: RoundedRectangleBorder(
@@ -279,9 +283,9 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                                 );
                               });
                         }
-                    });
-                  }
-                    },
+                      });
+                    }
+                  },
                   child: Center(
                     child: Container(
                       decoration: BoxDecoration(

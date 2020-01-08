@@ -123,7 +123,8 @@ class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
                         context: context,
                         builder: (BuildContext context) {
                           loadingContext = context;
-                          return LoadingAlertDismissible();
+                          return LoadingAlertDismissible(
+                              content: 'Enviando correo');
                         });
                     Environment().checkInternetConnection().then((res) {
                       if (res == true) {

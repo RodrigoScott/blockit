@@ -187,7 +187,8 @@ class _SignInState extends State<SignIn> {
                         context: context,
                         builder: (BuildContext context) {
                           loadingContext = context;
-                          return LoadingAlertDismissible();
+                          return LoadingAlertDismissible(
+                              content: 'Iniciando sesión');
                         });
                     Environment().checkInternetConnection().then((res) {
                       if (res == true) {
