@@ -1,4 +1,4 @@
-package com.example.trailock;
+package mx.trailock.app;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;
