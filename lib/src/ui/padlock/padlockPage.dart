@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trailock/src/resources/user.Services.dart';
 import 'package:trailock/src/ui/auth/signIn.dart';
 import 'package:trailock/src/utils/enviroment.dart';
-import 'package:flutter_offline/flutter_offline.dart';
+
 import 'bluetoothOffScreenWidget.dart';
 import 'cardPadLockScanResultWidget.dart';
 
@@ -60,16 +60,19 @@ class _PadlockPageState extends State<PadlockPage> {
                             children: snapshot.data
                                 .where((r) => r.device.name.indexOf("TL") != -1)
                                 .map((r) {
-                              if (prefs.getString('padlockName') ==
-                                  r.device.name)
-                                print("El candado " +
-                                    r.device.name +
-                                    " ya esta bloqueado");
+                              bool isLocked = prefs.getString('padlockName') ==
+                                  r.device.name;
                               return CardPadLockScanResult(
                                 result: r,
-                                dateTime: prefs.getString("padlockDateTime"),
-                                remaining: prefs.getInt("padlockDuration"),
-                                status: prefs.getString("padlockStatus"),
+                                dateTime: isLocked
+                                    ? prefs.getString("padlockDateTime")
+                                    : null,
+                                remaining: isLocked
+                                    ? prefs.getInt("padlockDuration")
+                                    : null,
+                                status: isLocked
+                                    ? prefs.getString("padlockStatus")
+                                    : null,
                               );
                             }).toList(),
                           ),
