@@ -20,6 +20,7 @@ class UserService {
       response = await dio.post(url, options: Options(headers: _headers));
       return response;
     } on DioError catch (e) {
+      print(e.response);
       return e.response;
     }
   }

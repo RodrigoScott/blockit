@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:connectivity/connectivity.dart';
+
 class Environment {
   String client_secret = "tc507xfyD6Y0FkOOvnLMDpl4TAoE2J0zug5hvHPX";
   String client_id = "2";
@@ -15,16 +17,12 @@ class Environment {
   static Environment get config => _config;
 
   Environment._internal();
-
   Future<bool> checkInternetConnection() async {
-    try {
-      var result = await InternetAddress.lookup('https://google.com');
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        result = null;
-        return true;
-      }
-    } on SocketException catch (e) {
-      return false;
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile) {
+      return true;
+    } else if (connectivityResult == ConnectivityResult.wifi) {
+      return true;
     }
     return false;
   }

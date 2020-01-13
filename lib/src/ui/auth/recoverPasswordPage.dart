@@ -233,8 +233,6 @@ class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
                             });
                       }
                     });
-
-                    //Navigator.pushNamed(context, 'HomePage');
                   }
                 },
                 child: Center(
