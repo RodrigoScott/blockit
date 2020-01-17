@@ -7,6 +7,7 @@ import 'package:flutter_blue/flutter_blue.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:quiver/async.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trailock/src/model/device.dart';
 import 'package:trailock/src/widgets/loadingAlertDismissible.dart';
 
 class CardPadLockScanResult extends StatefulWidget {
@@ -47,7 +48,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
             });
           })
           ..onDone(() {
-            clearSharedPreferences();
+            removeFromSharedPreferences();
           });
   }
 
@@ -62,7 +63,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
         startTimer(rest);
         padlockStatus = widget.status;
       } else
-        clearSharedPreferences();
+        removeFromSharedPreferences();
     }
 
     codeFieldController.addListener(() {
@@ -73,16 +74,23 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
     super.initState();
   }
 
-  Future<void> clearSharedPreferences() async {
+  Future<void> removeFromSharedPreferences() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       padlockStatus = "ready";
     });
 
-    prefs.remove('padlockName');
-    prefs.remove('padlockDateTime');
-    prefs.remove('padlockStatus');
-    prefs.remove("padlockDuration");
+    List<Device> devices = prefs.getStringList("padlocks") != null
+        ? prefs
+            .getStringList("padlocks")
+            .map((device) => Device.fromJson(jsonDecode(device)))
+            .toList()
+        : List<Device>();
+
+    devices.removeWhere((device) => device.name == widget.result.device.name);
+
+    prefs.setStringList("padlocks",
+        devices.map((device) => jsonEncode(device.toJson())).toList());
   }
 
   @override
@@ -465,6 +473,20 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                               closeAlert(loadingContext);
                                               FocusScope.of(context)
                                                   .requestFocus(FocusNode());
+
+                                              List<Device> devicesList = prefs
+                                                          .getStringList(
+                                                              "padlocks") !=
+                                                      null
+                                                  ? prefs
+                                                      .getStringList("padlocks")
+                                                      .map((device) =>
+                                                          Device.fromJson(
+                                                              jsonDecode(
+                                                                  device)))
+                                                      .toList()
+                                                  : List<Device>();
+
                                               setState(() {
                                                 switch (lockedStatus) {
                                                   case 0:
@@ -479,20 +501,25 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                     var now =
                                                         new DateTime.now();
 
-                                                    prefs.setString(
-                                                        'padlockName',
-                                                        widget.result.device
-                                                            .name);
-                                                    prefs.setString(
-                                                        'padlockDateTime',
-                                                        now.toIso8601String());
-                                                    prefs.setString(
-                                                        'padlockStatus',
-                                                        padlockStatus);
-                                                    prefs.setInt(
-                                                        "padlockDuration",
-                                                        _durationTimeOpen
-                                                            .inSeconds);
+                                                    Device device = Device(
+                                                        name: widget
+                                                            .result.device.name,
+                                                        datetime: now
+                                                            .toIso8601String(),
+                                                        duration:
+                                                            _durationTimeOpen
+                                                                .inSeconds,
+                                                        status: padlockStatus);
+
+                                                    devicesList.add(device);
+
+                                                    prefs.setStringList(
+                                                        "padlocks",
+                                                        devicesList
+                                                            .map((device) =>
+                                                                jsonEncode(device
+                                                                    .toJson()))
+                                                            .toList());
 
                                                     validateContainer = false;
                                                     textError = '';
@@ -558,20 +585,25 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                     var now =
                                                         new DateTime.now();
 
-                                                    prefs.setString(
-                                                        'padlockName',
-                                                        widget.result.device
-                                                            .name);
-                                                    prefs.setString(
-                                                        'padlockDateTime',
-                                                        now.toIso8601String());
-                                                    prefs.setString(
-                                                        'padlockStatus',
-                                                        padlockStatus);
-                                                    prefs.setInt(
-                                                        "padlockDuration",
-                                                        _durationTimeLocked
-                                                            .inSeconds);
+                                                    Device device = Device(
+                                                        name: widget
+                                                            .result.device.name,
+                                                        datetime: now
+                                                            .toIso8601String(),
+                                                        duration:
+                                                            _durationTimeLocked
+                                                                .inSeconds,
+                                                        status: padlockStatus);
+
+                                                    devicesList.add(device);
+
+                                                    prefs.setStringList(
+                                                        "padlocks",
+                                                        devicesList
+                                                            .map((device) =>
+                                                                jsonEncode(device
+                                                                    .toJson()))
+                                                            .toList());
 
                                                     startTimer(
                                                         _durationTimeLocked

@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trailock/src/model/device.dart';
 import 'package:trailock/src/resources/user.Services.dart';
 import 'package:trailock/src/ui/auth/signIn.dart';
 import 'package:trailock/src/utils/enviroment.dart';
@@ -16,6 +19,7 @@ class PadlockPage extends StatefulWidget {
 
 class _PadlockPageState extends State<PadlockPage> {
   SharedPreferences prefs;
+  List<Device> devices;
 
   closeAlert(BuildContext _context) {
     Navigator.of(_context).pop();
@@ -34,6 +38,14 @@ class _PadlockPageState extends State<PadlockPage> {
 
   getSharedInstance() async {
     prefs = await SharedPreferences.getInstance();
+    devices = prefs.getStringList("padlocks") != null
+        ? prefs
+            .getStringList("padlocks")
+            .map((device) => Device.fromJson(jsonDecode(device)))
+            .toList()
+        : List<Device>();
+
+    devices.forEach((device) => print(device));
   }
 
   @override
@@ -60,19 +72,18 @@ class _PadlockPageState extends State<PadlockPage> {
                             children: snapshot.data
                                 .where((r) => r.device.name.indexOf("TL") != -1)
                                 .map((r) {
-                              bool isLocked = prefs.getString('padlockName') ==
-                                  r.device.name;
+                              Device device = devices.firstWhere(
+                                  (device) => device.name == r.device.name,
+                                  orElse: () => null);
+                              /*bool isLocked = prefs.getString('padlockName') ==
+                                  r.device.name;*/
                               return CardPadLockScanResult(
                                 result: r,
-                                dateTime: isLocked
-                                    ? prefs.getString("padlockDateTime")
-                                    : null,
-                                remaining: isLocked
-                                    ? prefs.getInt("padlockDuration")
-                                    : null,
-                                status: isLocked
-                                    ? prefs.getString("padlockStatus")
-                                    : null,
+                                dateTime:
+                                    device != null ? device.datetime : null,
+                                remaining:
+                                    device != null ? device.duration : null,
+                                status: device != null ? device.status : null,
                               );
                             }).toList(),
                           ),
@@ -149,8 +160,11 @@ class _PadlockPageState extends State<PadlockPage> {
                     return FloatingActionButton(
                         backgroundColor: Color(0xffff5f00),
                         child: Icon(Icons.search),
-                        onPressed: () => FlutterBlue.instance
-                            .startScan(timeout: Duration(seconds: 5)));
+                        onPressed: () {
+                          getSharedInstance();
+                          FlutterBlue.instance
+                              .startScan(timeout: Duration(seconds: 5));
+                        });
                   }
                 },
               ),
