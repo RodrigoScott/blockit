@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_blue/flutter_blue.dart';
@@ -8,7 +9,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:quiver/async.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trailock/src/model/device.dart';
+import 'package:trailock/src/resources/locationService.dart';
 import 'package:trailock/src/widgets/loadingAlertDismissible.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:geocoder/geocoder.dart';
 
 class CardPadLockScanResult extends StatefulWidget {
   CardPadLockScanResult(
@@ -18,6 +22,8 @@ class CardPadLockScanResult extends StatefulWidget {
   final int remaining;
   final String dateTime;
   final String status;
+
+
 
   @override
   _CardPadLockScanResultState createState() => _CardPadLockScanResultState();
@@ -35,6 +41,10 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
   String padlockStatus = "ready";
   Duration _durationTimeOpen;
   Duration _durationTimeLocked;
+  bool check = false;
+  Position position;
+
+
 
   StreamSubscription<CountdownTimer> timer;
 
@@ -54,6 +64,10 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
 
   @override
   void initState() {
+
+    _getLocation();
+    _checkConection();
+
     if (widget.dateTime != null) {
       var started = DateTime.parse(widget.dateTime);
       var rest =
@@ -194,6 +208,9 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
             ),
             InkWell(
               onTap: () async {
+
+                if (check == false){
+
                 if (_current == "0:00") {
                   setState(() {
                     validateContainer = false;
@@ -703,7 +720,8 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                     print("Se desconecto");
                     widget.result.device.disconnect();
                   });
-                } else if (padlockStatus == "open") {
+                } else
+                  if (padlockStatus == "open") {
                   showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -737,7 +755,8 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                           );
                         });
                       });
-                } else if (padlockStatus == "locked") {
+                } else
+                  if (padlockStatus == "locked") {
                   showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -770,7 +789,79 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                           );
                         });
                       });
-                }
+                }}/*else
+                  {LocationService().set(position.latitude.toString(), position.longitude.toString(), widget.result.device.name).then((res){
+                    if (res.statusCode == 200 || res.statusCode == 201){
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return StatefulBuilder(builder: (context, setState) {
+                              return AlertDialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(5),
+                                  ),
+                                ),
+                                title: Text('Candado abierto'),
+                                content: Container(
+                                    child:
+                                    Text('El candado se cerrará en $_current')),
+                                actions: <Widget>[
+                                  FlatButton(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                      BorderRadius.all(Radius.circular(5)),
+                                    ),
+                                    color: Color(0xffff5f00),
+                                    child: Text(
+                                      "Aceptar",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  )
+                                ],
+                              );
+                            });
+                          });
+                    }else
+                      {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return StatefulBuilder(builder: (context, setState) {
+                                return AlertDialog(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(5),
+                                    ),
+                                  ),
+                                  title: Text('Candado bloqueado'),
+                                  content:
+                                  Container(child: Text('Intentar en $_current')),
+                                  actions: <Widget>[
+                                    FlatButton(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                        BorderRadius.all(Radius.circular(5)),
+                                      ),
+                                      color: Color(0xffff5f00),
+                                      child: Text(
+                                        "Aceptar",
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    )
+                                  ],
+                                );
+                              });
+                            });
+                      }
+                  });
+                  }*/
               },
               splashColor: Colors.white,
               borderRadius: BorderRadius.only(
@@ -815,4 +906,37 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
     if (timer != null) timer.cancel();
     super.dispose();
   }
+
+  _checkConection() async {
+
+    print("The statement 'this machine is connected to the Internet' is: ");
+    print(await DataConnectionChecker().hasConnection);
+
+    var listener = DataConnectionChecker().onStatusChange.listen((status) {
+      switch (status) {
+        case DataConnectionStatus.connected:
+          check = true;
+          print('Data connection is available.');
+          break;
+        case DataConnectionStatus.disconnected:
+          check = false;
+          print('You are disconnected from the internet.');
+          break;
+      }
+    });
+
+    // close listener after 30 seconds, so the program doesn't run forever
+    await Future.delayed(Duration(minutes: 1));
+    await listener.cancel();
+  }
+
+  _getLocation() async {
+    position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    print('location: ${position.longitude}, ${position.latitude}');
+    final coordinates = new Coordinates(position.latitude, position.longitude);
+    var addresses = await Geocoder.local.findAddressesFromCoordinates(coordinates);
+    var first = addresses.first;
+    print("${first.featureName} : ${first.addressLine}");
+  }
+
 }
