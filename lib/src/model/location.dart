@@ -3,6 +3,8 @@ class Location {
   String latitude;
   String longitude;
   String code;
+  String name;
+  bool inside;
 
   Location.init();
 
@@ -10,18 +12,19 @@ class Location {
     this.latitude,
     this.longitude,
     this.code,
+    this.name,
+    this.inside,
     });
 
   factory Location.fromJson(Map<String, dynamic> json) {
     return Location(
-      latitude:  json['latitude'],
-      longitude: json['longitude'],
+      inside:  json['inside'],
       code: json['code'],
     );}
 
   Map toJson() => {
-    "latitude": this.latitude,
-    "longitude": this.longitude,
-    "code": this.code,
+    "lat": this.latitude,
+    "lng": this.longitude,
+    "padlock_name": this.name,
   };
 }
