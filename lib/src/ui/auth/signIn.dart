@@ -59,36 +59,39 @@ class _SignInState extends State<SignIn> {
             Container(
                 height: MediaQuery.of(context).size.height * .07,
                 width: MediaQuery.of(context).size.width * .9,
-                child: TextField(
-                  textCapitalization: TextCapitalization.none,
-                  enableInteractiveSelection: false,
-                  keyboardType: TextInputType.emailAddress,
-                  controller: _emailController,
-                  cursorColor: Color(0xffff5f00),
-                  style: TextStyle(fontSize: 20),
-                  decoration: InputDecoration(
-                    prefixIcon: Icon(
-                      Icons.email,
-                      color: Color(0xff888888),
+                child: Theme(
+                  data: Theme.of(context)
+                      .copyWith(primaryColor: Color(0xffff5f00)),
+                  child: TextField(
+                    textCapitalization: TextCapitalization.none,
+                    enableInteractiveSelection: false,
+                    keyboardType: TextInputType.emailAddress,
+                    controller: _emailController,
+                    cursorColor: Color(0xffff5f00),
+                    style: TextStyle(fontSize: 20),
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(
+                        Icons.email,
+                      ),
+                      filled: true,
+                      fillColor: Color(0xffe3e3e3),
+                      contentPadding: EdgeInsets.all(8),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide: BorderSide(color: Colors.transparent)),
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide: BorderSide(color: Colors.transparent)),
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide: BorderSide(color: Colors.transparent)),
+                      errorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide: BorderSide(color: Colors.transparent)),
+                      disabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide: BorderSide(color: Colors.transparent)),
                     ),
-                    filled: true,
-                    fillColor: Color(0xffe3e3e3),
-                    contentPadding: EdgeInsets.all(8),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5),
-                        borderSide: BorderSide(color: Colors.transparent)),
-                    focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5),
-                        borderSide: BorderSide(color: Colors.transparent)),
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5),
-                        borderSide: BorderSide(color: Colors.transparent)),
-                    errorBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5),
-                        borderSide: BorderSide(color: Colors.transparent)),
-                    disabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5),
-                        borderSide: BorderSide(color: Colors.transparent)),
                   ),
                 )),
             SizedBox(
@@ -107,34 +110,37 @@ class _SignInState extends State<SignIn> {
             Container(
                 height: MediaQuery.of(context).size.height * .07,
                 width: MediaQuery.of(context).size.width * .9,
-                child: TextField(
-                  enableInteractiveSelection: false,
-                  obscureText: true,
-                  controller: _passwordController,
-                  cursorColor: Color(0xffff5f00),
-                  style: TextStyle(fontSize: 20),
-                  decoration: InputDecoration(
-                    prefixIcon: Icon(
-                      Icons.lock,
-                      color: Color(0xff888888),
-                    ),
-                    filled: true,
-                    fillColor: Color(0xffe3e3e3),
-                    contentPadding: EdgeInsets.all(8),
-                    border: OutlineInputBorder(
+                child: Theme(
+                  data: Theme.of(context)
+                      .copyWith(primaryColor: Color(0xffff5f00)),
+                  child: TextField(
+                    enableInteractiveSelection: false,
+                    obscureText: true,
+                    controller: _passwordController,
+                    cursorColor: Color(0xffff5f00),
+                    style: TextStyle(fontSize: 20),
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(
+                        Icons.lock,
+                      ),
+                      filled: true,
+                      fillColor: Color(0xffe3e3e3),
+                      contentPadding: EdgeInsets.all(8),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide: BorderSide(color: Colors.transparent)),
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide: BorderSide(color: Colors.transparent)),
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide: BorderSide(color: Colors.transparent)),
+                      errorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide: BorderSide(color: Colors.transparent)),
+                      disabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5),
-                        borderSide: BorderSide(color: Colors.transparent)),
-                    focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5),
-                        borderSide: BorderSide(color: Colors.transparent)),
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5),
-                        borderSide: BorderSide(color: Colors.transparent)),
-                    errorBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5),
-                        borderSide: BorderSide(color: Colors.transparent)),
-                    disabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5),
+                      ),
                     ),
                   ),
                 )),

@@ -1,4 +1,4 @@
-class Location {
+class LocationModel {
 
   String latitude;
   String longitude;
@@ -6,9 +6,9 @@ class Location {
   String name;
   bool inside;
 
-  Location.init();
+  LocationModel.init();
 
-  Location({
+  LocationModel({
     this.latitude,
     this.longitude,
     this.code,
@@ -16,8 +16,8 @@ class Location {
     this.inside,
     });
 
-  factory Location.fromJson(Map<String, dynamic> json) {
-    return Location(
+  factory LocationModel.fromJson(Map<String, dynamic> json) {
+    return LocationModel(
       inside:  json['inside'],
       code: json['code'],
     );}
