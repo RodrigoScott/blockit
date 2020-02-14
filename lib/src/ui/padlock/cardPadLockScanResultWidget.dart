@@ -213,7 +213,8 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                   //  alertText('Verificando internet');
                   alertText('Verificando localización');
                   currentLocation = await _getLocation(location);
-                  print("${currentLocation.longitude}, ${currentLocation.latitude}");
+                  print(
+                      "${currentLocation.longitude}, ${currentLocation.latitude}");
                   closeAlert(loadingContext);
                   alertText('Conectando Bluetooth');
                   await widget.result.device
@@ -268,6 +269,41 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                         fontSize: 25,
                                                         fontWeight:
                                                             FontWeight.bold)),
+                                                Container(
+                                                  height: 29,
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: <Widget>[
+                                                      Container(
+                                                          height: 30,
+                                                          child: Icon(
+                                                            Icons
+                                                                .not_interested,
+                                                            color: Color(
+                                                                0xffff5f00),
+                                                          )),
+                                                      SizedBox(
+                                                        width: 5,
+                                                      ),
+                                                      Container(
+                                                        height: 20,
+                                                        child: Text(
+                                                            'Fuera de Geocerca',
+                                                            style: TextStyle(
+                                                              color: Color(
+                                                                  0xffff5f00),
+                                                            )),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
                                                 validateBattery
                                                     ? Container(
                                                         height: 29,
@@ -446,276 +482,322 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                             });
                           }
                         }
-                      } else
-                        if (res.statusCode == 404){
-                          if (_current == "0:00") {
-                            setState(() {
-                              validateContainer = false;
-                            });
+                      } else if (res.statusCode == 404) {
+                        if (_current == "0:00") {
+                          setState(() {
+                            validateContainer = false;
+                          });
 
-                            closeAlert(loadingContext);
-                            showDialog(
-                                barrierDismissible: true,
-                                context: context,
-                                builder: (context) {
-                                  return Column(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      StatefulBuilder(builder: (context, setState) {
-                                        return AlertDialog(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                BorderRadius.circular(5)),
-                                            content: Column(
-                                              children: <Widget>[
-                                                Text('Candado',
-                                                    style: TextStyle(
-                                                        fontSize: 25,
-                                                        fontWeight: FontWeight.bold)),
-                                                Text(widget.result.device.name,
-                                                    style: TextStyle(
-                                                        fontSize: 25,
-                                                        fontWeight: FontWeight.bold)),
-                                                validateBattery
-                                                    ? Container(
-                                                  height: 29,
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .center,
-                                                    crossAxisAlignment:
-                                                    CrossAxisAlignment
-                                                        .center,
-                                                    mainAxisSize:
-                                                    MainAxisSize.min,
-                                                    children: <Widget>[
-                                                      Container(
-                                                          height: 30,
-                                                          child: Icon(
-                                                            Icons.battery_alert,
-                                                            color: Color(
-                                                                0xffff5f00),
-                                                          )),
-                                                      SizedBox(
-                                                        width: 5,
-                                                      ),
-                                                      Container(
-                                                        height: 20,
-                                                        child: Text(
-                                                            'Candado sin batería',
-                                                            style: TextStyle(
-                                                              color: Color(
-                                                                  0xffff5f00),
-                                                            )),
-                                                      )
-                                                    ],
-                                                  ),
-                                                )
-                                                    : Container(),
-                                                validateContainer
-                                                    ? Container(
-                                                  height: 29,
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .center,
-                                                    crossAxisAlignment:
-                                                    CrossAxisAlignment
-                                                        .center,
-                                                    mainAxisSize:
-                                                    MainAxisSize.min,
-                                                    children: <Widget>[
-                                                      Container(
-                                                          height: 30,
-                                                          child: Icon(
-                                                            Icons.error,
-                                                            color: Colors.red,
-                                                          )),
-                                                      SizedBox(
-                                                        width: 5,
-                                                      ),
-                                                      Container(
-                                                        height: 20,
-                                                        child: Text(
-                                                          textError,
-                                                          style: TextStyle(
-                                                              color:
-                                                              Colors.red),
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                )
-                                                    : Container(),
-                                                Container(
-                                                  height: MediaQuery.of(context)
-                                                      .size
-                                                      .height *
-                                                      .05,
-                                                  width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                      .9,
-                                                  alignment: Alignment.centerLeft,
-                                                  child: Text(
-                                                    'Código',
-                                                    style: TextStyle(
-                                                        fontSize: 13,
-                                                        fontWeight: FontWeight.bold),
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                ),
-                                                Container(
-                                                  height: MediaQuery.of(context)
-                                                      .size
-                                                      .height *
-                                                      .07,
-                                                  width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                      .9,
-                                                  child: Form(
-                                                      key: _validateField,
-                                                      child: _inputValidate),
-                                                ),
-                                                SizedBox(
-                                                  height: MediaQuery.of(context)
-                                                      .size
-                                                      .height *
-                                                      .05,
-                                                ),
-                                                Container(
-                                                  height: MediaQuery.of(context)
-                                                      .size
-                                                      .height *
-                                                      .07,
-                                                  width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                      .9,
-                                                  child: InkWell(
-                                                    borderRadius:
-                                                    BorderRadius.circular(5),
-                                                    onTap: () async {
-                                                      _validateResponse(
-                                                          codeFieldController.text,
-                                                          true,
-                                                          widget.result.device);
-                                                    },
-                                                    child: Center(
-                                                      child: Container(
-                                                        decoration: BoxDecoration(
-                                                          borderRadius:
-                                                          BorderRadius.circular(
-                                                              5),
-                                                          color: Color(0xffff5f00),
-                                                        ),
-                                                        height: MediaQuery.of(context)
-                                                            .size
-                                                            .height *
-                                                            .07,
-                                                        width: MediaQuery.of(context)
-                                                            .size
-                                                            .width *
-                                                            .9,
-                                                        child: Center(
-                                                          child: Text(
-                                                            'Verificar',
-                                                            style: TextStyle(
-                                                                fontSize: 20,
-                                                                color: Colors.white),
-                                                            textAlign:
-                                                            TextAlign.center,
+                          closeAlert(loadingContext);
+                          showDialog(
+                              barrierDismissible: true,
+                              context: context,
+                              builder: (context) {
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    StatefulBuilder(
+                                        builder: (context, setState) {
+                                      return AlertDialog(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(5)),
+                                          content: Column(
+                                            children: <Widget>[
+                                              Text('Candado',
+                                                  style: TextStyle(
+                                                      fontSize: 25,
+                                                      fontWeight:
+                                                          FontWeight.bold)),
+                                              Text(widget.result.device.name,
+                                                  style: TextStyle(
+                                                      fontSize: 25,
+                                                      fontWeight:
+                                                          FontWeight.bold)),
+                                              check
+                                                  ? Container()
+                                                  : Container(
+                                                      height: 29,
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: <Widget>[
+                                                          Container(
+                                                              height: 30,
+                                                              child: Icon(
+                                                                Icons
+                                                                    .battery_alert,
+                                                                color: Color(
+                                                                    0xffff5f00),
+                                                              )),
+                                                          SizedBox(
+                                                            width: 5,
                                                           ),
+                                                          Container(
+                                                            height: 20,
+                                                            child: Text(
+                                                                'Sin internet',
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: Color(
+                                                                      0xffff5f00),
+                                                                )),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
+                                              validateBattery
+                                                  ? Container(
+                                                      height: 29,
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: <Widget>[
+                                                          Container(
+                                                              height: 30,
+                                                              child: Icon(
+                                                                Icons
+                                                                    .battery_alert,
+                                                                color: Color(
+                                                                    0xffff5f00),
+                                                              )),
+                                                          SizedBox(
+                                                            width: 5,
+                                                          ),
+                                                          Container(
+                                                            height: 20,
+                                                            child: Text(
+                                                                'Candado sin batería',
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: Color(
+                                                                      0xffff5f00),
+                                                                )),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    )
+                                                  : Container(),
+                                              validateContainer
+                                                  ? Container(
+                                                      height: 29,
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: <Widget>[
+                                                          Container(
+                                                              height: 30,
+                                                              child: Icon(
+                                                                Icons.error,
+                                                                color:
+                                                                    Colors.red,
+                                                              )),
+                                                          SizedBox(
+                                                            width: 5,
+                                                          ),
+                                                          Container(
+                                                            height: 20,
+                                                            child: Text(
+                                                              textError,
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .red),
+                                                            ),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    )
+                                                  : Container(),
+                                              Container(
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    .05,
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    .9,
+                                                alignment: Alignment.centerLeft,
+                                                child: Text(
+                                                  'Código',
+                                                  style: TextStyle(
+                                                      fontSize: 13,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ),
+                                              Container(
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    .07,
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    .9,
+                                                child: Form(
+                                                    key: _validateField,
+                                                    child: _inputValidate),
+                                              ),
+                                              SizedBox(
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    .05,
+                                              ),
+                                              Container(
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    .07,
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    .9,
+                                                child: InkWell(
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
+                                                  onTap: () async {
+                                                    _validateResponse(
+                                                        codeFieldController
+                                                            .text,
+                                                        true,
+                                                        widget.result.device);
+                                                  },
+                                                  child: Center(
+                                                    child: Container(
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(5),
+                                                        color:
+                                                            Color(0xffff5f00),
+                                                      ),
+                                                      height:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .height *
+                                                              .07,
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              .9,
+                                                      child: Center(
+                                                        child: Text(
+                                                          'Verificar',
+                                                          style: TextStyle(
+                                                              fontSize: 20,
+                                                              color:
+                                                                  Colors.white),
+                                                          textAlign:
+                                                              TextAlign.center,
                                                         ),
                                                       ),
                                                     ),
                                                   ),
                                                 ),
-                                              ],
-                                            ));
-                                      }),
+                                              ),
+                                            ],
+                                          ));
+                                    }),
+                                  ],
+                                );
+                              }).then((data) {
+                            widget.result.device.disconnect();
+                          });
+                        } else if (padlockStatus == "open") {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return StatefulBuilder(
+                                    builder: (context, setState) {
+                                  return AlertDialog(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(5),
+                                      ),
+                                    ),
+                                    title: Text('Candado abierto'),
+                                    content: Container(
+                                        child: Text(
+                                            'El candado se cerrará en $_current')),
+                                    actions: <Widget>[
+                                      FlatButton(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(5)),
+                                        ),
+                                        color: Color(0xffff5f00),
+                                        child: Text(
+                                          "Aceptar",
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      )
                                     ],
                                   );
-                                }).then((data) {
-                              widget.result.device.disconnect();
-                            });
-                          } else
-                          if (padlockStatus == "open") {
-                            showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return StatefulBuilder(
-                                      builder: (context, setState) {
-                                        return AlertDialog(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(5),
-                                            ),
-                                          ),
-                                          title: Text('Candado abierto'),
-                                          content: Container(
-                                              child: Text(
-                                                  'El candado se cerrará en $_current')),
-                                          actions: <Widget>[
-                                            FlatButton(
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                BorderRadius.all(Radius.circular(5)),
-                                              ),
-                                              color: Color(0xffff5f00),
-                                              child: Text(
-                                                "Aceptar",
-                                                style: TextStyle(color: Colors.white),
-                                              ),
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                            )
-                                          ],
-                                        );
-                                      });
                                 });
-                          } else
-                          if (padlockStatus == "locked")
-                          {
-                            showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return StatefulBuilder(
-                                      builder: (context, setState) {
-                                        return AlertDialog(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(5),
-                                            ),
-                                          ),
-                                          title: Text('Candado bloqueado'),
-                                          content: Container(
-                                              child: Text('Intentar en $_current')),
-                                          actions: <Widget>[
-                                            FlatButton(
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                BorderRadius.all(Radius.circular(5)),
-                                              ),
-                                              color: Color(0xffff5f00),
-                                              child: Text(
-                                                "Aceptar",
-                                                style: TextStyle(color: Colors.white),
-                                              ),
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                            )
-                                          ],
-                                        );
-                                      });
+                              });
+                        } else if (padlockStatus == "locked") {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return StatefulBuilder(
+                                    builder: (context, setState) {
+                                  return AlertDialog(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(5),
+                                      ),
+                                    ),
+                                    title: Text('Candado bloqueado'),
+                                    content: Container(
+                                        child: Text('Intentar en $_current')),
+                                    actions: <Widget>[
+                                      FlatButton(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(5)),
+                                        ),
+                                        color: Color(0xffff5f00),
+                                        child: Text(
+                                          "Aceptar",
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      )
+                                    ],
+                                  );
                                 });
-                          }
+                              });
                         }
+                      }
                     });
                   } else {
                     if (_current == "0:00") {
@@ -748,6 +830,35 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                               style: TextStyle(
                                                   fontSize: 25,
                                                   fontWeight: FontWeight.bold)),
+                                          Container(
+                                            height: 29,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: <Widget>[
+                                                Container(
+                                                    height: 30,
+                                                    child: Icon(
+                                                      Icons.signal_wifi_off,
+                                                      color: Color(0xffff5f00),
+                                                    )),
+                                                SizedBox(
+                                                  width: 5,
+                                                ),
+                                                Container(
+                                                  height: 20,
+                                                  child: Text('Sin internet',
+                                                      style: TextStyle(
+                                                        color:
+                                                            Color(0xffff5f00),
+                                                      )),
+                                                )
+                                              ],
+                                            ),
+                                          ),
                                           validateBattery
                                               ? Container(
                                                   height: 29,
@@ -912,8 +1023,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                           }).then((data) {
                         widget.result.device.disconnect();
                       });
-                    } else
-                      if (padlockStatus == "open") {
+                    } else if (padlockStatus == "open") {
                       showDialog(
                           context: context,
                           builder: (BuildContext context) {
@@ -948,9 +1058,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                               );
                             });
                           });
-                    } else
-                      if (padlockStatus == "locked")
-                      {
+                    } else if (padlockStatus == "locked") {
                       showDialog(
                           context: context,
                           builder: (BuildContext context) {
@@ -986,8 +1094,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                           });
                     }
                   }
-                } else
-                  if (padlockStatus == "open") {
+                } else if (padlockStatus == "open") {
                   showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -1021,8 +1128,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                           );
                         });
                       });
-                } else
-                  if (padlockStatus == "locked") {
+                } else if (padlockStatus == "locked") {
                   showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -1117,15 +1223,15 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
     await listener.cancel();
   }
 
-  Future _getLocation( Location locationService) async {
+  Future _getLocation(Location locationService) async {
     try {
-    return await locationService.getLocation();
+      return await locationService.getLocation();
     } on PlatformException catch (e) {
       if (e.code == 'PERMISSION_DENIED') {
         print('Permission denied');
       }
       locationService = null;
-  }
+    }
   }
 
   _validateResponse(String code, bool validatecode, device) async {
