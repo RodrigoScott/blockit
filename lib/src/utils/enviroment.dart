@@ -7,7 +7,7 @@ class Environment {
   String base_url_api = 'http://trailock.mx/api/v1/';
   String host = 'trailock.mx';
 
-  /* String client_secret = "z89SUkG51B1bXXPGOlgCtIk66YJr4R83tBbIIn69";
+  /*String client_secret = "z89SUkG51B1bXXPGOlgCtIk66YJr4R83tBbIIn69";
   String client_id = "2";
   String base_url = 'http://trailock.mx/';
   String base_url_api = 'http://cceo.io:8109/api/v1/';
