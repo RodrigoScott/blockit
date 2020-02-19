@@ -23,6 +23,7 @@ dependencies:
   url_launcher: 5.0.0
   connectivity: ^0.4.6+1
   geolocator: '^5.1.1'
+  google_maps_flutter: ^0.5.23+1
   geocoder: ^0.2.1
   data_connection_checker: ^0.3.4
   location: ^2.3.5

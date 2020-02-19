@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:connectivity/connectivity.dart';
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,6 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trailock/src/model/device.dart';
 import 'package:trailock/src/model/location.dart';
 import 'package:trailock/src/resources/locationService.dart';
+import 'package:trailock/src/resources/user.Services.dart';
 import 'package:trailock/src/widgets/loadingAlertDismissible.dart';
 import 'package:location/location.dart';
 
@@ -30,6 +33,8 @@ class CardPadLockScanResult extends StatefulWidget {
 class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
   final codeFieldController = TextEditingController();
   var _validateField = GlobalKey<FormState>();
+  SharedPreferences prefs;
+  List<Device> devices;
   bool validateContainer = false;
   bool validateBotton = false;
   bool validateBattery = false;
@@ -210,7 +215,6 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
               onTap: () async {
                 if (_current == '0:00') {
                   _checkConection();
-                  //  alertText('Verificando internet');
                   alertText('Verificando localización');
                   currentLocation = await _getLocation(location);
                   print(
@@ -226,6 +230,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                     Duration(seconds: 10);
                     Navigator.pop(context);
                   });
+                  print('internet : $check ');
                   if (check == true) {
                     LocationService()
                         .set(
@@ -233,6 +238,8 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                             currentLocation.longitude.toString(),
                             widget.result.device.name)
                         .then((res) async {
+                      print('Localización : ${res.data['inside']}');
+                      print('status : ${res.statusCode}');
                       if (res.statusCode == 200) {
                         if (res.data['inside'] == true) {
                           await _validateResponse(
@@ -1207,20 +1214,29 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
     super.dispose();
   }
 
-  _checkConection() async {
-    var listener = DataConnectionChecker().onStatusChange.listen((status) {
-      switch (status) {
-        case DataConnectionStatus.connected:
+  Future<bool> _checkConection() async {
+    check = false;
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    try {
+      final result = await InternetAddress.lookup('trailock.mx');
+      print('resultado internet $result');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        setState(() {
           check = true;
-          break;
-        case DataConnectionStatus.disconnected:
+        });
+        print('connected');
+      } else {
+        setState(() {
           check = false;
-          break;
+        });
+        print('not connected');
       }
-    });
-    await Future.delayed(Duration(seconds: 30));
-
-    await listener.cancel();
+    } on SocketException catch (_) {
+      setState(() {
+        check = false;
+      });
+      print('not connected');
+    }
   }
 
   Future _getLocation(Location locationService) async {

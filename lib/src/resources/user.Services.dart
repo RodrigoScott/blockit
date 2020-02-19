@@ -1,11 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trailock/main.dart';
-import 'package:trailock/src/model/user.dart';
 import 'package:trailock/src/utils/enviroment.dart';
 
 class UserService {
   var dio = Dio();
+
   validateStatus() async {
     final prefs = await SharedPreferences.getInstance();
     token = prefs.getString('access_token');
@@ -20,6 +20,7 @@ class UserService {
       response = await dio.post(url, options: Options(headers: _headers));
       return response;
     } on DioError catch (e) {
+      print(e.response);
       return e.response;
     }
   }
@@ -46,26 +47,6 @@ class UserService {
       return response;
     } on DioError catch (e) {
       return e.response;
-    }
-  }
-
-  Future<List<User>> getUser() async {
-    var prefs = await SharedPreferences.getInstance();
-    var token = prefs.getString('access_token');
-    var _headers = {
-      "accept": "application/json",
-      "X-Requested-With": "XMLHttpRequest",
-      "Authorization": "Bearer $token",
-    };
-    Response response = await dio.get('${Environment.config.base_url_api}posts',
-        options: Options(headers: _headers));
-    if (response.statusCode == 200) {
-      var data =
-          (response.data as List).map((data) => User.fromJson(data)).toList();
-
-      return data;
-    } else {
-      return List();
     }
   }
 
