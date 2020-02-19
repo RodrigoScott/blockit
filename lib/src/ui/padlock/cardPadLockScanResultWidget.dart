@@ -1,9 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-
+import 'package:geolocator/geolocator.dart';
 import 'package:connectivity/connectivity.dart';
-import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_blue/flutter_blue.dart';
@@ -11,11 +10,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:quiver/async.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trailock/src/model/device.dart';
-import 'package:trailock/src/model/location.dart';
 import 'package:trailock/src/resources/locationService.dart';
-import 'package:trailock/src/resources/user.Services.dart';
 import 'package:trailock/src/widgets/loadingAlertDismissible.dart';
-import 'package:location/location.dart';
 
 class CardPadLockScanResult extends StatefulWidget {
   CardPadLockScanResult(
@@ -45,8 +41,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
   Duration _durationTimeOpen;
   Duration _durationTimeLocked;
   bool check = false;
-  LocationData currentLocation;
-  Location location = new Location();
+  String lat, lng;
   var loadingContext;
 
   closeAlert(BuildContext _context) {
@@ -216,27 +211,24 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                 if (_current == '0:00') {
                   _checkConection();
                   alertText('Verificando localización');
-                  currentLocation = await _getLocation(location);
-                  print(
-                      "${currentLocation.longitude}, ${currentLocation.latitude}");
+                  await _getLocation();
+                  print("$lng, $lat");
                   closeAlert(loadingContext);
                   alertText('Conectando Bluetooth');
                   await widget.result.device
                       .connect(autoConnect: false)
-                      .timeout(Duration(seconds: 30), onTimeout: () {
+                      .timeout(Duration(seconds: 10), onTimeout: () {
                     Fluttertoast.showToast(
                         timeInSecForIos: 10,
                         msg: "Tiempo de espera agotado. Intenta de nuevo");
                     Duration(seconds: 10);
+                    widget.result.device.disconnect();
                     Navigator.pop(context);
                   });
                   print('internet : $check ');
                   if (check == true) {
                     LocationService()
-                        .set(
-                            currentLocation.latitude.toString(),
-                            currentLocation.longitude.toString(),
-                            widget.result.device.name)
+                        .set(lat, lng, widget.result.device.name)
                         .then((res) async {
                       print('Localización : ${res.data['inside']}');
                       print('status : ${res.statusCode}');
@@ -244,7 +236,8 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                         if (res.data['inside'] == true) {
                           await _validateResponse(
                               res.data['code'], false, widget.result.device);
-                          widget.result.device.disconnect();
+                          var a = await widget.result.device.disconnect();
+                          print('estado celular bluetooth $a');
                         } else {
                           if (_current == "0:00") {
                             closeAlert(loadingContext);
@@ -1239,15 +1232,14 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
     }
   }
 
-  Future _getLocation(Location locationService) async {
-    try {
-      return await locationService.getLocation();
-    } on PlatformException catch (e) {
-      if (e.code == 'PERMISSION_DENIED') {
-        print('Permission denied');
-      }
-      locationService = null;
-    }
+  Future _getLocation() async {
+    var currentLocation = await Geolocator().getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.bestForNavigation);
+
+    setState(() {
+      lat = (currentLocation.latitude).toString();
+      lng = (currentLocation.longitude).toString();
+    });
   }
 
   _validateResponse(String code, bool validatecode, device) async {
@@ -1301,7 +1293,8 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
               return LoadingAlertDismissible(content: 'Verificando');
             });
         if (validatecode == true) {
-          await characteristic.write(utf8.encode(code.toUpperCase()));
+          await characteristic
+              .write(utf8.encode(codeFieldController.text.toUpperCase()));
         } else {
           await characteristic.write(utf8.encode(code.toUpperCase()));
         }
