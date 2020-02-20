@@ -211,8 +211,13 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                 if (_current == '0:00') {
                   _checkConection();
                   alertText('Verificando localización');
-                  await _getLocation();
-                  print("$lng, $lat");
+                  await _getLocation().timeout(Duration(seconds: 30),
+                      onTimeout: () {
+                    closeAlert(loadingContext);
+                    alertText('Imposible obtener ubicación');
+                    Duration(seconds: 5);
+                    lng = lat = '0';
+                  });
                   closeAlert(loadingContext);
                   alertText('Conectando Bluetooth');
                   await widget.result.device
@@ -225,19 +230,15 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                     widget.result.device.disconnect();
                     Navigator.pop(context);
                   });
-                  print('internet : $check ');
                   if (check == true) {
                     LocationService()
                         .set(lat, lng, widget.result.device.name)
                         .then((res) async {
-                      print('Localización : ${res.data['inside']}');
-                      print('status : ${res.statusCode}');
                       if (res.statusCode == 200) {
                         if (res.data['inside'] == true) {
                           await _validateResponse(
                               res.data['code'], false, widget.result.device);
                           var a = await widget.result.device.disconnect();
-                          print('estado celular bluetooth $a');
                         } else {
                           if (_current == "0:00") {
                             closeAlert(loadingContext);
@@ -1212,23 +1213,19 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
     var connectivityResult = await (Connectivity().checkConnectivity());
     try {
       final result = await InternetAddress.lookup('trailock.mx');
-      print('resultado internet $result');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
         setState(() {
           check = true;
         });
-        print('connected');
       } else {
         setState(() {
           check = false;
         });
-        print('not connected');
       }
     } on SocketException catch (_) {
       setState(() {
         check = false;
       });
-      print('not connected');
     }
   }
 
