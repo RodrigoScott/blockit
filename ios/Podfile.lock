@@ -9,6 +9,28 @@ PODS:
   - flutter_blue/Protos (0.0.1):
     - Flutter
     - Protobuf
+  - flutter_plugin_android_lifecycle (0.0.1):
+    - Flutter
+  - fluttertoast (0.0.2):
+    - Flutter
+  - geocoder (0.0.1):
+    - Flutter
+  - geolocator (5.2.1):
+    - Flutter
+  - google_api_availability (2.0.2):
+    - Flutter
+  - google_maps_flutter (0.0.1):
+    - Flutter
+    - GoogleMaps
+  - GoogleMaps (3.7.0):
+    - GoogleMaps/Maps (= 3.7.0)
+  - GoogleMaps/Base (3.7.0)
+  - GoogleMaps/Maps (3.7.0):
+    - GoogleMaps/Base
+  - location (0.0.1):
+    - Flutter
+  - "location_permissions (2.0.4+1)":
+    - Flutter
   - Protobuf (3.11.2)
   - Reachability (3.2)
   - shared_preferences (0.0.1):
@@ -20,11 +42,20 @@ DEPENDENCIES:
   - connectivity (from `.symlinks/plugins/connectivity/ios`)
   - Flutter (from `Flutter`)
   - flutter_blue (from `.symlinks/plugins/flutter_blue/ios`)
+  - flutter_plugin_android_lifecycle (from `.symlinks/plugins/flutter_plugin_android_lifecycle/ios`)
+  - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
+  - geocoder (from `.symlinks/plugins/geocoder/ios`)
+  - geolocator (from `.symlinks/plugins/geolocator/ios`)
+  - google_api_availability (from `.symlinks/plugins/google_api_availability/ios`)
+  - google_maps_flutter (from `.symlinks/plugins/google_maps_flutter/ios`)
+  - location (from `.symlinks/plugins/location/ios`)
+  - location_permissions (from `.symlinks/plugins/location_permissions/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
   - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
 
 SPEC REPOS:
   trunk:
+    - GoogleMaps
     - Protobuf
     - Reachability
 
@@ -35,6 +66,22 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_blue:
     :path: ".symlinks/plugins/flutter_blue/ios"
+  flutter_plugin_android_lifecycle:
+    :path: ".symlinks/plugins/flutter_plugin_android_lifecycle/ios"
+  fluttertoast:
+    :path: ".symlinks/plugins/fluttertoast/ios"
+  geocoder:
+    :path: ".symlinks/plugins/geocoder/ios"
+  geolocator:
+    :path: ".symlinks/plugins/geolocator/ios"
+  google_api_availability:
+    :path: ".symlinks/plugins/google_api_availability/ios"
+  google_maps_flutter:
+    :path: ".symlinks/plugins/google_maps_flutter/ios"
+  location:
+    :path: ".symlinks/plugins/location/ios"
+  location_permissions:
+    :path: ".symlinks/plugins/location_permissions/ios"
   shared_preferences:
     :path: ".symlinks/plugins/shared_preferences/ios"
   url_launcher:
@@ -44,6 +91,15 @@ SPEC CHECKSUMS:
   connectivity: 6e94255659cc86dcbef1d452ad3e0491bb1b3e75
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
   flutter_blue: be3f2be2f5fda254d174896c0738b2fcb6b1073e
+  flutter_plugin_android_lifecycle: 47de533a02850f070f5696a623995e93eddcdb9b
+  fluttertoast: b644586ef3b16f67fae9a1f8754cef6b2d6b634b
+  geocoder: 3cfab70531a0b367e917bafe82df4c30f6d4c45a
+  geolocator: a048cc412bf350b17d671d170f151b0c9fb8f098
+  google_api_availability: 6f1017d3a61be12be3bd9f929cc5b2606f24ae7f
+  google_maps_flutter: d0dd62f5a7d39bae61057eb9f52dd778d99c7c6c
+  GoogleMaps: 55da829c68aa931f3ae982b9e341cc2f3d89c587
+  location: 3a2eed4dd2fab25e7b7baf2a9efefe82b512d740
+  location_permissions: 360d12ecd1c94a4cab68585f508be1d5ad944c8b
   Protobuf: dd1aaea7140debfe4dd0683fb8ef208e527ae153
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   shared_preferences: 430726339841afefe5142b9c1f50cb6bd7793e01
