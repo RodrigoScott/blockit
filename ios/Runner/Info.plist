@@ -23,7 +23,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>Our app does not request this permission or utilize this functionality but it is included in our info.plist since our app utilizes the react-native-permissions library, which references this permission in its code.</string>
+	<string>Se usara la conexión Bluetooth para la busqueda de candados Trailock.</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>We use Bluetooth connection to search for padlock devices</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
