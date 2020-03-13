@@ -1,10 +1,6 @@
-import 'dart:convert';
-
-import 'package:trailock/src/model/location.dart';
-import 'package:trailock/src/utils/enviroment.dart';
 import 'package:dio/dio.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trailock/src/utils/enviroment.dart';
 
 class LocationService {
   var dio = Dio();
@@ -22,7 +18,7 @@ class LocationService {
 
     Response response;
     try {
-      uri = Uri.http('${Environment().host}', 'api/v1/zones', {
+      uri = Uri.https('${Environment().host}', 'api/v1/zones', {
         "lat": "$latitude",
         "lng": "$longitude",
         "padlock_name": '${int.parse(name.substring(3))}'
