@@ -69,15 +69,20 @@ class UserService {
     Response response;
     try {
       response =
-          await dio.post(url, options: Options(headers: _headers), data: _data);
-      if (response.statusCode == 200) {
-        prefs.setString('access_token', response.data['access_token']);
-        prefs.setString('userName', response.data['name']);
-        prefs.setString('lastName', response.data['first_last_name']);
-        prefs.setString('secondLastName', response.data['second_last_name']);
-        prefs.setString('userEmail', response.data['email']);
-        prefs.setString('carrier', response.data['company_name']);
-        return response;
+          await dio.post(url, options: Options(headers: _headers), data: _data).timeout(Duration(seconds: 15), onTimeout: (){return null;});
+      if (response == null){
+        return null;
+      }else{
+        if (response.statusCode == 200) {
+          prefs.setString('access_token', response.data['access_token']);
+          prefs.setString('userName', response.data['name']);
+          prefs.setString('lastName', response.data['first_last_name']);
+          prefs.setString('secondLastName', response.data['second_last_name']);
+          prefs.setString('userEmail', response.data['email']);
+          prefs.setString('carrier', response.data['company_name']);
+
+          return response;
+        }
       }
     } on DioError catch (e) {
       return e.response;

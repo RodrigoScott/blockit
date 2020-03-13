@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:trailock/src/resources/user.Services.dart';
+import 'package:trailock/src/resources/version.Services.dart';
 import 'package:trailock/src/utils/enviroment.dart';
 import 'package:trailock/src/widgets/loadingAlertDismissible.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -196,8 +197,8 @@ class _SignInState extends State<SignIn> {
                           return LoadingAlertDismissible(
                               content: 'Iniciando sesión');
                         });
-                    Environment().checkInternetConnection().then((res) {
-                      if (res == true) {
+                    version().getVersion().then((res) {
+                      if (res != null) {
                         UserService()
                             .requestLogin(
                                 _emailController.text, _passwordController.text)

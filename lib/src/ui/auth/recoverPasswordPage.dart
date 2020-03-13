@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trailock/src/resources/user.Services.dart';
+import 'package:trailock/src/resources/version.Services.dart';
 import 'package:trailock/src/utils/enviroment.dart';
 import 'package:trailock/src/widgets/loadingAlertDismissible.dart';
 
@@ -129,8 +130,8 @@ class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
                           return LoadingAlertDismissible(
                               content: 'Enviando correo');
                         });
-                    Environment().checkInternetConnection().then((res) {
-                      if (res == true) {
+                    version().getVersion().then((res) {
+                      if (res != null) {
                         UserService()
                             .requestRecoverPass(_emailController.text)
                             .then((res) {

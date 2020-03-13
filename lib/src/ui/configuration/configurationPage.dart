@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trailock/src/resources/user.Services.dart';
+import 'package:trailock/src/resources/version.Services.dart';
 import 'package:trailock/src/ui/auth/signIn.dart';
 import 'package:trailock/src/utils/enviroment.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -18,8 +19,8 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
   String carrier;
   void initState() {
     setState(() {
-      Environment().checkInternetConnection().then((res) {
-        res
+      version().getVersion().then((res) {
+        res != null
             ? UserService().validateStatus().then((r) {
                 r.statusCode == 401
                     ? showDialog(

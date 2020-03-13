@@ -1,11 +1,14 @@
 import 'package:connectivity/connectivity.dart';
+import 'package:trailock/src/resources/version.Services.dart';
 
 class Environment {
+  bool  validateNEtwork;
   String client_secret = "tc507xfyD6Y0FkOOvnLMDpl4TAoE2J0zug5hvHPX";
   String client_id = "2";
-  String base_url = 'https://trailock.mx/';
-  String base_url_api = 'https://trailock.mx/api/v1/';
+  String base_url = 'http://trailock.mx/';
+  String base_url_api = 'http://trailock.mx/api/v1/';
   String host = 'trailock.mx';
+
   /*String client_secret = "z89SUkG51B1bXXPGOlgCtIk66YJr4R83tBbIIn69";
   String client_id = "2";
   String base_url = 'http://trailock.mx/';
@@ -21,13 +24,4 @@ class Environment {
   static Environment get config => _config;
 
   Environment._internal();
-  Future<bool> checkInternetConnection() async {
-    var connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult == ConnectivityResult.mobile) {
-      return true;
-    } else if (connectivityResult == ConnectivityResult.wifi) {
-      return true;
-    }
-    return false;
-  }
 }

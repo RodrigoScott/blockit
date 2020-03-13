@@ -6,6 +6,7 @@ import 'package:flutter_blue/flutter_blue.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trailock/src/model/device.dart';
 import 'package:trailock/src/resources/user.Services.dart';
+import 'package:trailock/src/resources/version.Services.dart';
 import 'package:trailock/src/ui/auth/signIn.dart';
 import 'package:trailock/src/utils/enviroment.dart';
 import 'package:data_connection_checker/data_connection_checker.dart';
@@ -99,8 +100,8 @@ class _PadlockPageState extends State<PadlockPage> {
                 initialData: false,
                 builder: (c, snapshot) {
                   if (snapshot.data) {
-                    Environment().checkInternetConnection().then((res) {
-                      res
+                    version().getVersion().then((res) {
+                      res != null
                           ? UserService().validateStatus().then((r) {
                               r.statusCode == 401
                                   ? showDialog(
