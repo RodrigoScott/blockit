@@ -8,8 +8,6 @@ import 'package:trailock/src/model/device.dart';
 import 'package:trailock/src/resources/user.Services.dart';
 import 'package:trailock/src/resources/version.Services.dart';
 import 'package:trailock/src/ui/auth/signIn.dart';
-import 'package:trailock/src/utils/enviroment.dart';
-import 'package:data_connection_checker/data_connection_checker.dart';
 
 import 'bluetoothOffScreenWidget.dart';
 import 'cardPadLockScanResultWidget.dart';
@@ -100,7 +98,7 @@ class _PadlockPageState extends State<PadlockPage> {
                 initialData: false,
                 builder: (c, snapshot) {
                   if (snapshot.data) {
-                    version().getVersion().then((res) {
+                    VersionService().getVersion().then((res) {
                       res != null
                           ? UserService().validateStatus().then((r) {
                               r.statusCode == 401
@@ -177,5 +175,4 @@ class _PadlockPageState extends State<PadlockPage> {
   }
 
   _PadlockPageState();
-
 }

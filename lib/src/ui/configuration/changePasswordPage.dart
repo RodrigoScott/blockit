@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trailock/src/resources/user.Services.dart';
+import 'package:trailock/src/resources/version.Services.dart';
 import 'package:trailock/src/widgets/loadingAlertDismissible.dart';
 
 class ChangePasswordPage extends StatefulWidget {
@@ -8,6 +9,7 @@ class ChangePasswordPage extends StatefulWidget {
 }
 
 class _ChangePasswordPageState extends State<ChangePasswordPage> {
+  var _formNewOldPassword = GlobalKey<FormState>();
   var _formNewPassword = GlobalKey<FormState>();
   var _formConfirmNewPassword = GlobalKey<FormState>();
 
@@ -21,6 +23,11 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   }
 
   void initState() {
+    _oldPasswordController.addListener(() {
+      setState(() {
+        _formNewOldPassword.currentState.validate();
+      });
+    });
     _newPasswordController.addListener(() {
       setState(() {
         _formNewPassword.currentState.validate();
@@ -40,10 +47,8 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     Function _valida,
   ) {
     return Container(
-        height: MediaQuery.of(context).size.height * .07,
         width: MediaQuery.of(context).size.width * .9,
         child: TextFormField(
-          enableInteractiveSelection: false,
           obscureText: true,
           validator: _valida,
           controller: controller,
@@ -122,37 +127,43 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                 ),
               ),
               Container(
-                  height: MediaQuery.of(context).size.height * .07,
                   width: MediaQuery.of(context).size.width * .9,
-                  child: TextField(
-                    enableInteractiveSelection: false,
-                    obscureText: true,
-                    controller: _oldPasswordController,
-                    cursorColor: Color(0xffff5f00),
-                    style: TextStyle(fontSize: 20),
-                    decoration: InputDecoration(
-                      prefixIcon: Icon(
-                        Icons.email,
-                        color: Color(0xff888888),
+                  child: Form(
+                    key: _formNewOldPassword,
+                    child: TextFormField(
+                      obscureText: true,
+                      controller: _oldPasswordController,
+                      cursorColor: Color(0xffff5f00),
+                      style: TextStyle(fontSize: 20),
+                      validator: (value) {
+                        if (_oldPasswordController.text.length == 0) {
+                          return ('Favor de ingresar minimo 8 caracteres');
+                        }
+                      },
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(
+                          Icons.email,
+                          color: Color(0xff888888),
+                        ),
+                        filled: true,
+                        fillColor: Color(0xffe3e3e3),
+                        contentPadding: EdgeInsets.all(8),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5),
+                            borderSide: BorderSide(color: Colors.transparent)),
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5),
+                            borderSide: BorderSide(color: Colors.transparent)),
+                        enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5),
+                            borderSide: BorderSide(color: Colors.transparent)),
+                        errorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5),
+                            borderSide: BorderSide(color: Colors.transparent)),
+                        disabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5),
+                            borderSide: BorderSide(color: Colors.transparent)),
                       ),
-                      filled: true,
-                      fillColor: Color(0xffe3e3e3),
-                      contentPadding: EdgeInsets.all(8),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: BorderSide(color: Colors.transparent)),
-                      focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: BorderSide(color: Colors.transparent)),
-                      enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: BorderSide(color: Colors.transparent)),
-                      errorBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: BorderSide(color: Colors.transparent)),
-                      disabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: BorderSide(color: Colors.transparent)),
                     ),
                   )),
               SizedBox(
@@ -198,93 +209,132 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                 child: InkWell(
                   borderRadius: BorderRadius.circular(5),
                   onTap: () {
-                    if (_formNewPassword.currentState.validate() &&
-                        _formConfirmNewPassword.currentState.validate()) {
-                      showDialog(
-                          barrierDismissible: false,
-                          context: context,
-                          builder: (BuildContext context) {
-                            loadingContext = context;
-                            return LoadingAlertDismissible(
-                                content: 'Cambiando contraseña');
+                    VersionService().getVersion().then((res) {
+                      if (res != null) {
+                        if (_formNewPassword.currentState.validate() &&
+                            _formNewOldPassword.currentState.validate() &&
+                            _formConfirmNewPassword.currentState.validate()) {
+                          showDialog(
+                              barrierDismissible: false,
+                              context: context,
+                              builder: (BuildContext context) {
+                                loadingContext = context;
+                                return LoadingAlertDismissible(
+                                    content: 'Cambiando contraseña');
+                              });
+                          UserService()
+                              .changePassword(
+                                  _oldPasswordController.text,
+                                  _newPasswordController.text,
+                                  _confirmNewPasswordController.text)
+                              .then((res) {
+                            if (res.statusCode == 200) {
+                              _oldPasswordController.text = '';
+                              _newPasswordController.text = '';
+                              _confirmNewPasswordController.text = '';
+                              closeAlert(loadingContext);
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(5),
+                                        ),
+                                      ),
+                                      title: Text('Hecho'),
+                                      content: Container(
+                                          child:
+                                              Text('Contraseña restablecida')),
+                                      actions: <Widget>[
+                                        FlatButton(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(5)),
+                                          ),
+                                          color: Color(0xffff5f00),
+                                          child: Text(
+                                            "Aceptar",
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        )
+                                      ],
+                                    );
+                                  });
+                            } else {
+                              closeAlert(loadingContext);
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(5),
+                                        ),
+                                      ),
+                                      title: Text('Error'),
+                                      content: Container(
+                                          child: Text(
+                                              'Contraseña actual incorrecta')),
+                                      actions: <Widget>[
+                                        FlatButton(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(5)),
+                                          ),
+                                          color: Color(0xffff5f00),
+                                          child: Text(
+                                            "Aceptar",
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        )
+                                      ],
+                                    );
+                                  });
+                            }
                           });
-                      UserService()
-                          .changePassword(
-                              _oldPasswordController.text,
-                              _newPasswordController.text,
-                              _confirmNewPasswordController.text)
-                          .then((res) {
-                        if (res.statusCode == 200) {
-                          _oldPasswordController.text = '';
-                          _newPasswordController.text = '';
-                          _confirmNewPasswordController.text = '';
-                          closeAlert(loadingContext);
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(5),
-                                    ),
-                                  ),
-                                  title: Text('Hecho'),
-                                  content: Container(
-                                      child: Text('Contraseña restablecida')),
-                                  actions: <Widget>[
-                                    FlatButton(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(5)),
-                                      ),
-                                      color: Color(0xffff5f00),
-                                      child: Text(
-                                        "Aceptar",
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    )
-                                  ],
-                                );
-                              });
-                        } else {
-                          closeAlert(loadingContext);
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(5),
-                                    ),
-                                  ),
-                                  title: Text('Error'),
-                                  content: Container(
-                                      child:
-                                          Text('Contraseña actual incorrecta')),
-                                  actions: <Widget>[
-                                    FlatButton(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(5)),
-                                      ),
-                                      color: Color(0xffff5f00),
-                                      child: Text(
-                                        "Aceptar",
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    )
-                                  ],
-                                );
-                              });
                         }
-                      });
-                    }
+                      } else {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(5),
+                                  ),
+                                ),
+                                title: Text('Error'),
+                                content: Container(
+                                    child: Text('Sin conexion a internet')),
+                                actions: <Widget>[
+                                  FlatButton(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(5)),
+                                    ),
+                                    color: Color(0xffff5f00),
+                                    child: Text(
+                                      "Aceptar",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  )
+                                ],
+                              );
+                            });
+                      }
+                    });
                   },
                   child: Center(
                     child: Container(

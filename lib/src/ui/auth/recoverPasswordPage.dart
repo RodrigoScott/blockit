@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trailock/src/resources/user.Services.dart';
 import 'package:trailock/src/resources/version.Services.dart';
-import 'package:trailock/src/utils/enviroment.dart';
 import 'package:trailock/src/widgets/loadingAlertDismissible.dart';
 
 class RecoverPasswordPage extends StatefulWidget {
@@ -50,7 +49,6 @@ class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
                   data: Theme.of(context)
                       .copyWith(primaryColor: Color(0xffff5f00)),
                   child: TextField(
-                    enableInteractiveSelection: false,
                     keyboardType: TextInputType.emailAddress,
                     controller: _emailController,
                     cursorColor: Color(0xffff5f00),
@@ -89,87 +87,126 @@ class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
               child: InkWell(
                 borderRadius: BorderRadius.circular(5),
                 onTap: () {
-                  if (_emailController.text == '') {
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(5),
-                              ),
-                            ),
-                            title: Text('Error'),
-                            content: Container(
-                              child: Text('Ingrese un email'),
-                            ),
-                            actions: <Widget>[
-                              FlatButton(
+                  VersionService().getVersion().then((res) {
+                    if (res != null) {
+                      if (_emailController.text == '') {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
                                 shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(5)),
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(5),
+                                  ),
                                 ),
-                                color: Color(0xffff5f00),
-                                child: Text(
-                                  "Aceptar",
-                                  style: TextStyle(color: Colors.white),
+                                title: Text('Error'),
+                                content: Container(
+                                  child: Text('Ingrese un email'),
                                 ),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              )
-                            ],
-                          );
-                        });
-                  } else {
-                    showDialog(
-                        barrierDismissible: false,
-                        context: context,
-                        builder: (BuildContext context) {
-                          loadingContext = context;
-                          return LoadingAlertDismissible(
-                              content: 'Enviando correo');
-                        });
-                    version().getVersion().then((res) {
-                      if (res != null) {
-                        UserService()
-                            .requestRecoverPass(_emailController.text)
-                            .then((res) {
-                          if (res.statusCode == 200) {
-                            closeAlert(loadingContext);
-                            showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
+                                actions: <Widget>[
+                                  FlatButton(
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(5),
-                                      ),
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(5)),
                                     ),
-                                    title: Text('Envidado'),
-                                    content: Container(
-                                        child: Text(
-                                            'Se ha enviado un correo a la dirección ingresada')),
-                                    actions: <Widget>[
-                                      FlatButton(
+                                    color: Color(0xffff5f00),
+                                    child: Text(
+                                      "Aceptar",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  )
+                                ],
+                              );
+                            });
+                      } else {
+                        showDialog(
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (BuildContext context) {
+                              loadingContext = context;
+                              return LoadingAlertDismissible(
+                                  content: 'Enviando correo');
+                            });
+                        VersionService().getVersion().then((res) {
+                          if (res != null) {
+                            UserService()
+                                .requestRecoverPass(_emailController.text)
+                                .then((res) {
+                              if (res.statusCode == 200) {
+                                closeAlert(loadingContext);
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.all(
-                                              Radius.circular(5)),
+                                            Radius.circular(5),
+                                          ),
                                         ),
-                                        color: Color(0xffff5f00),
-                                        child: Text(
-                                          "Aceptar",
-                                          style: TextStyle(color: Colors.white),
+                                        title: Text('Envidado'),
+                                        content: Container(
+                                            child: Text(
+                                                'Se ha enviado un correo a la dirección ingresada')),
+                                        actions: <Widget>[
+                                          FlatButton(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(5)),
+                                            ),
+                                            color: Color(0xffff5f00),
+                                            child: Text(
+                                              "Aceptar",
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          )
+                                        ],
+                                      );
+                                    });
+                              } else {
+                                closeAlert(loadingContext);
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(5),
+                                          ),
                                         ),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      )
-                                    ],
-                                  );
-                                });
+                                        title: Text('Error'),
+                                        content: Container(
+                                            child: Text(
+                                                'Correo electronico erroneo, intentelo de nuevo ')),
+                                        actions: <Widget>[
+                                          FlatButton(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(5)),
+                                            ),
+                                            color: Color(0xffff5f00),
+                                            child: Text(
+                                              "Aceptar",
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          )
+                                        ],
+                                      );
+                                    });
+                              }
+                            });
                           } else {
-                            closeAlert(loadingContext);
+                            Navigator.pop(context);
                             showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
@@ -181,8 +218,7 @@ class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
                                     ),
                                     title: Text('Error'),
                                     content: Container(
-                                        child: Text(
-                                            'Correo electronico erroneo, intentelo de nuevo ')),
+                                        child: Text('Sin conexion a internet')),
                                     actions: <Widget>[
                                       FlatButton(
                                         shape: RoundedRectangleBorder(
@@ -203,41 +239,40 @@ class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
                                 });
                           }
                         });
-                      } else {
-                        Navigator.pop(context);
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(5),
-                                  ),
-                                ),
-                                title: Text('Error'),
-                                content: Container(
-                                    child: Text('Sin conexion a internet')),
-                                actions: <Widget>[
-                                  FlatButton(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(5)),
-                                    ),
-                                    color: Color(0xffff5f00),
-                                    child: Text(
-                                      "Aceptar",
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  )
-                                ],
-                              );
-                            });
                       }
-                    });
-                  }
+                    } else {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(5),
+                                ),
+                              ),
+                              title: Text('Error'),
+                              content: Container(
+                                  child: Text('Sin conexion a internet')),
+                              actions: <Widget>[
+                                FlatButton(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(5)),
+                                  ),
+                                  color: Color(0xffff5f00),
+                                  child: Text(
+                                    "Aceptar",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                )
+                              ],
+                            );
+                          });
+                    }
+                  });
                 },
                 child: Center(
                   child: Container(

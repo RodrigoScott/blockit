@@ -4,7 +4,6 @@ import 'package:trailock/src/resources/user.Services.dart';
 import 'package:trailock/src/resources/version.Services.dart';
 import 'package:trailock/src/ui/auth/signIn.dart';
 import 'package:trailock/src/ui/padlock/padlockPage.dart';
-import 'package:trailock/src/utils/enviroment.dart';
 
 import 'configuration/configurationPage.dart';
 
@@ -21,7 +20,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     setState(() {
-      version().getVersion().then((res) {
+      VersionService().getVersion().then((res) {
         res != null
             ? UserService().validateStatus().then((r) {
                 r.statusCode == 401

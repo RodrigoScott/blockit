@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:trailock/src/resources/user.Services.dart';
 import 'package:trailock/src/resources/version.Services.dart';
-import 'package:trailock/src/utils/enviroment.dart';
 import 'package:trailock/src/widgets/loadingAlertDismissible.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -65,7 +64,6 @@ class _SignInState extends State<SignIn> {
                       .copyWith(primaryColor: Color(0xffff5f00)),
                   child: TextField(
                     textCapitalization: TextCapitalization.none,
-                    enableInteractiveSelection: false,
                     keyboardType: TextInputType.emailAddress,
                     controller: _emailController,
                     cursorColor: Color(0xffff5f00),
@@ -115,7 +113,6 @@ class _SignInState extends State<SignIn> {
                   data: Theme.of(context)
                       .copyWith(primaryColor: Color(0xffff5f00)),
                   child: TextField(
-                    enableInteractiveSelection: false,
                     obscureText: true,
                     controller: _passwordController,
                     cursorColor: Color(0xffff5f00),
@@ -197,7 +194,7 @@ class _SignInState extends State<SignIn> {
                           return LoadingAlertDismissible(
                               content: 'Iniciando sesión');
                         });
-                    version().getVersion().then((res) {
+                    VersionService().getVersion().then((res) {
                       if (res != null) {
                         UserService()
                             .requestLogin(
