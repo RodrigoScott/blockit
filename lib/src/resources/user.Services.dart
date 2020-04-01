@@ -20,7 +20,6 @@ class UserService {
       response = await dio.post(url, options: Options(headers: _headers));
       return response;
     } on DioError catch (e) {
-      print(e.response);
       return e.response;
     }
   }
@@ -68,11 +67,14 @@ class UserService {
     var prefs = await SharedPreferences.getInstance();
     Response response;
     try {
-      response =
-          await dio.post(url, options: Options(headers: _headers), data: _data).timeout(Duration(seconds: 15), onTimeout: (){return null;});
-      if (response == null){
+      response = await dio
+          .post(url, options: Options(headers: _headers), data: _data)
+          .timeout(Duration(seconds: 15), onTimeout: () {
         return null;
-      }else{
+      });
+      if (response == null) {
+        return null;
+      } else {
         if (response.statusCode == 200) {
           prefs.setString('access_token', response.data['access_token']);
           prefs.setString('userName', response.data['name']);

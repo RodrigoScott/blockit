@@ -30,8 +30,6 @@ class VersionService {
         }
       }
     } on DioError catch (e) {
-      print(e.response);
-
       return e.response;
     }
   }

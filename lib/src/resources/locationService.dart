@@ -23,9 +23,7 @@ class LocationService {
         "lng": "$longitude",
         "padlock_name": '${int.parse(name.substring(3))}'
       });
-
       response = await dio.getUri(uri, options: Options(headers: _headers));
-
       if (response.statusCode == 200) {
         return response;
       }

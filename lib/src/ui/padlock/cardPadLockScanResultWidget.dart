@@ -36,6 +36,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
   bool validateContainer = false;
   bool validateBotton = false;
   bool validateBattery = false;
+  bool timeOut = false;
   bool validateUseContainer = false;
   String textError = '';
   String _current = '0:00';
@@ -210,6 +211,10 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
             ),
             InkWell(
               onTap: () async {
+                setState(() {
+                  timeOut = false;
+                });
+                widget.result.device.disconnect();
                 if (_current == '0:00') {
                   alertText('Verificando Internet');
                   await VersionService().getVersion().then((conect) async {
@@ -222,9 +227,12 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                           timeInSecForIos: 10,
                           msg: "Tiempo de espera agotado. Intenta de nuevo");
                       Duration(seconds: 10);
+                      setState(() {
+                        timeOut = true;
+                      });
                       widget.result.device.disconnect();
                     });
-                    Navigator.of(context).pop();
+                    if (timeOut != true) Navigator.of(context).pop();
                     if (conect != null) {
                       alertText('Verificando localización');
                       await _getLocation().timeout(Duration(seconds: 30),
