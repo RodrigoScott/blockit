@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geohash/geohash.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:quiver/async.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -31,6 +32,10 @@ class CardPadLockScanResult extends StatefulWidget {
 class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
   final codeFieldController = TextEditingController();
   var _validateField = GlobalKey<FormState>();
+  String _geoHash = "";
+  String _coordinates = "";
+  StreamSubscription _getPositionSubscription;
+  Position currentLocation;
   SharedPreferences prefs;
   List<Device> devices;
   bool validateContainer = false;
@@ -46,6 +51,8 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
   bool check = false;
   String lat, lng;
   var loadingContext;
+  var locationOptions =
+      LocationOptions(accuracy: LocationAccuracy.best, distanceFilter: 5);
 
   closeAlert(BuildContext context) {
     Navigator.of(context).pop();
@@ -70,7 +77,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
   @override
   void initState() {
     _checkConection();
-
+    _getLocation();
     if (widget.dateTime != null) {
       var started = DateTime.parse(widget.dateTime);
       var rest =
@@ -1101,6 +1108,8 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
     // TODO: implement dispose
     widget.result.device.disconnect();
     if (timer != null) timer.cancel();
+    _getPositionSubscription?.cancel();
+
     super.dispose();
   }
 
@@ -1125,13 +1134,27 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
     }
   }
 
-  Future _getLocation() async {
-    var currentLocation = await Geolocator().getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.bestForNavigation);
+  _getLocation() async {
+    currentLocation = await Geolocator()
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
 
     setState(() {
       lat = (currentLocation.latitude).toString();
       lng = (currentLocation.longitude).toString();
+    });
+    _getPositionSubscription = Geolocator()
+        .getPositionStream(locationOptions)
+        .listen((Position position) {
+      var newGeoHash =
+          Geohash.encode(position.latitude, position.longitude).substring(0, 8);
+      if (newGeoHash != _geoHash) {
+        setState(() {
+          _geoHash = newGeoHash;
+          lat = (position.latitude).toString();
+          lng = (position.longitude).toString();
+        });
+      }
+      _coordinates = position.toString();
     });
   }
 
