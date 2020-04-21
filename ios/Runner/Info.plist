@@ -23,7 +23,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>Se usara la conexión Bluetooth para la busqueda de candados Trailock.</string>
+	<string>Se usará la conexión Bluetooth para la búsqueda de candados Trailock.</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>We use Bluetooth connection to search for padlock devices</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>

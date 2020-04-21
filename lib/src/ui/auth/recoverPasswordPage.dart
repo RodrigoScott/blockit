@@ -146,7 +146,7 @@ class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
                                             Radius.circular(5),
                                           ),
                                         ),
-                                        title: Text('Envidado'),
+                                        title: Text('Enviado'),
                                         content: Container(
                                             child: Text(
                                                 'Se ha enviado un correo a la dirección ingresada')),
@@ -183,7 +183,7 @@ class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
                                         title: Text('Error'),
                                         content: Container(
                                             child: Text(
-                                                'Correo electronico erroneo, intentelo de nuevo ')),
+                                                'Correo electrónico erróneo, intentelo de nuevo ')),
                                         actions: <Widget>[
                                           FlatButton(
                                             shape: RoundedRectangleBorder(
@@ -218,7 +218,7 @@ class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
                                     ),
                                     title: Text('Error'),
                                     content: Container(
-                                        child: Text('Sin conexion a internet')),
+                                        child: Text('Sin conexión a internet')),
                                     actions: <Widget>[
                                       FlatButton(
                                         shape: RoundedRectangleBorder(
@@ -252,7 +252,7 @@ class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
                               ),
                               title: Text('Error'),
                               content: Container(
-                                  child: Text('Sin conexion a internet')),
+                                  child: Text('Sin conexión a internet')),
                               actions: <Widget>[
                                 FlatButton(
                                   shape: RoundedRectangleBorder(

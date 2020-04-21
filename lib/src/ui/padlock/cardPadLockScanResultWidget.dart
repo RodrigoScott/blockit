@@ -38,9 +38,11 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
   Position currentLocation;
   SharedPreferences prefs;
   List<Device> devices;
+  // external Duration get timeZoneOffset;
   bool validateContainer = false;
   bool validateBotton = false;
   bool validateBattery = false;
+  Duration zone = DateTime.now().timeZoneOffset;
   bool timeOut = false;
   bool validateUseContainer = false;
   String textError = '';
@@ -253,7 +255,8 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                           lng = lat = '0';
                         });
                         LocationService()
-                            .set(lat, lng, widget.result.device.name)
+                            .set(lat, lng, widget.result.device.name,
+                                zone.toString())
                             .then((res) async {
                           if (res.statusCode == 200) {
                             if (res.data['inside'] == true) {
@@ -261,6 +264,9 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                               await _validateResponse(res.data['code'], false,
                                   widget.result.device);
                             } else {
+                              setState(() {
+                                codeFieldController.text = res.data['code'];
+                              });
                               Navigator.of(context).pop();
                               showDialog(
                                   barrierDismissible: true,
