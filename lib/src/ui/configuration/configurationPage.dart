@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trailock/src/model/versionAppModel.dart';
 import 'package:trailock/src/resources/user.Services.dart';
 import 'package:trailock/src/resources/version.Services.dart';
 import 'package:trailock/src/ui/auth/signIn.dart';
+import 'package:trailock/src/utils/enviroment.dart';
+import 'package:trailock/src/widgets/versionWidget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ConfigurationPage extends StatefulWidget {
@@ -17,53 +20,7 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
   String userEmail;
   String carrier;
   void initState() {
-    setState(() {
-      VersionService().getVersion().then((res) {
-        res != null
-            ? UserService().validateStatus().then((r) {
-                r.statusCode == 401
-                    ? showDialog(
-                        barrierDismissible: false,
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(5),
-                              ),
-                            ),
-                            title: Text('Alerta'),
-                            content:
-                                Container(child: Text('Tu sesión a caducado')),
-                            actions: <Widget>[
-                              FlatButton(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(5)),
-                                ),
-                                color: Color(0xffff5f00),
-                                child: Text(
-                                  "Aceptar",
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                onPressed: () async {
-                                  final prefs =
-                                      await SharedPreferences.getInstance();
-                                  prefs.remove('access_token');
-                                  Navigator.of(context).pushAndRemoveUntil(
-                                      MaterialPageRoute(
-                                          builder: (context) => SignIn()),
-                                      (Route<dynamic> route) => false);
-                                },
-                              ),
-                            ],
-                          );
-                        })
-                    : null;
-              })
-            : null;
-      });
-    });
+    validateVersion();
     super.initState();
     setState(() {
       getshared();
@@ -78,7 +35,19 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
       child: ListView(
         children: <Widget>[
           SizedBox(
-            height: 30,
+            height: 10,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: Center(
+              child: Text(
+                'App Versión: ${Environment().version}',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 10,
           ),
           Padding(
             padding: const EdgeInsets.only(left: 22),
@@ -234,6 +203,20 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
                               borderRadius:
                                   BorderRadius.all(Radius.circular(5)),
                             ),
+                            color: Colors.white,
+                            child: Text(
+                              "Cancelar",
+                              style: TextStyle(color: Color(0xffff5f00)),
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          FlatButton(
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5)),
+                            ),
                             color: Color(0xffff5f00),
                             child: Text(
                               "Aceptar",
@@ -248,20 +231,6 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
                                       builder: (context) => SignIn()),
                                   (Route<dynamic> route) => false);
                             },
-                          ),
-                          FlatButton(
-                            shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5)),
-                            ),
-                            color: Color(0xffff5f00),
-                            child: Text(
-                              "Cancelar",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
                           )
                         ],
                       );
@@ -273,6 +242,57 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
         trailing: Icon(Icons.arrow_forward_ios),
       ),
     );
+  }
+
+  validateVersion() {
+    VersionService().getVersion().then((res) {
+      VersionAppModel version = new VersionAppModel();
+      if (res != null) {
+        version = VersionAppModel.fromJson(res.data);
+        UserService().validateStatus().then((r) {
+          r.statusCode == 401
+              ? showDialog(
+                  barrierDismissible: false,
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(5),
+                        ),
+                      ),
+                      title: Text('Alerta'),
+                      content: Container(child: Text('Tu sesión a caducado')),
+                      actions: <Widget>[
+                        FlatButton(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                          ),
+                          color: Color(0xffff5f00),
+                          child: Text(
+                            "Aceptar",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          onPressed: () async {
+                            final prefs = await SharedPreferences.getInstance();
+                            prefs.remove('access_token');
+                            Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                    builder: (context) => SignIn()),
+                                (Route<dynamic> route) => false);
+                          },
+                        ),
+                      ],
+                    );
+                  })
+              : null;
+        });
+
+        if (version.version != Environment().version) {
+          VersionWidget().version(version.version, context);
+        }
+      }
+    });
   }
 
   Future getshared() async {

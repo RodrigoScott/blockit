@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:trailock/src/resources/user.Services.dart';
 import 'package:trailock/src/resources/version.Services.dart';
+import 'package:trailock/src/utils/enviroment.dart';
 import 'package:trailock/src/widgets/loadingAlertDismissible.dart';
 
 class ChangePasswordPage extends StatefulWidget {
@@ -99,7 +100,19 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
       body: ListView(
         children: <Widget>[
           SizedBox(
-            height: MediaQuery.of(context).size.height * .01,
+            height: 10,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: Center(
+              child: Text(
+                'App Versión: ${Environment().version}',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 10,
           ),
           Padding(
             padding: const EdgeInsets.only(left: 22),

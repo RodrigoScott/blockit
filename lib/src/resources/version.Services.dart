@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:trailock/src/model/versionAppModel.dart';
 import 'package:trailock/src/utils/enviroment.dart';
 
 class VersionService {
@@ -25,8 +24,7 @@ class VersionService {
         return null;
       } else {
         if (response.statusCode == 200) {
-          var data = VersionAppModel.fromJson(response.data);
-          return data;
+          return response;
         }
       }
     } on DioError catch (e) {

@@ -12,6 +12,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:quiver/async.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trailock/src/model/device.dart';
+import 'package:trailock/src/model/location.dart';
 import 'package:trailock/src/resources/locationService.dart';
 import 'package:trailock/src/resources/version.Services.dart';
 import 'package:trailock/src/widgets/loadingAlertDismissible.dart';
@@ -38,11 +39,11 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
   Position currentLocation;
   SharedPreferences prefs;
   List<Device> devices;
+  LocationModel location = new LocationModel();
   // external Duration get timeZoneOffset;
   bool validateContainer = false;
   bool validateBotton = false;
   bool validateBattery = false;
-  Duration zone = DateTime.now().timeZoneOffset;
   bool timeOut = false;
   bool validateUseContainer = false;
   String textError = '';
@@ -226,7 +227,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                 widget.result.device.disconnect();
                 if (_current == '0:00') {
                   alertText('Verificando Internet');
-                  await VersionService().getVersion().then((conect) async {
+                  await VersionService().getVersion().then((res) async {
                     Navigator.of(context).pop();
                     alertText('Conectando Bluetooth');
                     await widget.result.device
@@ -244,7 +245,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                     });
                     if (timeOut != true) {
                       Navigator.of(context).pop();
-                      if (conect != null) {
+                      if (res != null) {
                         alertText('Verificando localización');
                         await _getLocation().timeout(Duration(seconds: 30),
                             onTimeout: () {
@@ -255,17 +256,17 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                           lng = lat = '0';
                         });
                         LocationService()
-                            .set(lat, lng, widget.result.device.name,
-                                zone.toString())
+                            .set(lat, lng, widget.result.device.name)
                             .then((res) async {
                           if (res.statusCode == 200) {
-                            if (res.data['inside'] == true) {
+                            location = LocationModel.fromJson(res.data);
+                            if (location.inside) {
                               Navigator.of(context).pop();
-                              await _validateResponse(res.data['code'], false,
-                                  widget.result.device);
+                              await _validateResponse(
+                                  location.code, false, widget.result.device);
                             } else {
                               setState(() {
-                                codeFieldController.text = res.data['code'];
+                                codeFieldController.text = location.code;
                               });
                               Navigator.of(context).pop();
                               showDialog(
@@ -555,7 +556,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                         fontSize: 25,
                                                         fontWeight:
                                                             FontWeight.bold)),
-                                                conect == null
+                                                res == null
                                                     ? Container()
                                                     : Container(
                                                         height: 29,
@@ -1416,6 +1417,11 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
           case 0:
             validateContainer = true;
             textError = 'Código incorrecto';
+            if (location.inside == false && location.code != '') {
+              setState(() {
+                codeFieldController.text = location.master;
+              });
+            }
             break;
           case 1:
             setState(() {

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:trailock/src/model/versionAppModel.dart';
 import 'package:trailock/src/resources/user.Services.dart';
 import 'package:trailock/src/resources/version.Services.dart';
+import 'package:trailock/src/utils/enviroment.dart';
 import 'package:trailock/src/widgets/loadingAlertDismissible.dart';
+import 'package:trailock/src/widgets/versionWidget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SignIn extends StatefulWidget {
@@ -21,6 +24,7 @@ class _SignInState extends State<SignIn> {
   bool connectionInternet = false;
   var _passwordController = TextEditingController();
   void initState() {
+    validateVersion();
     super.initState();
 
     SystemChrome.setPreferredOrientations([
@@ -36,6 +40,18 @@ class _SignInState extends State<SignIn> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
+            SizedBox(
+              height: MediaQuery.of(context).size.height * .04,
+            ),
+            Container(
+              height: MediaQuery.of(context).size.height * .03,
+              child: Center(
+                child: Text(
+                  'App Versión: ${Environment().version}',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
             Center(
               child: Container(
                 width: MediaQuery.of(context).size.width * .6,
@@ -325,7 +341,7 @@ class _SignInState extends State<SignIn> {
               ),
             ),
             SizedBox(
-              height: MediaQuery.of(context).size.height * .1,
+              height: MediaQuery.of(context).size.height * .05,
             ),
             Container(
               width: MediaQuery.of(context).size.width * .9,
@@ -358,5 +374,17 @@ class _SignInState extends State<SignIn> {
         ),
       ),
     );
+  }
+
+  validateVersion() {
+    VersionService().getVersion().then((res) {
+      VersionAppModel version = new VersionAppModel();
+      if (res != null) {
+        version = VersionAppModel.fromJson(res.data);
+        if (version.version != Environment().version) {
+          VersionWidget().version(version.version, context);
+        }
+      }
+    });
   }
 }

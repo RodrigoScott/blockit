@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trailock/src/model/versionAppModel.dart';
 import 'package:trailock/src/resources/user.Services.dart';
 import 'package:trailock/src/resources/version.Services.dart';
 import 'package:trailock/src/ui/auth/signIn.dart';
@@ -21,8 +22,10 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     setState(() {
       VersionService().getVersion().then((res) {
+        VersionAppModel version = new VersionAppModel();
         res != null
             ? UserService().validateStatus().then((r) {
+                version = VersionAppModel.fromJson(res.data);
                 r.statusCode == 401
                     ? showDialog(
                         barrierDismissible: false,

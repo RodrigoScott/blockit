@@ -5,9 +5,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trailock/src/model/device.dart';
+import 'package:trailock/src/model/versionAppModel.dart';
 import 'package:trailock/src/resources/user.Services.dart';
 import 'package:trailock/src/resources/version.Services.dart';
 import 'package:trailock/src/ui/auth/signIn.dart';
+import 'package:trailock/src/utils/enviroment.dart';
+import 'package:trailock/src/widgets/versionWidget.dart';
 
 import 'bluetoothOffScreenWidget.dart';
 import 'cardPadLockScanResultWidget.dart';
@@ -20,6 +23,7 @@ class PadlockPage extends StatefulWidget {
 class _PadlockPageState extends State<PadlockPage> {
   SharedPreferences prefs;
   List<Device> devices;
+  VersionAppModel version = new VersionAppModel();
 
   closeAlert(BuildContext _context) {
     Navigator.of(_context).pop();
@@ -27,6 +31,7 @@ class _PadlockPageState extends State<PadlockPage> {
 
   @override
   initState() {
+    validateVersion();
     getSharedInstance();
 
     SystemChrome.setPreferredOrientations([
@@ -65,6 +70,15 @@ class _PadlockPageState extends State<PadlockPage> {
                     padding: const EdgeInsets.only(top: 30.0),
                     child: Column(
                       children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: Center(
+                            child: Text(
+                              'App Versión: ${Environment().version}',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
                         StreamBuilder<List<ScanResult>>(
                           stream: FlutterBlue.instance.scanResults,
                           initialData: [],
@@ -160,7 +174,8 @@ class _PadlockPageState extends State<PadlockPage> {
                     return FloatingActionButton(
                         backgroundColor: Color(0xffff5f00),
                         child: Icon(Icons.search),
-                        onPressed: () {
+                        onPressed: () async {
+                          await validateVersion();
                           getSharedInstance();
                           FlutterBlue.instance
                               .startScan(timeout: Duration(seconds: 5));
@@ -175,4 +190,16 @@ class _PadlockPageState extends State<PadlockPage> {
   }
 
   _PadlockPageState();
+
+  validateVersion() {
+    VersionService().getVersion().then((res) {
+      VersionAppModel version = new VersionAppModel();
+      if (res != null) {
+        version = VersionAppModel.fromJson(res.data);
+        if (version.version != Environment().version) {
+          VersionWidget().version(version.version, context);
+        }
+      }
+    });
+  }
 }

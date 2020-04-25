@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:trailock/src/model/versionAppModel.dart';
 import 'package:trailock/src/resources/user.Services.dart';
 import 'package:trailock/src/resources/version.Services.dart';
+import 'package:trailock/src/utils/enviroment.dart';
 import 'package:trailock/src/widgets/loadingAlertDismissible.dart';
+import 'package:trailock/src/widgets/versionWidget.dart';
 
 class RecoverPasswordPage extends StatefulWidget {
   @override
@@ -9,6 +12,12 @@ class RecoverPasswordPage extends StatefulWidget {
 }
 
 class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
+  @override
+  void initState() {
+    validateVersion();
+    super.initState();
+  }
+
   var _emailController = TextEditingController();
   var loadingContext;
   closeAlert(BuildContext _context) {
@@ -22,6 +31,18 @@ class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
+            SizedBox(
+              height: MediaQuery.of(context).size.height * .04,
+            ),
+            Container(
+              height: MediaQuery.of(context).size.height * .03,
+              child: Center(
+                child: Text(
+                  'App Versión: ${Environment().version}',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
             Center(
               child: Container(
                 width: MediaQuery.of(context).size.width * .6,
@@ -297,5 +318,18 @@ class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
         ),
       ),
     );
+  }
+
+  validateVersion() {
+    VersionService().getVersion().then((res) {
+      VersionAppModel version = new VersionAppModel();
+
+      if (res != null) {
+        version = VersionAppModel.fromJson(res.data);
+        if (version.version != Environment().version) {
+          VersionWidget().version(version.version, context);
+        }
+      }
+    });
   }
 }

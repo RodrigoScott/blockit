@@ -1,7 +1,7 @@
-import 'dart:io';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trailock/src/utils/enviroment.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -19,7 +19,7 @@ class _ProfilePageState extends State<ProfilePage> {
   void initState() {
     super.initState();
     setState(() {
-     getshared();
+      getshared();
     });
   }
 
@@ -33,7 +33,16 @@ class _ProfilePageState extends State<ProfilePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             SizedBox(
-              height: 30,
+              height: MediaQuery.of(context).size.height * .04,
+            ),
+            Container(
+              height: MediaQuery.of(context).size.height * .03,
+              child: Center(
+                child: Text(
+                  'App Versión: ${Environment().version}',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.only(left: 22),
@@ -60,9 +69,10 @@ class _ProfilePageState extends State<ProfilePage> {
                           onTap: () {},
                           child: ClipOval(
                               child: Container(
-
-                            child: Text(userName == null ? '' :
-                              '${userName.substring(0,1)}${lastName.substring(0,1)}',
+                            child: Text(
+                              userName == null
+                                  ? ''
+                                  : '${userName.substring(0, 1)}${lastName.substring(0, 1)}',
                               style:
                                   TextStyle(fontSize: 55, color: Colors.white),
                             ),
@@ -80,11 +90,15 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text(userName == null ? '' : '$userName $lastName $secondLastName',
+                        Text(
+                          userName == null
+                              ? ''
+                              : '$userName $lastName $secondLastName',
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold),
                         ),
-                        Text(carrier == null ? '' : carrier,
+                        Text(
+                          carrier == null ? '' : carrier,
                           style: TextStyle(fontSize: 13, color: Colors.black38),
                         ),
                       ],
@@ -157,7 +171,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     SizedBox(
                       height: MediaQuery.of(context).size.height * .02,
                     ),
-
                     Container(
                       height: MediaQuery.of(context).size.height * .05,
                       alignment: Alignment.centerLeft,
@@ -233,17 +246,17 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Future getshared() async{
+  Future getshared() async {
     var prefs = await SharedPreferences.getInstance();
 
-   setState(() {
-     userName = prefs.getString('userName');
-     lastName = prefs.getString('lastName');
-     secondLastName = prefs.getString('secondLastName');
-     userEmail = prefs.getString('userEmail');
-     carrier = prefs.getString('carrier');
-     _nameController.text = '$userName $lastName $secondLastName';
-     _emailController.text = userEmail;
-   });
+    setState(() {
+      userName = prefs.getString('userName');
+      lastName = prefs.getString('lastName');
+      secondLastName = prefs.getString('secondLastName');
+      userEmail = prefs.getString('userEmail');
+      carrier = prefs.getString('carrier');
+      _nameController.text = '$userName $lastName $secondLastName';
+      _emailController.text = userEmail;
+    });
   }
 }
