@@ -1,5 +1,5 @@
 class Environment {
-  String version = '1.1.1';
+  String version = '1.1.0';
   bool validateNEtwork;
   /*String client_secret = "tc507xfyD6Y0FkOOvnLMDpl4TAoE2J0zug5hvHPX";
   String client_id = "2";

@@ -11,8 +11,11 @@ import 'package:geohash/geohash.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:quiver/async.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trailock/src/controller/codesController.dart';
+import 'package:trailock/src/model/codeModel.dart';
 import 'package:trailock/src/model/device.dart';
 import 'package:trailock/src/model/location.dart';
+import 'package:trailock/src/resources/PadLockService.dart';
 import 'package:trailock/src/resources/locationService.dart';
 import 'package:trailock/src/resources/version.Services.dart';
 import 'package:trailock/src/widgets/loadingAlertDismissible.dart';
@@ -236,6 +239,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
               onTap: () async {
                 setState(() {
                   timeOut = false;
+                  codeFieldController.text = '';
                 });
                 widget.result.device.disconnect();
                 if (_current == '0:00') {
@@ -274,7 +278,6 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                           if (res.statusCode == 200) {
                             location = LocationModel.fromJson(res.data);
                             if (location.inside) {
-                              //           location.code, false, widget.result.device);
                               Navigator.of(context).pop();
                               List<BluetoothService> services =
                                   await widget.result.device.discoverServices();
@@ -351,7 +354,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                   builder: (BuildContext context) {
                                     loadingContext = context;
                                     return LoadingAlertDismissible(
-                                        content: 'Verificando Codigo');
+                                        content: 'Verificando Geocerca');
                                   });
                               await characteristic
                                   .write(utf8.encode(location.code));
@@ -399,13 +402,10 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                   case 0:
                                     validateContainer = true;
                                     textError = 'Código incorrecto';
-                                    if (location.inside == false &&
-                                        location.code != '') {
-                                      setState(() {
-                                        codeFieldController.text =
-                                            location.master;
-                                      });
-                                    }
+                                    setState(() {
+                                      codeFieldController.text =
+                                          location.master;
+                                    });
                                     break;
                                   case 1:
                                     setState(() {
@@ -432,6 +432,11 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                     textError = '';
                                     startTimer(_durationTimeOpen.inSeconds);
                                     Navigator.pop(context);
+                                    PadLockService().status(
+                                        codeFieldController.text,
+                                        int.parse(widget.result.device.name
+                                            .substring(3)),
+                                        2);
                                     showDialog(
                                         context: context,
                                         builder: (BuildContext context) {
@@ -441,7 +446,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                 Radius.circular(5),
                                               ),
                                             ),
-                                            title: Text('Código correcto'),
+                                            title: Text('Abierto por Geocerca'),
                                             content: Container(
                                                 child: Text(
                                                     'El candado permanecera abierto durante ${_durationTimeOpen.inMinutes}:${(_durationTimeOpen.inSeconds % 60).toString().padLeft(2, '0')}')),
@@ -923,7 +928,6 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                                               device)))
                                                                   .toList()
                                                               : List<Device>();
-
                                                           setState(() {
                                                             switch (
                                                                 lockedStatus) {
@@ -1024,6 +1028,16 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                                         ],
                                                                       );
                                                                     });
+                                                                PadLockService().status(
+                                                                    codeFieldController
+                                                                        .text,
+                                                                    int.parse(widget
+                                                                        .result
+                                                                        .device
+                                                                        .name
+                                                                        .substring(
+                                                                            3)),
+                                                                    3);
                                                                 break;
                                                               case 2:
                                                                 validateContainer =
@@ -1119,23 +1133,18 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                             }
                                                             lockedStatus = null;
 
-                                                            {
-                                                              textError =
-                                                                  'Código incorrecto';
-                                                              if (validateContainer ==
-                                                                      true &&
-                                                                  location.code !=
-                                                                      '' &&
-                                                                  validateBattery ==
-                                                                      true) {
-                                                                codeFieldController
-                                                                        .text =
-                                                                    location
-                                                                        .master;
-                                                              } else {
-                                                                codeFieldController
-                                                                    .text = '';
-                                                              }
+                                                            if (validateContainer ==
+                                                                    true &&
+                                                                location.code !=
+                                                                    '') {
+                                                              //&& validateBattery == true) {
+                                                              codeFieldController
+                                                                      .text =
+                                                                  location
+                                                                      .master;
+                                                            } else {
+                                                              codeFieldController
+                                                                  .text = '';
                                                             }
                                                           }); //
                                                         }
@@ -1608,6 +1617,17 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                               startTimer(
                                                                   _durationTimeOpen
                                                                       .inSeconds);
+                                                              CodeModel padLock = new CodeModel(
+                                                                  code:
+                                                                      codeFieldController
+                                                                          .text,
+                                                                  name: widget
+                                                                      .result
+                                                                      .device
+                                                                      .name
+                                                                      .substring(
+                                                                          3));
+                                                              saveCode(padLock);
                                                               Navigator.pop(
                                                                   context);
                                                               showDialog(
@@ -2152,7 +2172,6 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                                         device)))
                                                             .toList()
                                                         : List<Device>();
-
                                                     setState(() {
                                                       switch (lockedStatus) {
                                                         case 0:
@@ -2171,7 +2190,6 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                           });
                                                           var now = new DateTime
                                                               .now();
-
                                                           Device device = Device(
                                                               name: widget
                                                                   .result
@@ -2203,6 +2221,18 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                           startTimer(
                                                               _durationTimeOpen
                                                                   .inSeconds);
+                                                          CodeModel padLock =
+                                                              new CodeModel(
+                                                                  code:
+                                                                      codeFieldController
+                                                                          .text,
+                                                                  name: widget
+                                                                      .result
+                                                                      .device
+                                                                      .name
+                                                                      .substring(
+                                                                          3));
+                                                          saveCode(padLock);
                                                           Navigator.pop(
                                                               context);
                                                           showDialog(
@@ -2252,6 +2282,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                                   ],
                                                                 );
                                                               });
+
                                                           break;
                                                         case 2:
                                                           validateContainer =
@@ -2572,5 +2603,9 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
           loadingContext = context;
           return LoadingAlertDismissible(content: '$text');
         });
+  }
+
+  void saveCode(CodeModel padLock) async {
+    var res = await CodesController().save(padLock);
   }
 }

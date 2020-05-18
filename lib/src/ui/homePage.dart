@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trailock/src/controller/codesController.dart';
 import 'package:trailock/src/model/versionAppModel.dart';
 import 'package:trailock/src/resources/user.Services.dart';
 import 'package:trailock/src/resources/version.Services.dart';
@@ -52,6 +53,7 @@ class _HomePageState extends State<HomePage> {
                                   style: TextStyle(color: Colors.white),
                                 ),
                                 onPressed: () async {
+                                  var r = await CodesController().deleteTable();
                                   final prefs =
                                       await SharedPreferences.getInstance();
                                   prefs.remove('access_token');

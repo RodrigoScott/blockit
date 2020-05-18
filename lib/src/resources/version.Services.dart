@@ -16,7 +16,7 @@ class VersionService {
     try {
       Response response = await dio
           .get('${Environment.config.base_url_api}version',
-              options: Options(headers: _headers))
+          options: Options(headers: _headers))
           .timeout(Duration(seconds: 5), onTimeout: () {
         return null;
       });

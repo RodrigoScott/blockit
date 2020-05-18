@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trailock/src/controller/codesController.dart';
+import 'package:trailock/src/model/codeModel.dart';
 import 'package:trailock/src/model/versionAppModel.dart';
+import 'package:trailock/src/resources/PadLockService.dart';
 import 'package:trailock/src/resources/user.Services.dart';
 import 'package:trailock/src/resources/version.Services.dart';
 import 'package:trailock/src/ui/auth/signIn.dart';
@@ -223,9 +226,11 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
                               style: TextStyle(color: Colors.white),
                             ),
                             onPressed: () async {
+                              var r = await CodesController().deleteTable();
                               final prefs =
                                   await SharedPreferences.getInstance();
                               prefs.remove('access_token');
+                              prefs.clear();
                               Navigator.of(context).pushAndRemoveUntil(
                                   MaterialPageRoute(
                                       builder: (context) => SignIn()),
@@ -244,11 +249,20 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
     );
   }
 
-  validateVersion() {
-    VersionService().getVersion().then((res) {
+  validateVersion() async {
+    List<CodeModel> listCode = await CodesController().index();
+    VersionService().getVersion().then((res) async {
       VersionAppModel version = new VersionAppModel();
       if (res != null) {
         version = VersionAppModel.fromJson(res.data);
+        if (listCode.length != 0) {
+          PadLockService().listPadLock(listCode).then((result) async {
+            if (result.statusCode == 200 || result.statusCode == 201) {
+              var r = await CodesController().deleteTable();
+            }
+          });
+        }
+
         UserService().validateStatus().then((r) {
           r.statusCode == 401
               ? showDialog(
@@ -274,8 +288,10 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
                             style: TextStyle(color: Colors.white),
                           ),
                           onPressed: () async {
+                            var r = await CodesController().deleteTable();
                             final prefs = await SharedPreferences.getInstance();
                             prefs.remove('access_token');
+                            prefs.clear();
                             Navigator.of(context).pushAndRemoveUntil(
                                 MaterialPageRoute(
                                     builder: (context) => SignIn()),

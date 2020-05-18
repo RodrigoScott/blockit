@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trailock/src/controller/codesController.dart';
+import 'package:trailock/src/model/codeModel.dart';
 import 'package:trailock/src/model/device.dart';
 import 'package:trailock/src/model/versionAppModel.dart';
+import 'package:trailock/src/resources/PadLockService.dart';
 import 'package:trailock/src/resources/user.Services.dart';
 import 'package:trailock/src/resources/version.Services.dart';
 import 'package:trailock/src/ui/auth/signIn.dart';
@@ -143,6 +146,8 @@ class _PadlockPageState extends State<PadlockPage> {
                                                     color: Colors.white),
                                               ),
                                               onPressed: () async {
+                                                var r = await CodesController()
+                                                    .deleteTable();
                                                 final prefs =
                                                     await SharedPreferences
                                                         .getInstance();
@@ -191,11 +196,19 @@ class _PadlockPageState extends State<PadlockPage> {
 
   _PadlockPageState();
 
-  validateVersion() {
+  validateVersion() async {
+    List<CodeModel> listCode = await CodesController().index();
     VersionService().getVersion().then((res) {
       VersionAppModel version = new VersionAppModel();
       if (res != null) {
         version = VersionAppModel.fromJson(res.data);
+        if (listCode.length != 0) {
+          PadLockService().listPadLock(listCode).then((result) async {
+            if (result.statusCode == 200 || result.statusCode == 201) {
+              var r = await CodesController().deleteTable();
+            }
+          });
+        }
         if (version.version != Environment().version) {
           VersionWidget().version(version.version, context);
         }
