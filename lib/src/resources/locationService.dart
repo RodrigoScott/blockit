@@ -1,18 +1,11 @@
 import 'package:dio/dio.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trailock/src/utils/dioConfiguration.dart';
 import 'package:trailock/src/utils/enviroment.dart';
 
 class LocationService {
-  var dio = Dio();
+  Dio dio = new DioConfiguration().createDio();
 
   set(String latitude, String longitude, String name, String zone) async {
-    var prefs = await SharedPreferences.getInstance();
-    var _headers = {
-      "accept": "application/json",
-      "X-Requested-With": "XMLHttpRequest",
-      "Authorization": "Bearer ${prefs.getString('access_token')}",
-    };
-
     Uri uri = new Uri();
 
     Response response;
@@ -23,7 +16,8 @@ class LocationService {
         "padlock_name": name.substring(3),
         "time_zone": zone
       });
-      response = await dio.getUri(uri, options: Options(headers: _headers));
+      response = await dio.getUri(uri,
+          options: Options(headers: {"requirestoken": true}));
       if (response.statusCode == 200) {
         return response;
       }

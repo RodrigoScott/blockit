@@ -1,23 +1,18 @@
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:trailock/main.dart';
+import 'package:trailock/src/utils/dioConfiguration.dart';
 import 'package:trailock/src/utils/enviroment.dart';
 
 class UserService {
-  var dio = Dio();
+  Dio dio = new DioConfiguration().createDio();
 
   validateStatus() async {
-    final prefs = await SharedPreferences.getInstance();
-    token = prefs.getString('access_token');
     var url = '${Environment.config.base_url_api}validation';
-    var _headers = {
-      "accept": "application/json",
-      "X-Requested-With": "XMLHttpRequest",
-      "Authorization": "Bearer $token"
-    };
+
     Response response;
     try {
-      response = await dio.post(url, options: Options(headers: _headers));
+      response = await dio.post(url,
+          options: Options(headers: {"requirestoken": true}));
       return response;
     } on DioError catch (e) {
       return e.response;
@@ -26,14 +21,7 @@ class UserService {
 
   changePassword(
       String oldPassword, String newPassword, String confirmNewPassword) async {
-    final prefs = await SharedPreferences.getInstance();
-    token = prefs.getString('access_token');
     var url = '${Environment.config.base_url_api}password/change';
-    var _headers = {
-      "accept": "application/json",
-      "X-Requested-With": "XMLHttpRequest",
-      "Authorization": "Bearer $token"
-    };
     var _data = {
       "old_password": "$oldPassword",
       "new_password": "$newPassword",
@@ -41,8 +29,8 @@ class UserService {
     };
     Response response;
     try {
-      response =
-          await dio.post(url, options: Options(headers: _headers), data: _data);
+      response = await dio.post(url,
+          options: Options(headers: {"requirestoken": true}), data: _data);
       return response;
     } on DioError catch (e) {
       return e.response;
@@ -51,10 +39,6 @@ class UserService {
 
   requestLogin(String email, String password) async {
     var url = '${Environment.config.base_url_api}login';
-    var _headers = {
-      "accept": "application/json",
-      "X-Requested-With": "XMLHttpRequest",
-    };
     var _data = {
       "grant_type": "password",
       "scope": "*",
@@ -68,7 +52,8 @@ class UserService {
     Response response;
     try {
       response = await dio
-          .post(url, options: Options(headers: _headers), data: _data)
+          .post(url,
+              options: Options(headers: {"requirestoken": false}), data: _data)
           .timeout(Duration(seconds: 15), onTimeout: () {
         return null;
       });
@@ -92,16 +77,13 @@ class UserService {
   }
 
   requestRecoverPass(String email) async {
-    var _headers = {
-      "accept": "application/json",
-      "X-Requested-With": "XMLHttpRequest"
-    };
     var url = '${Environment.config.base_url_api}password/reset';
     var recoverData = {"email": "$email"};
     Response response;
     try {
       response = await dio.post(url,
-          data: recoverData, options: Options(headers: _headers));
+          data: recoverData,
+          options: Options(headers: {"requirestoken": false}));
       return response;
     } on DioError catch (e) {
       return e.response;
