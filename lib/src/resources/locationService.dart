@@ -10,7 +10,7 @@ class LocationService {
 
     Response response;
     try {
-      uri = Uri.http('${Environment().host}', 'api/v1/zones', {
+      uri = Uri.https('${Environment().host}', 'api/v1/zones', {
         "lat": latitude,
         "lng": longitude,
         "padlock_name": name.substring(3),

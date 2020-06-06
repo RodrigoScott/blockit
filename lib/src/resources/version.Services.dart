@@ -4,7 +4,6 @@ import 'package:trailock/src/utils/enviroment.dart';
 
 class VersionService {
   Dio dio = new DioConfiguration().createDio();
-
   getVersion() async {
     try {
       Response response = await dio

@@ -15,6 +15,9 @@ PODS:
     - Flutter
   - fluttertoast (0.0.2):
     - Flutter
+  - FMDB (2.7.5):
+    - FMDB/standard (= 2.7.5)
+  - FMDB/standard (2.7.5)
   - geocoder (0.0.1):
     - Flutter
   - geolocator (5.2.1):
@@ -35,10 +38,17 @@ PODS:
     - Flutter
   - "location_permissions (2.0.4+1)":
     - Flutter
+  - path_provider (0.0.1):
+    - Flutter
+  - path_provider_macos (0.0.1):
+    - Flutter
   - Protobuf (3.11.4)
   - Reachability (3.2)
   - shared_preferences (0.0.1):
     - Flutter
+  - sqflite (0.0.1):
+    - Flutter
+    - FMDB (~> 2.7.2)
   - url_launcher (0.0.1):
     - Flutter
 
@@ -56,11 +66,15 @@ DEPENDENCIES:
   - launch_review (from `.symlinks/plugins/launch_review/ios`)
   - location (from `.symlinks/plugins/location/ios`)
   - location_permissions (from `.symlinks/plugins/location_permissions/ios`)
+  - path_provider (from `.symlinks/plugins/path_provider/ios`)
+  - path_provider_macos (from `.symlinks/plugins/path_provider_macos/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
+  - sqflite (from `.symlinks/plugins/sqflite/ios`)
   - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
+    - FMDB
     - GoogleMaps
     - Protobuf
     - Reachability
@@ -92,8 +106,14 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/location/ios"
   location_permissions:
     :path: ".symlinks/plugins/location_permissions/ios"
+  path_provider:
+    :path: ".symlinks/plugins/path_provider/ios"
+  path_provider_macos:
+    :path: ".symlinks/plugins/path_provider_macos/ios"
   shared_preferences:
     :path: ".symlinks/plugins/shared_preferences/ios"
+  sqflite:
+    :path: ".symlinks/plugins/sqflite/ios"
   url_launcher:
     :path: ".symlinks/plugins/url_launcher/ios"
 
@@ -104,6 +124,7 @@ SPEC CHECKSUMS:
   flutter_blue: eeb381dc4727a0954dede73515f683865494b370
   flutter_plugin_android_lifecycle: 47de533a02850f070f5696a623995e93eddcdb9b
   fluttertoast: b644586ef3b16f67fae9a1f8754cef6b2d6b634b
+  FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   geocoder: 3cfab70531a0b367e917bafe82df4c30f6d4c45a
   geolocator: a048cc412bf350b17d671d170f151b0c9fb8f098
   google_api_availability: 6f1017d3a61be12be3bd9f929cc5b2606f24ae7f
@@ -112,9 +133,12 @@ SPEC CHECKSUMS:
   launch_review: 75d5a956ba8eaa493e9c9d4bf4c05e505e8d5ed0
   location: 3a2eed4dd2fab25e7b7baf2a9efefe82b512d740
   location_permissions: 360d12ecd1c94a4cab68585f508be1d5ad944c8b
+  path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
+  path_provider_macos: f760a3c5b04357c380e2fddb6f9db6f3015897e0
   Protobuf: 176220c526ad8bd09ab1fb40a978eac3fef665f7
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   shared_preferences: 430726339841afefe5142b9c1f50cb6bd7793e01
+  sqflite: 4001a31ff81d210346b500c55b17f4d6c7589dd0
   url_launcher: 0067ddb8f10d36786672aa0722a21717dba3a298
 
 PODFILE CHECKSUM: 49ec7d4076524b7e225c38b98147173651ac4b9d
