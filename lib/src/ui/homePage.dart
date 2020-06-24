@@ -59,7 +59,7 @@ class _HomePageState extends State<HomePage> {
                                   prefs.remove('access_token');
                                   Navigator.of(context).pushAndRemoveUntil(
                                       MaterialPageRoute(
-                                          builder: (context) => SignIn()),
+                                          builder: (context) => SingIn()),
                                       (Route<dynamic> route) => false);
                                 },
                               ),

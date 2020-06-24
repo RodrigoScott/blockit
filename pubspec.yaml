@@ -20,6 +20,7 @@ dependencies:
   flutter:
     sdk: flutter
 
+  auto_size_text: ^2.1.0
   connectivity: ^0.4.6+2
   cupertino_icons: ^0.1.2
   data_connection_checker: ^0.3.4

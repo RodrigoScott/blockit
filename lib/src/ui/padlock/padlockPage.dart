@@ -157,7 +157,7 @@ class _PadlockPageState extends State<PadlockPage> {
                                                         MaterialPageRoute(
                                                             builder:
                                                                 (context) =>
-                                                                    SignIn()),
+                                                                    SingIn()),
                                                         (Route<dynamic>
                                                                 route) =>
                                                             false);

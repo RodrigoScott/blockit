@@ -354,7 +354,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                   builder: (BuildContext context) {
                                     loadingContext = context;
                                     return LoadingAlertDismissible(
-                                        content: 'Verificando Geocerca');
+                                        'Verificando Geocerca');
                                   });
                               await characteristic
                                   .write(utf8.encode(location.code));
@@ -623,7 +623,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                     builder: (BuildContext context) {
                                       loadingContext = context;
                                       return LoadingAlertDismissible(
-                                          content: 'Verificando Codigo');
+                                          'Verificando Codigo');
                                     });
                                 await characteristic.write(
                                     utf8.encode(location.code.toUpperCase()));
@@ -1140,7 +1140,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                                   loadingContext =
                                                                       context;
                                                                   return LoadingAlertDismissible(
-                                                                      content:
+
                                                                           'Verificando Codigo');
                                                                 });
                                                             await characteristic
@@ -1757,7 +1757,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                               loadingContext =
                                                                   context;
                                                               return LoadingAlertDismissible(
-                                                                  content:
+
                                                                       'Verificando Codigo');
                                                             });
                                                         await characteristic
@@ -2365,7 +2365,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                           loadingContext =
                                                               context;
                                                           return LoadingAlertDismissible(
-                                                              content:
+
                                                                   'Verificando Codigo');
                                                         });
                                                     await characteristic.write(
@@ -2859,7 +2859,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
         context: context,
         builder: (BuildContext context) {
           loadingContext = context;
-          return LoadingAlertDismissible(content: '$text');
+          return LoadingAlertDismissible('$text');
         });
   }
 
@@ -2914,7 +2914,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
         context: context,
         builder: (BuildContext context) {
           loadingContext = context;
-          return LoadingAlertDismissible(content: 'Verificando Codigo');
+          return LoadingAlertDismissible('Verificando Codigo');
         });
     await characteristic.write(utf8.encode(location.master.toUpperCase()));
 

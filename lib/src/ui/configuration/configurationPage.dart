@@ -233,7 +233,7 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
                               prefs.clear();
                               Navigator.of(context).pushAndRemoveUntil(
                                   MaterialPageRoute(
-                                      builder: (context) => SignIn()),
+                                      builder: (context) => SingIn()),
                                   (Route<dynamic> route) => false);
                             },
                           )
@@ -294,7 +294,7 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
                             prefs.clear();
                             Navigator.of(context).pushAndRemoveUntil(
                                 MaterialPageRoute(
-                                    builder: (context) => SignIn()),
+                                    builder: (context) => SingIn()),
                                 (Route<dynamic> route) => false);
                           },
                         ),

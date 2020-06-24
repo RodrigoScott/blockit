@@ -149,7 +149,7 @@ class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
                             builder: (BuildContext context) {
                               loadingContext = context;
                               return LoadingAlertDismissible(
-                                  content: 'Enviando correo');
+                                  'Enviando correo');
                             });
                         VersionService().getVersion().then((res) {
                           if (res != null) {

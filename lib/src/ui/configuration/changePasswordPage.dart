@@ -233,7 +233,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                               builder: (BuildContext context) {
                                 loadingContext = context;
                                 return LoadingAlertDismissible(
-                                    content: 'Cambiando contraseña');
+                                    'Cambiando contraseña');
                               });
                           UserService()
                               .changePassword(

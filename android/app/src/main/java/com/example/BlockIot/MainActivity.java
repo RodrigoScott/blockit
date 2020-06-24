@@ -1,4 +1,4 @@
-package mx.trailock.app;
+package mx.BlockIot.app;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

@@ -1,390 +1,289 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
-import 'package:trailock/src/model/versionAppModel.dart';
-import 'package:trailock/src/resources/user.Services.dart';
-import 'package:trailock/src/resources/version.Services.dart';
-import 'package:trailock/src/utils/enviroment.dart';
-import 'package:trailock/src/widgets/loadingAlertDismissible.dart';
-import 'package:trailock/src/widgets/versionWidget.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:trailock/src/resources/userService.dart';
+import '../../resources/user.Services.dart';
+import '../../widgets/loadingAlertDismissible.dart';
+import '../homePage.dart';
 
-class SignIn extends StatefulWidget {
+//0xff00558a
+
+class SingIn extends StatefulWidget {
   @override
-  _SignInState createState() => _SignInState();
+  _SingInState createState() => _SingInState();
 }
 
-class _SignInState extends State<SignIn> {
-  var loadingContext;
-  closeAlert(BuildContext _context) {
-    Navigator.of(_context).pop();
-  }
+var _formSignInKey = GlobalKey<FormState>();
+var _formPasswordKey = GlobalKey<FormState>();
+var _formEmailKey = GlobalKey<FormState>();
 
-  var _emailController = TextEditingController();
-  bool connectionInternet = false;
-  var _passwordController = TextEditingController();
+var _emailController = TextEditingController();
+var _passwordController = TextEditingController();
+
+bool ok = true;
+
+var loadingContext;
+
+class _SingInState extends State<SingIn> {
   void initState() {
-    validateVersion();
-    super.initState();
+    _emailController.addListener(() {
+      if (this.mounted) {
+        setState(() {
+          _formEmailKey.currentState.validate();
+        });
+      }
+    });
 
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
+    _passwordController.addListener(() {
+      if (this.mounted) {
+        setState(() {
+          _formPasswordKey.currentState.validate();
+        });
+      }
+    });
+
+    _emailController.clear();
+    _passwordController.clear();
+
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            SizedBox(
-              height: MediaQuery.of(context).size.height * .04,
-            ),
-            Container(
-              height: MediaQuery.of(context).size.height * .03,
-              child: Center(
-                child: Text(
-                  'App Versión: ${Environment().version}',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
-            Center(
-              child: Container(
-                width: MediaQuery.of(context).size.width * .6,
-                height: MediaQuery.of(context).size.height * .35,
-                child: Image.asset("assets/logoTrailock.png"),
-              ),
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * .01,
-            ),
-            Container(
-              height: MediaQuery.of(context).size.height * .05,
-              width: MediaQuery.of(context).size.width * .9,
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Correo Electónico',
-                style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            Container(
-                height: MediaQuery.of(context).size.height * .07,
-                width: MediaQuery.of(context).size.width * .9,
-                child: Theme(
-                  data: Theme.of(context)
-                      .copyWith(primaryColor: Color(0xffff5f00)),
-                  child: TextField(
-                    textCapitalization: TextCapitalization.none,
-                    keyboardType: TextInputType.emailAddress,
-                    controller: _emailController,
-                    cursorColor: Color(0xffff5f00),
-                    style: TextStyle(fontSize: 20),
-                    decoration: InputDecoration(
-                      prefixIcon: Icon(
-                        Icons.email,
-                      ),
-                      filled: true,
-                      fillColor: Color(0xffe3e3e3),
-                      contentPadding: EdgeInsets.all(8),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: BorderSide(color: Colors.transparent)),
-                      focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: BorderSide(color: Colors.transparent)),
-                      enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: BorderSide(color: Colors.transparent)),
-                      errorBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: BorderSide(color: Colors.transparent)),
-                      disabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: BorderSide(color: Colors.transparent)),
-                    ),
-                  ),
-                )),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * .02,
-            ),
-            Container(
-              height: MediaQuery.of(context).size.height * .05,
-              width: MediaQuery.of(context).size.width * .9,
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Contraseña',
-                style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            Container(
-                height: MediaQuery.of(context).size.height * .07,
-                width: MediaQuery.of(context).size.width * .9,
-                child: Theme(
-                  data: Theme.of(context)
-                      .copyWith(primaryColor: Color(0xffff5f00)),
-                  child: TextField(
-                    obscureText: true,
-                    controller: _passwordController,
-                    cursorColor: Color(0xffff5f00),
-                    style: TextStyle(fontSize: 20),
-                    decoration: InputDecoration(
-                      prefixIcon: Icon(
-                        Icons.lock,
-                      ),
-                      filled: true,
-                      fillColor: Color(0xffe3e3e3),
-                      contentPadding: EdgeInsets.all(8),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: BorderSide(color: Colors.transparent)),
-                      focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: BorderSide(color: Colors.transparent)),
-                      enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: BorderSide(color: Colors.transparent)),
-                      errorBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: BorderSide(color: Colors.transparent)),
-                      disabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                    ),
-                  ),
-                )),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * .05,
-            ),
-            Container(
-              height: MediaQuery.of(context).size.height * .07,
-              width: MediaQuery.of(context).size.width * .9,
-              child: InkWell(
-                borderRadius: BorderRadius.circular(5),
-                onTap: () {
-                  if (_emailController.text == '' ||
-                      _passwordController.text == '') {
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(5),
-                              ),
-                            ),
-                            title: Text('Error'),
-                            content: Container(
-                                child: _emailController.text == ''
-                                    ? Text(' Ingrese un email')
-                                    : Text('Ingrese una contraseña')),
-                            actions: <Widget>[
-                              FlatButton(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(5)),
-                                ),
-                                color: Color(0xffff5f00),
-                                child: Text(
-                                  "Aceptar",
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              )
-                            ],
-                          );
-                        });
-                  } else {
-                    showDialog(
-                        barrierDismissible: false,
-                        context: context,
-                        builder: (BuildContext context) {
-                          loadingContext = context;
-                          return LoadingAlertDismissible(
-                              content: 'Iniciando sesión');
-                        });
-                    VersionService().getVersion().then((res) {
-                      if (res != null) {
-                        UserService()
-                            .requestLogin(
-                                _emailController.text, _passwordController.text)
-                            .then((res) {
-                          closeAlert(loadingContext);
-                          if (res.statusCode == 200) {
-                            Navigator.of(context).pushNamedAndRemoveUntil(
-                                'HomePage', (Route<dynamic> route) => false);
-                          } else {
-                            showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(5),
-                                      ),
-                                    ),
-                                    title: Text('Error'),
-                                    content: Container(
-                                        child: Text(
-                                            'Correo electronico o contraseña erroneos, intentelo de nuevo ')),
-                                    actions: <Widget>[
-                                      FlatButton(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(5)),
-                                        ),
-                                        color: Color(0xffff5f00),
-                                        child: Text(
-                                          "Aceptar",
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      )
-                                    ],
-                                  );
-                                });
-                          }
-                        });
-                      } else {
-                        Navigator.pop(context);
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(5),
-                                  ),
-                                ),
-                                title: Text('Error'),
-                                content: Container(
-                                    child: Text('Sin conexion a internet')),
-                                actions: <Widget>[
-                                  FlatButton(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(5)),
-                                    ),
-                                    color: Color(0xffff5f00),
-                                    child: Text(
-                                      "Aceptar",
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  )
-                                ],
-                              );
-                            });
-                      }
-                    });
-                  }
-                },
-                child: Center(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      color: Color(0xffff5f00),
-                    ),
-                    height: MediaQuery.of(context).size.height * .07,
-                    width: MediaQuery.of(context).size.width * .9,
-                    child: Center(
-                      child: Text(
-                        'Iniciar sesión',
-                        style: TextStyle(fontSize: 25, color: Colors.white),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * .01,
-            ),
-            Container(
-              width: MediaQuery.of(context).size.width * .9,
-              child: InkWell(
-                focusColor: Colors.transparent,
-                borderRadius: BorderRadius.circular(15),
-                onTap: () {
-                  Navigator.pushNamed(context, 'RecoverPass');
-                },
-                child: Center(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      //border: Border.all(width: 3),
-                      color: Colors.transparent,
-                    ),
-                    width: MediaQuery.of(context).size.width * .9,
-                    height: 40,
-                    child: Center(
-                      child: Text(
-                        'Olvide mi contraseña',
-                        style: TextStyle(fontSize: 15),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * .05,
-            ),
-            Container(
-              width: MediaQuery.of(context).size.width * .9,
-              child: InkWell(
-                focusColor: Colors.transparent,
-                borderRadius: BorderRadius.circular(15),
-                onTap: () {
-                  launch('http://trailock.mx/terminos-y-condiciones');
-                },
-                child: Center(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      color: Colors.transparent,
-                    ),
-                    width: MediaQuery.of(context).size.width * .9,
-                    height: 40,
-                    child: Center(
-                      child: Text(
-                        'Terminos y condiciones',
-                        style: TextStyle(fontSize: 15),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+    var size = MediaQuery.of(context).size;
 
-  validateVersion() {
-    VersionService().getVersion().then((res) {
-      VersionAppModel version = new VersionAppModel();
-      if (res != null) {
-        version = VersionAppModel.fromJson(res.data);
-        if (version.version != Environment().version) {
-          VersionWidget().version(version.version, context);
-        }
+    Widget createButton(Function _onPress, String _text, double _width,
+        double _height, double _fontSize) {
+      return ButtonTheme(
+          height: _height,
+          minWidth: MediaQuery.of(context).size.width * 0.5,
+          child: RaisedButton(
+            shape: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(50)),
+                borderSide: BorderSide(color: Color(0xff00558a), width: 3)),
+            onPressed: _onPress,
+            color: Color(0xff00558a),
+            child: Text('$_text',
+                style: TextStyle(color: Colors.white, fontSize: _fontSize)),
+          ));
+    }
+
+    Widget createInput(String _label, TextEditingController _controller,
+        bool isPassword, Function _validator) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Container(
+            margin: EdgeInsets.symmetric(vertical: 10),
+            width: size.width * .7,
+            child: TextFormField(
+                cursorColor: Colors.grey,
+                keyboardType: TextInputType.text,
+                controller: _controller,
+                validator: _validator,
+                obscureText: isPassword,
+                maxLength: isPassword ? 8 : null,
+                decoration: InputDecoration(
+                  hintText: _label,
+                  //labelText: _label,
+                  fillColor: Colors.white,
+                ),
+                style: TextStyle(fontSize: 18)),
+          ),
+        ],
+      );
+    }
+
+    void _submit(BuildContext context) async {
+      _formPasswordKey.currentState.validate();
+      _formEmailKey.currentState.validate();
+      if (_formEmailKey.currentState.validate() &&
+          _formPasswordKey.currentState.validate()) {
+        showDialog(
+            barrierDismissible: false,
+            context: context,
+            builder: (BuildContext context) {
+              loadingContext = context;
+              return LoadingAlertDismissible('Cargando...');
+            });
+        IotUserService()
+            .requestLogin(_emailController.text, _passwordController.text)
+            .then((res) {
+          Navigator.of(context).pop();
+          if (res == null) {
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(20),
+                      ),
+                    ),
+                    title: Text("Error de conexión"),
+                    content: Text(
+                        "Conecte su dispositivo a una red e intentelo de nuevo"),
+                    actions: <Widget>[
+                      FlatButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10),
+                          ),
+                        ),
+                        color: Color(0xff00558a),
+                        child: Text(
+                          "Aceptar",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      )
+                    ],
+                  );
+                });
+          } else {
+            //if (ok) {
+            if (res.statusCode == 200) {
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                  (Route<dynamic> route) => false);
+            } else {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(20),
+                        ),
+                      ),
+                      title: Text("Intente otra vez"),
+                      content: Text("Usuario o contraseña incorrectos"),
+                      actions: <Widget>[
+                        FlatButton(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10),
+                            ),
+                          ),
+                          color: Color(0xff00558a),
+                          child: Text(
+                            "Aceptar",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        )
+                      ],
+                    );
+                  });
+            }
+          }
+        });
+      }
+    }
+
+    final inputEmail =
+        createInput("Correo electronico", _emailController, false, (value) {
+      if (_emailController.text.length == 0) {
+        return ('Ingrese su correo');
       }
     });
+    final inputPassword =
+        createInput("Contraseña", _passwordController, true, (value) {
+      if (_passwordController.text.length == 0 ||
+          _passwordController.text.length <= 7) {
+        return ('Ingrese su contraseña');
+      }
+    });
+
+    final bttnSignIn = createButton(() {
+      _submit(context);
+    }, "Ingresar", MediaQuery.of(context).size.width / 2.5, 40, 18);
+
+    return Scaffold(
+        backgroundColor: Colors.white, //Color(0xffe9a9aa),
+        body: SingleChildScrollView(
+          child: Container(
+            height: size.height,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              //crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * .05,
+                ),
+                Image.asset(
+                  'assets/logo.png',
+                  scale: size.width * .02,
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * .05,
+                ),
+                Container(
+                  width: size.width * .8,
+                  //color: Colors.grey,
+                  child: AutoSizeText(
+                    'Inicio de Sesión',
+                    style: TextStyle(fontSize: 30, color: Colors.black54),
+                    textAlign: TextAlign.left,
+                    minFontSize: 20,
+                    maxLines: 1,
+                  ),
+                ),
+                Container(
+                  width: size.width,
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * .02,
+                      ),
+                      Form(
+                        key: _formEmailKey,
+                        child: inputEmail,
+                      ),
+                      Form(
+                        key: _formPasswordKey,
+                        child: inputPassword,
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * .03,
+                      ),
+                      Container(
+                        width: size.width * .7,
+                        child: InkWell(
+                            child: Text(
+                              '¿Olvidaste tu contraseña?',
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontSize: 15,
+                              ),
+                              textAlign: TextAlign.right,
+                            ),
+                            onTap:
+                                () {} /* => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => recoveryPassword())),*/
+                            ),
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * .03,
+                      ),
+                      Container(
+                        child: bttnSignIn,
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * .03,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ));
   }
 }

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class LoadingAlertDismissible extends StatefulWidget {
-  String content = 'Cargando';
+  String text;
+  LoadingAlertDismissible(this.text);
   @override
-  LoadingAlertDismissible({Key key, this.content}) : super(key: key);
   _LoadingAlertDismissibleState createState() =>
       _LoadingAlertDismissibleState();
 }
@@ -11,18 +11,15 @@ class LoadingAlertDismissible extends StatefulWidget {
 class _LoadingAlertDismissibleState extends State<LoadingAlertDismissible> {
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
     return AlertDialog(
       content: new Row(
         children: <Widget>[
-          new CircularProgressIndicator(
-            valueColor: new AlwaysStoppedAnimation<Color>(Color(0xffff5f00)),
-          ),
-          SizedBox(
-            width: 10,
-          ),
+          new CircularProgressIndicator(),
+          SizedBox(width: size.width * 0.02),
           Padding(
-            padding: const EdgeInsets.only(left: 10.0),
-            child: new Text(widget.content),
+            padding: const EdgeInsets.only(left: 8.0),
+            child: new Text('${widget.text}'),
           ),
         ],
       ),
