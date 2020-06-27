@@ -32,9 +32,11 @@ class _PadlockPageState extends State<PadlockPage> {
     Navigator.of(_context).pop();
   }
 
+  String user;
+
   @override
   initState() {
-    validateVersion();
+    //validateVersion();
     getSharedInstance();
 
     SystemChrome.setPreferredOrientations([
@@ -46,6 +48,8 @@ class _PadlockPageState extends State<PadlockPage> {
 
   getSharedInstance() async {
     prefs = await SharedPreferences.getInstance();
+    user = prefs.getString('name');
+    print('hola: $user');
     devices = prefs.getStringList("padlocks") != null
         ? prefs
             .getStringList("padlocks")
@@ -58,6 +62,7 @@ class _PadlockPageState extends State<PadlockPage> {
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
     return StreamBuilder<BluetoothState>(
         stream: FlutterBlue.instance.state,
         initialData: BluetoothState.unknown,
@@ -73,13 +78,38 @@ class _PadlockPageState extends State<PadlockPage> {
                     padding: const EdgeInsets.only(top: 30.0),
                     child: Column(
                       children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(right: 10),
-                          child: Center(
-                            child: Text(
-                              'App Versión: ${Environment().version}',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
+                        SizedBox(height: size.height * 0.1),
+                        Container(
+                          alignment: AlignmentDirectional.center,
+                          height: size.height * 0.15,
+                          child: Image.asset(
+                            'assets/logo.png',
+                            fit: BoxFit.contain,
+                            scale: size.width * .02,
+                          ),
+                        ),
+                        SizedBox(height: size.height * 0.04),
+                        Container(
+                          width: size.width * 0.9,
+                          child: Text(
+                            'Administrador: $user',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.grey,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                        SizedBox(height: size.height * 0.02),
+                        Container(
+                          width: size.width * 0.9,
+                          child: Text(
+                            'Dispositivos: ',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.grey,
+                                fontWeight: FontWeight.w500),
                           ),
                         ),
                         StreamBuilder<List<ScanResult>>(
@@ -139,7 +169,7 @@ class _PadlockPageState extends State<PadlockPage> {
                                                 borderRadius: BorderRadius.all(
                                                     Radius.circular(5)),
                                               ),
-                                              color: Color(0xffff5f00),
+                                              color: Color(0xff00558A),
                                               child: Text(
                                                 "Aceptar",
                                                 style: TextStyle(
@@ -157,7 +187,7 @@ class _PadlockPageState extends State<PadlockPage> {
                                                         MaterialPageRoute(
                                                             builder:
                                                                 (context) =>
-                                                                    SignIn()),
+                                                                    SingIn()),
                                                         (Route<dynamic>
                                                                 route) =>
                                                             false);
@@ -177,7 +207,7 @@ class _PadlockPageState extends State<PadlockPage> {
                     );
                   } else {
                     return FloatingActionButton(
-                        backgroundColor: Color(0xffff5f00),
+                        backgroundColor: Color(0xff00558A),
                         child: Icon(Icons.search),
                         onPressed: () async {
                           await validateVersion();

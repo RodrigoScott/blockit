@@ -17,7 +17,7 @@ Future<Null> main() async {
     title: 'Trailock',
     initialRoute: (token == null || token == '') ? '/' : 'HomePage',
     routes: {
-      '/': (BuildContext context) => SignIn(),
+      '/': (BuildContext context) => SingIn(),
       'HomePage': (BuildContext context) => HomePage(),
       'RecoverPass': (BuildContext context) => RecoverPasswordPage(),
       'Profile': (BuildContext context) => ProfilePage(),

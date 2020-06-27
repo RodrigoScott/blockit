@@ -9,7 +9,7 @@ class BluetoothOffScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFFF5F00),
+      backgroundColor: Color(0xFF00558A),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -24,7 +24,7 @@ class BluetoothOffScreen extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(right: 10, left: 10),
               child: Text(
-                'Para desbloquear candados enciende el Bluetooth.',
+                'Para desbloquear la cortina enciende el Bluetooth.',
                 style: TextStyle(color: Colors.white),
                 textAlign: TextAlign.center,
               ),

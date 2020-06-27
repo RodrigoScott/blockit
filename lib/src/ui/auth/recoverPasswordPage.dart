@@ -14,7 +14,7 @@ class RecoverPasswordPage extends StatefulWidget {
 class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
   @override
   void initState() {
-    validateVersion();
+    //validateVersion();
     super.initState();
   }
 
@@ -33,15 +33,6 @@ class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
           children: <Widget>[
             SizedBox(
               height: MediaQuery.of(context).size.height * .04,
-            ),
-            Container(
-              height: MediaQuery.of(context).size.height * .03,
-              child: Center(
-                child: Text(
-                  'App Versión: ${Environment().version}',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
             ),
             Center(
               child: Container(
@@ -68,11 +59,11 @@ class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
                 width: MediaQuery.of(context).size.width * .9,
                 child: Theme(
                   data: Theme.of(context)
-                      .copyWith(primaryColor: Color(0xffff5f00)),
+                      .copyWith(primaryColor: Color(0xff00558A)),
                   child: TextField(
                     keyboardType: TextInputType.emailAddress,
                     controller: _emailController,
-                    cursorColor: Color(0xffff5f00),
+                    cursorColor: Color(0xff00558A0),
                     style: TextStyle(fontSize: 20),
                     decoration: InputDecoration(
                       prefixIcon: Icon(
@@ -130,7 +121,7 @@ class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
                                       borderRadius:
                                           BorderRadius.all(Radius.circular(5)),
                                     ),
-                                    color: Color(0xffff5f00),
+                                    color: Color(0xff00558A),
                                     child: Text(
                                       "Aceptar",
                                       style: TextStyle(color: Colors.white),
@@ -148,8 +139,7 @@ class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
                             context: context,
                             builder: (BuildContext context) {
                               loadingContext = context;
-                              return LoadingAlertDismissible(
-                                  content: 'Enviando correo');
+                              return LoadingAlertDismissible('Enviando correo');
                             });
                         VersionService().getVersion().then((res) {
                           if (res != null) {
@@ -177,7 +167,7 @@ class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
                                               borderRadius: BorderRadius.all(
                                                   Radius.circular(5)),
                                             ),
-                                            color: Color(0xffff5f00),
+                                            color: Color(0xff00558A),
                                             child: Text(
                                               "Aceptar",
                                               style: TextStyle(
@@ -211,7 +201,7 @@ class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
                                               borderRadius: BorderRadius.all(
                                                   Radius.circular(5)),
                                             ),
-                                            color: Color(0xffff5f00),
+                                            color: Color(0xff00558A),
                                             child: Text(
                                               "Aceptar",
                                               style: TextStyle(
@@ -246,7 +236,7 @@ class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(5)),
                                         ),
-                                        color: Color(0xffff5f00),
+                                        color: Color(0xff00558A),
                                         child: Text(
                                           "Aceptar",
                                           style: TextStyle(color: Colors.white),
@@ -280,7 +270,7 @@ class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(5)),
                                   ),
-                                  color: Color(0xffff5f00),
+                                  color: Color(0xff00558A),
                                   child: Text(
                                     "Aceptar",
                                     style: TextStyle(color: Colors.white),
@@ -299,7 +289,7 @@ class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5),
-                      color: Color(0xffff5f00),
+                      color: Color(0xff00558A),
                     ),
                     height: MediaQuery.of(context).size.height * .07,
                     width: MediaQuery.of(context).size.width * .9,

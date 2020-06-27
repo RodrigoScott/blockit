@@ -18,12 +18,13 @@ class ConfigurationPage extends StatefulWidget {
 
 class _ConfigurationPageState extends State<ConfigurationPage> {
   String userName;
+  String name;
   String lastName;
   String secondLastName;
   String userEmail;
   String carrier;
   void initState() {
-    validateVersion();
+    //validateVersion();
     super.initState();
     setState(() {
       getshared();
@@ -32,28 +33,16 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
     return Scaffold(
         body: Container(
       color: Colors.transparent,
       child: ListView(
         children: <Widget>[
           SizedBox(
-            height: 10,
+            height: size.height * 0.05,
           ),
-          Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: Center(
-              child: Text(
-                'App Versión: ${Environment().version}',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 22),
+          Center(
             child: Text(
               'Perfil',
               style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
@@ -72,7 +61,7 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
                 child: Center(
                   child: CircleAvatar(
                       radius: 75,
-                      backgroundColor: Color(0xffff5f00),
+                      backgroundColor: Color(0xff00558A),
                       child: InkWell(
                         onTap: () {},
                         child: ClipOval(
@@ -98,9 +87,7 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        userName == null
-                            ? ''
-                            : '$userName $lastName $secondLastName',
+                        userName == null ? '' : '$userName $lastName',
                         style: TextStyle(
                             fontSize: 20, fontWeight: FontWeight.bold),
                       ),
@@ -209,7 +196,7 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
                             color: Colors.white,
                             child: Text(
                               "Cancelar",
-                              style: TextStyle(color: Color(0xffff5f00)),
+                              style: TextStyle(color: Color(0xff00558A)),
                             ),
                             onPressed: () {
                               Navigator.of(context).pop();
@@ -220,7 +207,7 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
                               borderRadius:
                                   BorderRadius.all(Radius.circular(5)),
                             ),
-                            color: Color(0xffff5f00),
+                            color: Color(0xff00558A),
                             child: Text(
                               "Aceptar",
                               style: TextStyle(color: Colors.white),
@@ -233,7 +220,7 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
                               prefs.clear();
                               Navigator.of(context).pushAndRemoveUntil(
                                   MaterialPageRoute(
-                                      builder: (context) => SignIn()),
+                                      builder: (context) => SingIn()),
                                   (Route<dynamic> route) => false);
                             },
                           )
@@ -282,7 +269,7 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.all(Radius.circular(5)),
                           ),
-                          color: Color(0xffff5f00),
+                          color: Color(0xff00558A),
                           child: Text(
                             "Aceptar",
                             style: TextStyle(color: Colors.white),
@@ -294,7 +281,7 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
                             prefs.clear();
                             Navigator.of(context).pushAndRemoveUntil(
                                 MaterialPageRoute(
-                                    builder: (context) => SignIn()),
+                                    builder: (context) => SingIn()),
                                 (Route<dynamic> route) => false);
                           },
                         ),
@@ -313,12 +300,14 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
 
   Future getshared() async {
     var prefs = await SharedPreferences.getInstance();
+    name = prefs.getString('name');
+    List<String> nameSplit = name.split(' ');
 
+    print('${nameSplit[0]}');
     setState(() {
-      userName = prefs.getString('userName');
-      lastName = prefs.getString('lastName');
-      secondLastName = prefs.getString('secondLastName');
-      carrier = prefs.getString('carrier');
+      userName = '${nameSplit[0]}';
+      lastName = '${nameSplit[1]}';
+      carrier = 'Administrador';
     });
   }
 }

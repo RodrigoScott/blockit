@@ -1,12 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="mx.trailock.app">
+    package="mx.BlockIot.app">
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="Trailock"
+        android:label="BlockIot"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

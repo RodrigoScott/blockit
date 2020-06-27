@@ -34,7 +34,7 @@ class VersionWidget {
                 color: Colors.white,
                 child: Text(
                   "Cancelar",
-                  style: TextStyle(color: Color(0xffff5f00)),
+                  style: TextStyle(color: Color(0xff00558A)),
                 ),
                 onPressed: () async {
                   Navigator.pop(context);
@@ -44,7 +44,7 @@ class VersionWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(5)),
                 ),
-                color: Color(0xffff5f00),
+                color: Color(0xff00558A),
                 child: Text(
                   "Actualizar",
                   style: TextStyle(color: Colors.white),

@@ -12,6 +12,7 @@ class _ProfilePageState extends State<ProfilePage> {
   var _nameController = TextEditingController();
   var _emailController = TextEditingController();
   String userName;
+  String name;
   String lastName;
   String secondLastName;
   String userEmail;
@@ -35,17 +36,8 @@ class _ProfilePageState extends State<ProfilePage> {
             SizedBox(
               height: MediaQuery.of(context).size.height * .04,
             ),
-            Container(
-              height: MediaQuery.of(context).size.height * .03,
-              child: Center(
-                child: Text(
-                  'App Versión: ${Environment().version}',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 22),
+            Center(
+              //padding: const EdgeInsets.only(left: 22),
               child: Text(
                 'Perfil',
                 style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
@@ -64,7 +56,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: Center(
                     child: CircleAvatar(
                         radius: 75,
-                        backgroundColor: Color(0xffff5f00),
+                        backgroundColor: Color(0xff00558A),
                         child: InkWell(
                           onTap: () {},
                           child: ClipOval(
@@ -91,9 +83,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          userName == null
-                              ? ''
-                              : '$userName $lastName $secondLastName',
+                          userName == null ? '' : '$userName $lastName',
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold),
                         ),
@@ -248,14 +238,16 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future getshared() async {
     var prefs = await SharedPreferences.getInstance();
+    name = prefs.getString('name');
+    List<String> nameSplit = name.split(' ');
 
     setState(() {
-      userName = prefs.getString('userName');
-      lastName = prefs.getString('lastName');
-      secondLastName = prefs.getString('secondLastName');
-      userEmail = prefs.getString('userEmail');
-      carrier = prefs.getString('carrier');
-      _nameController.text = '$userName $lastName $secondLastName';
+      userName = '${nameSplit[0]}';
+      lastName = '${nameSplit[1]}';
+      carrier = 'Administrador';
+      userEmail = prefs.getString('email');
+      carrier = 'Administrador';
+      _nameController.text = '$userName $lastName';
       _emailController.text = userEmail;
     });
   }
