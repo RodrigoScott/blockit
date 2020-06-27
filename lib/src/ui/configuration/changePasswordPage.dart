@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trailock/src/resources/user.Services.dart';
+import 'package:trailock/src/resources/userService.dart';
 import 'package:trailock/src/resources/version.Services.dart';
 import 'package:trailock/src/utils/enviroment.dart';
 import 'package:trailock/src/widgets/loadingAlertDismissible.dart';
@@ -53,7 +54,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
           obscureText: true,
           validator: _valida,
           controller: controller,
-          cursorColor: Color(0xffff5f00),
+          cursorColor: Color(0xff00558A),
           style: TextStyle(fontSize: 20),
           decoration: InputDecoration(
             prefixIcon: Icon(
@@ -103,18 +104,6 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
             height: 10,
           ),
           Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: Center(
-              child: Text(
-                'App Versión: ${Environment().version}',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Padding(
             padding: const EdgeInsets.only(left: 22),
             child: Text(
               'Cambiar Contraseña',
@@ -146,7 +135,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                     child: TextFormField(
                       obscureText: true,
                       controller: _oldPasswordController,
-                      cursorColor: Color(0xffff5f00),
+                      cursorColor: Color(0xff00558A),
                       style: TextStyle(fontSize: 20),
                       validator: (value) {
                         if (_oldPasswordController.text.length == 0) {
@@ -235,7 +224,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                                 return LoadingAlertDismissible(
                                     'Cambiando contraseña');
                               });
-                          UserService()
+                          IotUserService()
                               .changePassword(
                                   _oldPasswordController.text,
                                   _newPasswordController.text,
@@ -265,7 +254,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                                             borderRadius: BorderRadius.all(
                                                 Radius.circular(5)),
                                           ),
-                                          color: Color(0xffff5f00),
+                                          color: Color(0xff00558A),
                                           child: Text(
                                             "Aceptar",
                                             style:
@@ -299,7 +288,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                                             borderRadius: BorderRadius.all(
                                                 Radius.circular(5)),
                                           ),
-                                          color: Color(0xffff5f00),
+                                          color: Color(0xff00558A),
                                           child: Text(
                                             "Aceptar",
                                             style:
@@ -334,7 +323,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                                       borderRadius:
                                           BorderRadius.all(Radius.circular(5)),
                                     ),
-                                    color: Color(0xffff5f00),
+                                    color: Color(0xff00558A),
                                     child: Text(
                                       "Aceptar",
                                       style: TextStyle(color: Colors.white),
@@ -353,7 +342,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5),
-                        color: Color(0xffff5f00),
+                        color: Color(0xff00558A),
                       ),
                       height: MediaQuery.of(context).size.height * .07,
                       width: MediaQuery.of(context).size.width * .9,

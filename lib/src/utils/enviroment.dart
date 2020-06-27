@@ -1,7 +1,7 @@
 class Environment {
   String version = '1.1.0';
   bool validateNEtwork;
-  String client_secret = "1MY6EDcF1d5MhkoBNuqNJ7vgcpBSn9kqOOFZZdUI";
+  String client_secret = "4OzBihD7fqLKmt3egqoZKcZ7BuetAG9G9cFLwzaS";
   String client_id = "2";
   String base_url = 'http://cceo.io:8134';
   String base_url_api = 'http://cceo.io:8134/api';

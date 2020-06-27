@@ -5,12 +5,12 @@ import 'package:trailock/src/model/versionAppModel.dart';
 import 'package:trailock/src/resources/user.Services.dart';
 import 'package:trailock/src/resources/version.Services.dart';
 import 'package:trailock/src/ui/auth/signIn.dart';
+import 'package:trailock/src/ui/configuration/configurationPage.dart';
 import 'package:trailock/src/ui/padlock/padlockPage.dart';
-
-import 'configuration/configurationPage.dart';
 
 class HomePage extends StatefulWidget {
   int indexPage;
+
   @override
   HomePage({Key key, this.indexPage}) : super(key: key);
   _HomePageState createState() => _HomePageState();
@@ -19,6 +19,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   final _pageOptions = [PadlockPage(), ConfigurationPage()];
+
   @override
   void initState() {
     setState(() {
@@ -47,7 +48,7 @@ class _HomePageState extends State<HomePage> {
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(5)),
                                 ),
-                                color: Color(0xffff5f00),
+                                color: Color(0xff00558A),
                                 child: Text(
                                   "Aceptar",
                                   style: TextStyle(color: Colors.white),
@@ -78,7 +79,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
-        fixedColor: Color(0xffff5f00),
+        fixedColor: Color(0xff00558A),
         currentIndex: widget.indexPage == 1 ? widget.indexPage : _selectedIndex,
         type: BottomNavigationBarType.fixed,
         onTap: (int index) async {
@@ -89,14 +90,13 @@ class _HomePageState extends State<HomePage> {
         iconSize: 30,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-              activeIcon:
-                  Icon(Icons.airport_shuttle, color: Colors.deepOrangeAccent),
+              activeIcon: Icon(Icons.airport_shuttle, color: Color(0xff00558A)),
               icon: Icon(Icons.airport_shuttle),
-              title: Text('Candados')),
+              title: Text('Puertas')),
           BottomNavigationBarItem(
               activeIcon: Icon(
                 Icons.settings,
-                color: Colors.deepOrangeAccent,
+                color: Color(0xff00558A),
               ),
               icon: Icon(Icons.settings),
               title: Text(

@@ -147,8 +147,8 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
           width: MediaQuery.of(context).size.width * .9,
           child: Theme(
             data: ThemeData(
-              primaryColor: Color(0xffff5f00),
-              primaryColorDark: Color(0xffff5f00),
+              primaryColor: Color(0xff00558A),
+              primaryColorDark: Color(0xff00558A),
             ),
             child: TextFormField(
               validator: _valida,
@@ -156,10 +156,10 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
               keyboardType: TextInputType.visiblePassword,
               maxLength: 9,
               controller: controller,
-              cursorColor: Color(0xffff5f00),
+              cursorColor: Color(0xff00558A),
               style: TextStyle(fontSize: 20),
               decoration: InputDecoration(
-                errorStyle: TextStyle(color: Color(0xffff5f00)),
+                errorStyle: TextStyle(color: Color(0xff00558A)),
                 filled: true,
                 fillColor: Color(0xffe3e3e3),
                 contentPadding:
@@ -199,7 +199,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                 Center(
                     child: Container(
                   decoration: BoxDecoration(
-                      color: Color(0xFFFF5F00),
+                      color: Color(0xFF00558A),
                       borderRadius:
                           BorderRadius.only(topLeft: Radius.circular(5))),
                   height: 120,
@@ -219,7 +219,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                     child: Column(
                       children: <Widget>[
                         Text(
-                          'Candado',
+                          'Puerta',
                           style: TextStyle(
                               fontSize: 25, fontWeight: FontWeight.bold),
                         ),
@@ -446,10 +446,10 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                 Radius.circular(5),
                                               ),
                                             ),
-                                            title: Text('Abierto por Geocerca'),
+                                            title: Text('Abierta por Geocerca'),
                                             content: Container(
                                                 child: Text(
-                                                    'El candado permanecera abierto durante ${_durationTimeOpen.inMinutes}:${(_durationTimeOpen.inSeconds % 60).toString().padLeft(2, '0')}')),
+                                                    'La puerta permanecera abierta durante ${_durationTimeOpen.inMinutes}:${(_durationTimeOpen.inSeconds % 60).toString().padLeft(2, '0')}')),
                                             actions: <Widget>[
                                               FlatButton(
                                                 shape: RoundedRectangleBorder(
@@ -457,7 +457,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                       BorderRadius.all(
                                                           Radius.circular(5)),
                                                 ),
-                                                color: Color(0xffff5f00),
+                                                color: Color(0xff00558A),
                                                 child: Text(
                                                   "Aceptar",
                                                   style: TextStyle(
@@ -473,7 +473,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                     break;
                                   case 2:
                                     validateContainer = true;
-                                    textError = 'El candado está abierto';
+                                    textError = 'La puerta está abierto';
                                     break;
                                   case 3:
                                     setState(() {
@@ -508,7 +508,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                 Radius.circular(5),
                                               ),
                                             ),
-                                            title: Text('Candado bloqueado'),
+                                            title: Text('Puerta bloqueada'),
                                             content: Container(
                                                 child: Text(
                                                     'Vuelva a intentar en ${_durationTimeLocked.inMinutes}:${(_durationTimeLocked.inSeconds % 60).toString().padLeft(2, '0')}')),
@@ -519,7 +519,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                       BorderRadius.all(
                                                           Radius.circular(5)),
                                                 ),
-                                                color: Color(0xffff5f00),
+                                                color: Color(0xff00558A),
                                                 child: Text(
                                                   "Aceptar",
                                                   style: TextStyle(
@@ -717,7 +717,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                               )),
                                               content: Container(
                                                   child: Text(
-                                                      'El candado permanecera abierto durante ${_durationTimeOpen.inMinutes}:${(_durationTimeOpen.inSeconds % 60).toString().padLeft(2, '0')}')),
+                                                      'La puerta permanecera abierta durante ${_durationTimeOpen.inMinutes}:${(_durationTimeOpen.inSeconds % 60).toString().padLeft(2, '0')}')),
                                               actions: <Widget>[
                                                 FlatButton(
                                                   shape: RoundedRectangleBorder(
@@ -725,7 +725,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                         BorderRadius.all(
                                                             Radius.circular(5)),
                                                   ),
-                                                  color: Color(0xffff5f00),
+                                                  color: Color(0xff00558A),
                                                   child: Text(
                                                     "Aceptar",
                                                     style: TextStyle(
@@ -741,7 +741,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                       break;
                                     case 2:
                                       validateContainer = true;
-                                      textError = 'El candado está abierto';
+                                      textError = 'La puerta está abierta';
                                       break;
                                     case 3:
                                       setState(() {
@@ -777,7 +777,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                   Radius.circular(5),
                                                 ),
                                               ),
-                                              title: Text('Candado bloqueado'),
+                                              title: Text('Puerta bloqueada'),
                                               content: Container(
                                                   child: Text(
                                                       'Vuelva a intentar en ${_durationTimeLocked.inMinutes}:${(_durationTimeLocked.inSeconds % 60).toString().padLeft(2, '0')}')),
@@ -788,7 +788,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                         BorderRadius.all(
                                                             Radius.circular(5)),
                                                   ),
-                                                  color: Color(0xffff5f00),
+                                                  color: Color(0xff00558A),
                                                   child: Text(
                                                     "Aceptar",
                                                     style: TextStyle(
@@ -835,7 +835,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                             5)),
                                                 content: Column(
                                                   children: <Widget>[
-                                                    Text('Candado',
+                                                    Text('Puerta',
                                                         style: TextStyle(
                                                             fontSize: 25,
                                                             fontWeight:
@@ -867,7 +867,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                                 Icons
                                                                     .not_interested,
                                                                 color: Color(
-                                                                    0xffff5f00),
+                                                                    0xff00558A),
                                                               )),
                                                           SizedBox(
                                                             width: 5,
@@ -879,7 +879,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                                 style:
                                                                     TextStyle(
                                                                   color: Color(
-                                                                      0xffff5f00),
+                                                                      0xff00558A),
                                                                 )),
                                                           )
                                                         ],
@@ -906,7 +906,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                                       Icons
                                                                           .battery_alert,
                                                                       color: Color(
-                                                                          0xffff5f00),
+                                                                          0xff00558A),
                                                                     )),
                                                                 SizedBox(
                                                                   width: 5,
@@ -914,11 +914,11 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                                 Container(
                                                                   height: 20,
                                                                   child: Text(
-                                                                      'Candado sin batería',
+                                                                      'Dispositivo sin batería',
                                                                       style:
                                                                           TextStyle(
                                                                         color: Color(
-                                                                            0xffff5f00),
+                                                                            0xff00558A),
                                                                       )),
                                                                 )
                                                               ],
@@ -1140,8 +1140,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                                   loadingContext =
                                                                       context;
                                                                   return LoadingAlertDismissible(
-
-                                                                          'Verificando Codigo');
+                                                                      'Verificando Codigo');
                                                                 });
                                                             await characteristic
                                                                 .write(utf8.encode(
@@ -1289,14 +1288,14 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                                           title:
                                                                               Text('Código correcto'),
                                                                           content:
-                                                                              Container(child: Text('El candado permanecera abierto durante ${_durationTimeOpen.inMinutes}:${(_durationTimeOpen.inSeconds % 60).toString().padLeft(2, '0')}')),
+                                                                              Container(child: Text('La puerta permanecera abierta durante ${_durationTimeOpen.inMinutes}:${(_durationTimeOpen.inSeconds % 60).toString().padLeft(2, '0')}')),
                                                                           actions: <
                                                                               Widget>[
                                                                             FlatButton(
                                                                               shape: RoundedRectangleBorder(
                                                                                 borderRadius: BorderRadius.all(Radius.circular(5)),
                                                                               ),
-                                                                              color: Color(0xffff5f00),
+                                                                              color: Color(0xff00558A),
                                                                               child: Text(
                                                                                 "Aceptar",
                                                                                 style: TextStyle(color: Colors.white),
@@ -1313,7 +1312,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                                   validateContainer =
                                                                       true;
                                                                   textError =
-                                                                      'El candado está abierto';
+                                                                      'La puerta está abierta';
                                                                   break;
                                                                 case 3:
                                                                   setState(() {
@@ -1368,7 +1367,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                                             ),
                                                                           ),
                                                                           title:
-                                                                              Text('Candado bloqueado'),
+                                                                              Text('Puerta bloqueada'),
                                                                           content:
                                                                               Container(child: Text('Vuelva a intentar en ${_durationTimeLocked.inMinutes}:${(_durationTimeLocked.inSeconds % 60).toString().padLeft(2, '0')}')),
                                                                           actions: <
@@ -1377,7 +1376,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                                               shape: RoundedRectangleBorder(
                                                                                 borderRadius: BorderRadius.all(Radius.circular(5)),
                                                                               ),
-                                                                              color: Color(0xffff5f00),
+                                                                              color: Color(0xff00558A),
                                                                               child: Text(
                                                                                 "Aceptar",
                                                                                 style: TextStyle(color: Colors.white),
@@ -1414,7 +1413,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                                       .circular(
                                                                           5),
                                                               color: Color(
-                                                                  0xffff5f00),
+                                                                  0xff00558A),
                                                             ),
                                                             height: MediaQuery.of(
                                                                         context)
@@ -1475,7 +1474,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                     BorderRadius.circular(5)),
                                             content: Column(
                                               children: <Widget>[
-                                                Text('Candado',
+                                                Text('Puerta',
                                                     style: TextStyle(
                                                         fontSize: 25,
                                                         fontWeight:
@@ -1505,7 +1504,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                                   Icons
                                                                       .battery_alert,
                                                                   color: Color(
-                                                                      0xffff5f00),
+                                                                      0xff00558A),
                                                                 )),
                                                             SizedBox(
                                                               width: 5,
@@ -1517,7 +1516,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                                   style:
                                                                       TextStyle(
                                                                     color: Color(
-                                                                        0xffff5f00),
+                                                                        0xff00558A),
                                                                   )),
                                                             )
                                                           ],
@@ -1542,7 +1541,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                                   Icons
                                                                       .battery_alert,
                                                                   color: Color(
-                                                                      0xffff5f00),
+                                                                      0xff00558A),
                                                                 )),
                                                             SizedBox(
                                                               width: 5,
@@ -1550,11 +1549,11 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                             Container(
                                                               height: 20,
                                                               child: Text(
-                                                                  'Candado sin batería',
+                                                                  'Dispositivo sin batería',
                                                                   style:
                                                                       TextStyle(
                                                                     color: Color(
-                                                                        0xffff5f00),
+                                                                        0xff00558A),
                                                                   )),
                                                             )
                                                           ],
@@ -1757,8 +1756,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                               loadingContext =
                                                                   context;
                                                               return LoadingAlertDismissible(
-
-                                                                      'Verificando Codigo');
+                                                                  'Verificando Codigo');
                                                             });
                                                         await characteristic
                                                             .write(utf8.encode(
@@ -1907,7 +1905,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                                           'Código correcto'),
                                                                       content: Container(
                                                                           child:
-                                                                              Text('El candado permanecera abierto durante ${_durationTimeOpen.inMinutes}:${(_durationTimeOpen.inSeconds % 60).toString().padLeft(2, '0')}')),
+                                                                              Text('La puerta permanecera abierta durante ${_durationTimeOpen.inMinutes}:${(_durationTimeOpen.inSeconds % 60).toString().padLeft(2, '0')}')),
                                                                       actions: <
                                                                           Widget>[
                                                                         FlatButton(
@@ -1917,7 +1915,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                                                 BorderRadius.all(Radius.circular(5)),
                                                                           ),
                                                                           color:
-                                                                              Color(0xffff5f00),
+                                                                              Color(0xff00558A),
                                                                           child:
                                                                               Text(
                                                                             "Aceptar",
@@ -1937,7 +1935,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                               validateContainer =
                                                                   true;
                                                               textError =
-                                                                  'El candado está abierto';
+                                                                  'La puerta está abierta';
                                                               break;
                                                             case 3:
                                                               setState(() {
@@ -1994,7 +1992,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                                         ),
                                                                       ),
                                                                       title: Text(
-                                                                          'Candado bloqueado'),
+                                                                          'Puerta bloqueada'),
                                                                       content: Container(
                                                                           child:
                                                                               Text('Vuelva a intentar en ${_durationTimeLocked.inMinutes}:${(_durationTimeLocked.inSeconds % 60).toString().padLeft(2, '0')}')),
@@ -2007,7 +2005,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                                                 BorderRadius.all(Radius.circular(5)),
                                                                           ),
                                                                           color:
-                                                                              Color(0xffff5f00),
+                                                                              Color(0xff00558A),
                                                                           child:
                                                                               Text(
                                                                             "Aceptar",
@@ -2044,7 +2042,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                               BorderRadius
                                                                   .circular(5),
                                                           color:
-                                                              Color(0xffff5f00),
+                                                              Color(0xff00558A),
                                                         ),
                                                         height: MediaQuery.of(
                                                                     context)
@@ -2101,7 +2099,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                 BorderRadius.circular(5)),
                                         content: Column(
                                           children: <Widget>[
-                                            Text('Candado',
+                                            Text('Puerta',
                                                 style: TextStyle(
                                                     fontSize: 25,
                                                     fontWeight:
@@ -2125,7 +2123,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                       child: Icon(
                                                         Icons.signal_wifi_off,
                                                         color:
-                                                            Color(0xffff5f00),
+                                                            Color(0xff00558A),
                                                       )),
                                                   SizedBox(
                                                     width: 5,
@@ -2135,7 +2133,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                     child: Text('Sin internet',
                                                         style: TextStyle(
                                                           color:
-                                                              Color(0xffff5f00),
+                                                              Color(0xff00558A),
                                                         )),
                                                   )
                                                 ],
@@ -2160,7 +2158,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                               Icons
                                                                   .battery_alert,
                                                               color: Color(
-                                                                  0xffff5f00),
+                                                                  0xff00558A),
                                                             )),
                                                         SizedBox(
                                                           width: 5,
@@ -2168,10 +2166,10 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                         Container(
                                                           height: 20,
                                                           child: Text(
-                                                              'Candado sin batería',
+                                                              'Dispositivo sin batería',
                                                               style: TextStyle(
                                                                 color: Color(
-                                                                    0xffff5f00),
+                                                                    0xff00558A),
                                                               )),
                                                         )
                                                       ],
@@ -2365,8 +2363,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                           loadingContext =
                                                               context;
                                                           return LoadingAlertDismissible(
-
-                                                                  'Verificando Codigo');
+                                                              'Verificando Codigo');
                                                         });
                                                     await characteristic.write(
                                                         utf8.encode(
@@ -2513,7 +2510,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                                       'Código correcto'),
                                                                   content: Container(
                                                                       child: Text(
-                                                                          'El candado permanecera abierto durante ${_durationTimeOpen.inMinutes}:${(_durationTimeOpen.inSeconds % 60).toString().padLeft(2, '0')}')),
+                                                                          'La puerta permanecera abierta durante ${_durationTimeOpen.inMinutes}:${(_durationTimeOpen.inSeconds % 60).toString().padLeft(2, '0')}')),
                                                                   actions: <
                                                                       Widget>[
                                                                     FlatButton(
@@ -2523,7 +2520,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                                             BorderRadius.all(Radius.circular(5)),
                                                                       ),
                                                                       color: Color(
-                                                                          0xffff5f00),
+                                                                          0xff00558A),
                                                                       child:
                                                                           Text(
                                                                         "Aceptar",
@@ -2546,7 +2543,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                           validateContainer =
                                                               true;
                                                           textError =
-                                                              'El candado está abierto';
+                                                              'La puerta está abierta';
                                                           break;
                                                         case 3:
                                                           setState(() {
@@ -2604,7 +2601,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                                     ),
                                                                   ),
                                                                   title: Text(
-                                                                      'Candado bloqueado'),
+                                                                      'Puerta bloqueada'),
                                                                   content: Container(
                                                                       child: Text(
                                                                           'Vuelva a intentar en ${_durationTimeLocked.inMinutes}:${(_durationTimeLocked.inSeconds % 60).toString().padLeft(2, '0')}')),
@@ -2617,7 +2614,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                                             BorderRadius.all(Radius.circular(5)),
                                                                       ),
                                                                       color: Color(
-                                                                          0xffff5f00),
+                                                                          0xff00558A),
                                                                       child:
                                                                           Text(
                                                                         "Aceptar",
@@ -2654,7 +2651,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               5),
-                                                      color: Color(0xffff5f00),
+                                                      color: Color(0xff00558A),
                                                     ),
                                                     height:
                                                         MediaQuery.of(context)
@@ -2704,17 +2701,17 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                 Radius.circular(5),
                               ),
                             ),
-                            title: Text('Candado abierto'),
+                            title: Text('Puerta abierta'),
                             content: Container(
                                 child:
-                                    Text('El candado se cerrará en $_current')),
+                                    Text('La puerta se cerrará en $_current')),
                             actions: <Widget>[
                               FlatButton(
                                 shape: RoundedRectangleBorder(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(5)),
                                 ),
-                                color: Color(0xffff5f00),
+                                color: Color(0xff00558A),
                                 child: Text(
                                   "Aceptar",
                                   style: TextStyle(color: Colors.white),
@@ -2738,7 +2735,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                 Radius.circular(5),
                               ),
                             ),
-                            title: Text('Candado bloqueado'),
+                            title: Text('Puerta bloqueada'),
                             content:
                                 Container(child: Text('Intentar en $_current')),
                             actions: <Widget>[
@@ -2747,7 +2744,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(5)),
                                 ),
-                                color: Color(0xffff5f00),
+                                color: Color(0xff00558A),
                                 child: Text(
                                   "Aceptar",
                                   style: TextStyle(color: Colors.white),
@@ -3000,16 +2997,16 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                 height: 30,
                                 child: Icon(
                                   Icons.battery_alert,
-                                  color: Color(0xffff5f00),
+                                  color: Color(0xff00558A),
                                 )),
                             SizedBox(
                               width: 5,
                             ),
                             Container(
                               height: 20,
-                              child: Text('Candado sin batería',
+                              child: Text('Dispositivo sin batería',
                                   style: TextStyle(
-                                    color: Color(0xffff5f00),
+                                    color: Color(0xff00558A),
                                   )),
                             )
                           ],
@@ -3017,7 +3014,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                       ),
                       Container(
                           child: Text(
-                              'El candado permanecera abierto durante ${_durationTimeOpen.inMinutes}:${(_durationTimeOpen.inSeconds % 60).toString().padLeft(2, '0')}')),
+                              'La puerta permanecera abierta durante ${_durationTimeOpen.inMinutes}:${(_durationTimeOpen.inSeconds % 60).toString().padLeft(2, '0')}')),
                     ],
                   ),
                   actions: <Widget>[
@@ -3025,7 +3022,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(5)),
                       ),
-                      color: Color(0xffff5f00),
+                      color: Color(0xff00558A),
                       child: Text(
                         "Aceptar",
                         style: TextStyle(color: Colors.white),
@@ -3040,7 +3037,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
           break;
         case 2:
           validateContainer = true;
-          textError = 'El candado está abierto';
+          textError = 'La puerta está abierta';
           break;
         case 3:
           setState(() {
@@ -3074,7 +3071,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                       Radius.circular(5),
                     ),
                   ),
-                  title: Text('Candado bloqueado'),
+                  title: Text('Puerta bloqueada'),
                   content: Container(
                       child: Text(
                           'Vuelva a intentar en ${_durationTimeLocked.inMinutes}:${(_durationTimeLocked.inSeconds % 60).toString().padLeft(2, '0')}')),
@@ -3083,7 +3080,7 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(5)),
                       ),
-                      color: Color(0xffff5f00),
+                      color: Color(0xff00558A),
                       child: Text(
                         "Aceptar",
                         style: TextStyle(color: Colors.white),
