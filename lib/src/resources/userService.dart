@@ -38,19 +38,36 @@ class IotUserService {
 
   changePassword(String oldPassword, String newPassword,
       String newPasswordConfirmation) async {
+    var prefs = await SharedPreferences.getInstance();
+    String email = prefs.getString('email');
+    print(email);
     var _data = {
       "old_password": "$oldPassword",
       "new_password": "$newPassword",
       "new_password_confirmation": "$newPasswordConfirmation",
+      "email": "$email",
     };
 
     try {
-      Response response = await _dio.put('/user/password',
+      Response response = await _dio.post('/password/change',
           data: _data, options: Options(headers: {'requierestoken': false}));
       print(response.statusCode);
       if (response.statusCode == 200) {
         return response;
       }
+    } on DioError catch (e) {
+      print(e.message);
+      return e.response;
+    }
+  }
+
+  deviceStatus(String name) async {
+    var recoverData = {"name": "$name"};
+    try {
+      Response response = await _dio.put('/status/device',
+          data: recoverData,
+          options: Options(headers: {'requierestoken': false}));
+      return response;
     } on DioError catch (e) {
       return e.response;
     }
