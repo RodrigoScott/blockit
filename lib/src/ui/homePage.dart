@@ -90,15 +90,15 @@ class _HomePageState extends State<HomePage> {
         iconSize: 30,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-              activeIcon: Icon(Icons.airport_shuttle, color: Color(0xff00558A)),
-              icon: Icon(Icons.airport_shuttle),
+              activeIcon: Icon(Icons.lock_outline, color: Color(0xff00558A)),
+              icon: Icon(Icons.lock_outline),
               title: Text('Puertas')),
           BottomNavigationBarItem(
               activeIcon: Icon(
-                Icons.settings,
+                Icons.person_outline,
                 color: Color(0xff00558A),
               ),
-              icon: Icon(Icons.settings),
+              icon: Icon(Icons.person_outline),
               title: Text(
                 'Configuración',
               )),

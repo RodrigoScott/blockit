@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:trailock/src/utils/enviroment.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -27,202 +26,198 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          title: Text("Perfil"),
+          centerTitle: true,
+          backgroundColor: Color(0xff00558A),
+        ),
         body: Container(
-      color: Colors.transparent,
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            SizedBox(
-              height: MediaQuery.of(context).size.height * .04,
-            ),
-            Center(
-              //padding: const EdgeInsets.only(left: 22),
-              child: Text(
-                'Perfil',
-                style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
-              ),
-            ),
-            SizedBox(
-              height: 30,
-            ),
-            Row(
+          color: Colors.transparent,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 SizedBox(
-                  width: MediaQuery.of(context).size.width * .05,
+                  height: 30,
                 ),
-                Container(
-                  width: MediaQuery.of(context).size.width * .45,
-                  child: Center(
-                    child: CircleAvatar(
-                        radius: 75,
-                        backgroundColor: Color(0xff00558A),
-                        child: InkWell(
-                          onTap: () {},
-                          child: ClipOval(
-                              child: Container(
-                            child: Text(
-                              userName == null
-                                  ? ''
-                                  : '${userName.substring(0, 1)}${lastName.substring(0, 1)}',
-                              style:
-                                  TextStyle(fontSize: 55, color: Colors.white),
+                Row(
+                  children: <Widget>[
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * .05,
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width * .45,
+                      child: Center(
+                        child: CircleAvatar(
+                            radius: 75,
+                            backgroundColor: Color(0xff00558A),
+                            child: InkWell(
+                              onTap: () {},
+                              child: ClipOval(
+                                  child: Container(
+                                child: Text(
+                                  userName == null
+                                      ? ''
+                                      : '${userName.substring(0, 1)}${lastName.substring(0, 1)}',
+                                  style: TextStyle(
+                                      fontSize: 55, color: Colors.white),
+                                ),
+                              )),
+                            )),
+                      ),
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * .05,
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width * .40,
+                      child: Padding(
+                        padding: const EdgeInsets.all(2.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              userName == null ? '' : '$userName $lastName',
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
                             ),
-                          )),
-                        )),
-                  ),
+                            Text(
+                              carrier == null ? '' : carrier,
+                              style: TextStyle(
+                                  fontSize: 13, color: Colors.black38),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 SizedBox(
-                  width: MediaQuery.of(context).size.width * .05,
+                  height: 15,
                 ),
                 Container(
-                  width: MediaQuery.of(context).size.width * .40,
                   child: Padding(
-                    padding: const EdgeInsets.all(2.0),
+                    padding: const EdgeInsets.only(left: 20),
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text(
-                          userName == null ? '' : '$userName $lastName',
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * .02,
                         ),
-                        Text(
-                          carrier == null ? '' : carrier,
-                          style: TextStyle(fontSize: 13, color: Colors.black38),
+                        Container(
+                          height: MediaQuery.of(context).size.height * .05,
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            'Nombre',
+                            style: TextStyle(
+                                fontSize: 13, fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        Container(
+                            height: MediaQuery.of(context).size.height * .07,
+                            width: MediaQuery.of(context).size.width * .9,
+                            child: TextField(
+                              controller: _nameController,
+                              enabled: false,
+                              cursorColor: Colors.black,
+                              style: TextStyle(fontSize: 17),
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(
+                                  Icons.person_outline,
+                                  color: Color(0xff888888),
+                                ),
+                                filled: true,
+                                fillColor: Color(0xffe3e3e3),
+                                contentPadding: EdgeInsets.all(8),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide:
+                                        BorderSide(color: Colors.transparent)),
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide:
+                                        BorderSide(color: Colors.transparent)),
+                                enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide:
+                                        BorderSide(color: Colors.transparent)),
+                                errorBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide:
+                                        BorderSide(color: Colors.transparent)),
+                                disabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide:
+                                        BorderSide(color: Colors.transparent)),
+                              ),
+                            )),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * .02,
+                        ),
+                        Container(
+                          height: MediaQuery.of(context).size.height * .05,
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            'Correo Electronico',
+                            style: TextStyle(
+                                fontSize: 13, fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        Container(
+                            height: MediaQuery.of(context).size.height * .07,
+                            width: MediaQuery.of(context).size.width * .9,
+                            child: TextField(
+                              controller: _emailController,
+                              enabled: false,
+                              cursorColor: Colors.black,
+                              style: TextStyle(fontSize: 17),
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(
+                                  Icons.mail_outline,
+                                  color: Color(0xff888888),
+                                ),
+                                filled: true,
+                                fillColor: Color(0xffe3e3e3),
+                                contentPadding: EdgeInsets.all(8),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide:
+                                        BorderSide(color: Colors.transparent)),
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide:
+                                        BorderSide(color: Colors.transparent)),
+                                enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide:
+                                        BorderSide(color: Colors.transparent)),
+                                errorBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide:
+                                        BorderSide(color: Colors.transparent)),
+                                disabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide:
+                                        BorderSide(color: Colors.transparent)),
+                              ),
+                            )),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * .02,
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * .05,
                         ),
                       ],
                     ),
                   ),
-                ),
+                )
               ],
             ),
-            SizedBox(
-              height: 15,
-            ),
-            Container(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 20),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * .02,
-                    ),
-                    Container(
-                      height: MediaQuery.of(context).size.height * .05,
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Nombre',
-                        style: TextStyle(
-                            fontSize: 13, fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    Container(
-                        height: MediaQuery.of(context).size.height * .07,
-                        width: MediaQuery.of(context).size.width * .9,
-                        child: TextField(
-                          controller: _nameController,
-                          enabled: false,
-                          cursorColor: Colors.black,
-                          style: TextStyle(fontSize: 17),
-                          decoration: InputDecoration(
-                            prefixIcon: Icon(
-                              Icons.person_outline,
-                              color: Color(0xff888888),
-                            ),
-                            filled: true,
-                            fillColor: Color(0xffe3e3e3),
-                            contentPadding: EdgeInsets.all(8),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide:
-                                    BorderSide(color: Colors.transparent)),
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide:
-                                    BorderSide(color: Colors.transparent)),
-                            enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide:
-                                    BorderSide(color: Colors.transparent)),
-                            errorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide:
-                                    BorderSide(color: Colors.transparent)),
-                            disabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide:
-                                    BorderSide(color: Colors.transparent)),
-                          ),
-                        )),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * .02,
-                    ),
-                    Container(
-                      height: MediaQuery.of(context).size.height * .05,
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Correo Electronico',
-                        style: TextStyle(
-                            fontSize: 13, fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    Container(
-                        height: MediaQuery.of(context).size.height * .07,
-                        width: MediaQuery.of(context).size.width * .9,
-                        child: TextField(
-                          controller: _emailController,
-                          enabled: false,
-                          cursorColor: Colors.black,
-                          style: TextStyle(fontSize: 17),
-                          decoration: InputDecoration(
-                            prefixIcon: Icon(
-                              Icons.mail_outline,
-                              color: Color(0xff888888),
-                            ),
-                            filled: true,
-                            fillColor: Color(0xffe3e3e3),
-                            contentPadding: EdgeInsets.all(8),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide:
-                                    BorderSide(color: Colors.transparent)),
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide:
-                                    BorderSide(color: Colors.transparent)),
-                            enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide:
-                                    BorderSide(color: Colors.transparent)),
-                            errorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide:
-                                    BorderSide(color: Colors.transparent)),
-                            disabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide:
-                                    BorderSide(color: Colors.transparent)),
-                          ),
-                        )),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * .02,
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * .05,
-                    ),
-                  ],
-                ),
-              ),
-            )
-          ],
-        ),
-      ),
-    ));
+          ),
+        ));
   }
 
   styleText(String data, content) {

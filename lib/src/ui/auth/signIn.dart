@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/material.dart';
 import 'package:trailock/src/resources/userService.dart';
-import '../../resources/user.Services.dart';
+
 import '../../widgets/loadingAlertDismissible.dart';
 import '../homePage.dart';
 
@@ -82,7 +82,6 @@ class _SingInState extends State<SingIn> {
                 controller: _controller,
                 validator: _validator,
                 obscureText: isPassword,
-                maxLength: isPassword ? 8 : null,
                 decoration: InputDecoration(
                   hintText: _label,
                   //labelText: _label,
@@ -185,19 +184,19 @@ class _SingInState extends State<SingIn> {
       }
     }
 
-    final inputEmail =
-        createInput("Correo electronico", _emailController, false, (value) {
-      if (_emailController.text.length == 0) {
-        return ('Ingrese su correo');
-      }
-    });
-    final inputPassword =
-        createInput("Contraseña", _passwordController, true, (value) {
-      if (_passwordController.text.length == 0 ||
-          _passwordController.text.length <= 7) {
-        return ('Ingrese su contraseña');
-      }
-    });
+    final inputEmail = createInput(
+        "Correo electronico",
+        _emailController,
+        false,
+        (value) =>
+            _emailController.text.length == 0 ? ('Ingrese su correo') : null);
+    final inputPassword = createInput(
+        "Contraseña",
+        _passwordController,
+        true,
+        (value) => _passwordController.text.length == 0
+            ? ('Ingrese su contraseña')
+            : null);
 
     final bttnSignIn = createButton(() {
       _submit(context);

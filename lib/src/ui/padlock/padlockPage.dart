@@ -4,16 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:trailock/src/controller/codesController.dart';
-import 'package:trailock/src/model/codeModel.dart';
 import 'package:trailock/src/model/device.dart';
 import 'package:trailock/src/model/versionAppModel.dart';
-import 'package:trailock/src/resources/PadLockService.dart';
-import 'package:trailock/src/resources/user.Services.dart';
-import 'package:trailock/src/resources/version.Services.dart';
-import 'package:trailock/src/ui/auth/signIn.dart';
-import 'package:trailock/src/utils/enviroment.dart';
-import 'package:trailock/src/widgets/versionWidget.dart';
 
 import 'bluetoothOffScreenWidget.dart';
 import 'cardPadLockScanResultWidget.dart';
@@ -70,6 +62,11 @@ class _PadlockPageState extends State<PadlockPage> {
           final state = snapshot.data;
           if (state == BluetoothState.on) {
             return Scaffold(
+              appBar: AppBar(
+                title: Text("Puertas Disponibles"),
+                centerTitle: true,
+                backgroundColor: Color(0xff00558A),
+              ),
               body: RefreshIndicator(
                 onRefresh: () => FlutterBlue.instance
                     .startScan(timeout: Duration(seconds: 4)),
@@ -78,17 +75,13 @@ class _PadlockPageState extends State<PadlockPage> {
                     padding: const EdgeInsets.only(top: 30.0),
                     child: Column(
                       children: <Widget>[
-                        SizedBox(height: size.height * 0.1),
-                        Container(
-                          alignment: AlignmentDirectional.center,
-                          height: size.height * 0.15,
-                          child: Image.asset(
-                            'assets/logo.png',
-                            fit: BoxFit.contain,
-                            scale: size.width * .02,
-                          ),
+                        SizedBox(height: 10),
+                        Icon(
+                          Icons.perm_contact_calendar,
+                          size: 200,
+                          color: Color(0xff00558A),
                         ),
-                        SizedBox(height: size.height * 0.04),
+                        SizedBox(height: 10),
                         Container(
                           width: size.width * 0.9,
                           child: Text(
@@ -145,61 +138,6 @@ class _PadlockPageState extends State<PadlockPage> {
                 initialData: false,
                 builder: (c, snapshot) {
                   if (snapshot.data) {
-                    VersionService().getVersion().then((res) {
-                      res != null
-                          ? UserService().validateStatus().then((r) {
-                              r.statusCode == 401
-                                  ? showDialog(
-                                      barrierDismissible: false,
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(5),
-                                            ),
-                                          ),
-                                          title: Text('Alerta'),
-                                          content: Container(
-                                              child:
-                                                  Text('Tu sesión a caducado')),
-                                          actions: <Widget>[
-                                            FlatButton(
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(5)),
-                                              ),
-                                              color: Color(0xff00558A),
-                                              child: Text(
-                                                "Aceptar",
-                                                style: TextStyle(
-                                                    color: Colors.white),
-                                              ),
-                                              onPressed: () async {
-                                                var r = await CodesController()
-                                                    .deleteTable();
-                                                final prefs =
-                                                    await SharedPreferences
-                                                        .getInstance();
-                                                prefs.remove('access_token');
-                                                Navigator.of(context)
-                                                    .pushAndRemoveUntil(
-                                                        MaterialPageRoute(
-                                                            builder:
-                                                                (context) =>
-                                                                    SingIn()),
-                                                        (Route<dynamic>
-                                                                route) =>
-                                                            false);
-                                              },
-                                            ),
-                                          ],
-                                        );
-                                      })
-                                  : null;
-                            })
-                          : null;
-                    });
                     return FloatingActionButton(
                       child: Icon(Icons.stop),
                       onPressed: () => FlutterBlue.instance.stopScan(),
@@ -210,7 +148,6 @@ class _PadlockPageState extends State<PadlockPage> {
                         backgroundColor: Color(0xff00558A),
                         child: Icon(Icons.search),
                         onPressed: () async {
-                          await validateVersion();
                           getSharedInstance();
                           FlutterBlue.instance
                               .startScan(timeout: Duration(seconds: 5));
@@ -225,24 +162,4 @@ class _PadlockPageState extends State<PadlockPage> {
   }
 
   _PadlockPageState();
-
-  validateVersion() async {
-    List<CodeModel> listCode = await CodesController().index();
-    VersionService().getVersion().then((res) {
-      VersionAppModel version = new VersionAppModel();
-      if (res != null) {
-        version = VersionAppModel.fromJson(res.data);
-        if (listCode.length != 0) {
-          PadLockService().listPadLock(listCode).then((result) async {
-            if (result.statusCode == 200 || result.statusCode == 201) {
-              var r = await CodesController().deleteTable();
-            }
-          });
-        }
-        if (version.version != Environment().version) {
-          VersionWidget().version(version.version, context);
-        }
-      }
-    });
-  }
 }

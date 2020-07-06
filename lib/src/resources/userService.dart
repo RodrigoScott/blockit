@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../utils/dioConfiguration.dart';
 import '../utils/enviroment.dart';
 
@@ -67,8 +68,10 @@ class IotUserService {
       Response response = await _dio.put('/status/device',
           data: recoverData,
           options: Options(headers: {'requierestoken': false}));
+      print(response.data);
       return response;
     } on DioError catch (e) {
+      print(e.response);
       return e.response;
     }
   }

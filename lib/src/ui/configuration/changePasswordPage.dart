@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:trailock/src/resources/user.Services.dart';
 import 'package:trailock/src/resources/userService.dart';
 import 'package:trailock/src/resources/version.Services.dart';
-import 'package:trailock/src/utils/enviroment.dart';
 import 'package:trailock/src/widgets/loadingAlertDismissible.dart';
 
 class ChangePasswordPage extends StatefulWidget {
@@ -98,20 +96,15 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     });
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Cambiar Contraseña"),
+        centerTitle: true,
+        backgroundColor: Color(0xff00558A),
+      ),
       body: ListView(
         children: <Widget>[
           SizedBox(
-            height: 10,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 22),
-            child: Text(
-              'Cambiar Contraseña',
-              style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
-            ),
-          ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * .2,
+            height: 30,
           ),
           Column(
             children: <Widget>[
