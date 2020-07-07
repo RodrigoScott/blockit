@@ -279,34 +279,6 @@ class _CardPadLockScanResultState extends State<CardPadLockScanResult> {
                                             style: TextStyle(
                                                 fontSize: 25,
                                                 fontWeight: FontWeight.bold)),
-                                        Container(
-                                          height: 29,
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: <Widget>[
-                                              Container(
-                                                  height: 30,
-                                                  child: Icon(
-                                                    Icons.signal_wifi_off,
-                                                    color: Color(0xff00558A),
-                                                  )),
-                                              SizedBox(
-                                                width: 5,
-                                              ),
-                                              Container(
-                                                height: 20,
-                                                child: Text('Sin internet',
-                                                    style: TextStyle(
-                                                      color: Color(0xff00558A),
-                                                    )),
-                                              )
-                                            ],
-                                          ),
-                                        ),
                                         validateBattery
                                             ? Container(
                                                 height: 29,

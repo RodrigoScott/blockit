@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trailock/src/ui/auth/recoverPasswordPage.dart';
 import 'package:trailock/src/ui/auth/signIn.dart';
 import 'package:trailock/src/ui/homePage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 import 'src/ui/configuration/changePasswordPage.dart';
 import 'src/ui/configuration/configurationPage.dart';
 import 'src/ui/configuration/profilePage.dart';
@@ -14,7 +15,7 @@ Future<Null> main() async {
   token = prefs.getString('access_token');
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
-    title: 'Trailock',
+    title: 'BlockIt',
     initialRoute: (token == null || token == '') ? '/' : 'HomePage',
     routes: {
       '/': (BuildContext context) => SingIn(),
